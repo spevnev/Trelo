@@ -1,24 +1,40 @@
 import React from "react";
 import {Navigate, Outlet, Route, Routes} from "react-router-dom";
+import {useParams} from "react-router";
 
-import {isAuth} from "./services/auth";
+import {hasAccess, isAuth} from "./services/auth";
+
+import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
+import Board from "./pages/board";
+import BoardSettings from "./pages/boardSettings";
+import CardDescription from "./pages/cardDescription";
 import Layout from "./layout";
+
+const PrivateRoute = ({hasAccess, redirectTo}) => {
+	const params = useParams();
+
+	return hasAccess(params) ? <Outlet/> : <Navigate to={redirectTo}/>;
+};
 
 const App = () => {
 	return (
-		<Layout>
-			<Routes>
-				<Route path="/login" element={isAuth() ? <Navigate to="/"/> : <h1>Sign up</h1>}/>
 
-				<Route path="/" element={isAuth() ? <Outlet/> : <Navigate to="/login"/>}>
-					<Route index element={<h1>Default</h1>}/>
+		<Routes>
+			<Route path="/login" element={isAuth() ? <Navigate to="/"/> : <Login/>}/>
+
+			<Route path="/" element={<Layout><PrivateRoute hasAccess={isAuth} redirectTo="/login"/></Layout>}>
+				<Route index element={<Dashboard/>}/>
+
+				<Route path="board/:boardId" element={<PrivateRoute hasAccess={hasAccess} redirectTo="/"/>}>
+					<Route index element={<Board/>}/>
+					<Route path="settings" element={<BoardSettings/>}/>
+					<Route path=":cardId" element={<CardDescription/>}/>
 				</Route>
+			</Route>
 
-				<Route path="/404" element={<h1>Error 404 - Page not found</h1>}/>
-				<Route path="*" element={<Navigate to="/404"/>}/>
-			</Routes>
-		</Layout>
-	);
+			<Route path="*" element={<Navigate to="/"/>}/>
+		</Routes>);
 };
 
 export default App;
