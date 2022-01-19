@@ -22,6 +22,7 @@ const Icons = styled.div`
 const Icon = styled.img`
   width: 2.4rem;
   height: 2.4rem;
+  margin-left: 5px;
 `;
 
 const Board = ({title, isFavourite, id}) => {

@@ -8,7 +8,7 @@ export const BoardContainer = styled.div`
   width: 18vw;
   min-width: 150px;
   height: 7rem;
-  padding: 0.5rem 1rem;
+  padding: .5rem .8rem;
 
   margin-right: 1.2vw;
   margin-bottom: 15px;
