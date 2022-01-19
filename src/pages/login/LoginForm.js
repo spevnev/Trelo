@@ -6,7 +6,6 @@ import ErrorMessage from "../../components/ErrorMessage";
 
 const LoginForm = () => {
 	const [error, setError] = useState();
-
 	const [formState, setFormState] = useState({username: "", password: ""});
 
 	const submit = () => {

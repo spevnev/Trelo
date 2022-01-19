@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React from "react";
 import styled from "styled-components";
 
 const Icon = styled.label`
   display: block;
-  width: 100px;
-  height: 100px;
+  width: 10rem;
+  height: 10rem;
   border-radius: 50%;
   cursor: pointer;
-  margin: 25px auto;
+  margin: 2.5rem auto;
   transition: all 0.3s;
   background: ${props => props.image ? `url(${props.image})` : `#e0e0e0`};
   background-position: center;
@@ -18,22 +18,22 @@ const Icon = styled.label`
   }
 `;
 
-const UserIcon = () => {
-	const [image, setImage] = useState(null);
-
+const UserIcon = ({icon, setIcon}) => {
 	const onFile = e => {
 		const file = e.target.files[0];
 
 		if (file) {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			reader.onload = () => setImage(reader.result);
+			reader.onload = () => {
+				setIcon(reader.result);
+			};
 		}
 	};
 
 	return (
 		<>
-			<Icon htmlFor="userIcon" image={image}/>
+			<Icon htmlFor="userIcon" image={icon}/>
 			<input accept="image/jpeg,image/png" onChange={onFile} id="userIcon" type="file" style={{display: "none"}}/>
 		</>
 	);

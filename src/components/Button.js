@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Button = styled.button`
-  font-size: 18px;
+  font-size: ${props => props.fontSize || "1.8rem"};
   cursor: pointer;
   padding: 4px 8px;
   border: 1px solid #000;
@@ -17,11 +17,11 @@ const Button = styled.button`
 	color: #000;
   `}
   &:hover {
-    transform: translateY(1px);
+    filter: brightness(90%);
   }
 
   &:active {
-    transform: translateY(3px);
+    transform: translateY(1px);
   }
 `;
 

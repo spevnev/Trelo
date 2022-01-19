@@ -19,7 +19,6 @@ const PrivateRoute = ({hasAccess, redirectTo}) => {
 
 const App = () => {
 	return (
-
 		<Routes>
 			<Route path="/login" element={isAuth() ? <Navigate to="/"/> : <Login/>}/>
 

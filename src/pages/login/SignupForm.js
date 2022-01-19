@@ -7,8 +7,9 @@ import ErrorMessage from "../../components/ErrorMessage";
 
 const SignupForm = () => {
 	const [error, setError] = useState();
+	const [formState, setFormState] = useState({username: "", password: "", confirm: "", icon: ""});
 
-	const [formState, setFormState] = useState({username: "", password: "", confirm: ""});
+	const setIcon = (icon) => setFormState({...formState, icon});
 
 	const submit = () => {
 
@@ -20,7 +21,7 @@ const SignupForm = () => {
 			<Text secondary>Don't have account yet?</Text>
 
 			<Form>
-				<UserIcon/>
+				<UserIcon setIcon={setIcon} icon={formState.icon}/>
 
 				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
 				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>

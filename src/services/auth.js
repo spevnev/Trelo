@@ -1,7 +1,9 @@
 export const isAuth = () => {
-	return false;
+	return true;
 };
 
 export const hasAccess = ({boardId}) => {
+	if (boardId === "undefined") return false;
+
 	return true;
 };
