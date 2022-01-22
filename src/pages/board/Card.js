@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import textIcon from "../../assets/svg/paragraph-left.svg";
 import imageIcon from "../../assets/svg/images.svg";
+import {useNavigate} from "react-router";
 
 const CardContainer = styled.div`
   margin-bottom: 10px;
@@ -10,6 +11,7 @@ const CardContainer = styled.div`
   padding: 2px 4px;
   border-radius: 2px;
   font-size: 1.6rem;
+  cursor: pointer;
 `;
 
 const SubContainer = styled.div`
@@ -34,9 +36,12 @@ const UserIcon = styled.img`
   margin-left: 2px;
 `;
 
-const Card = ({title}) => {
+const Card = ({title, id}) => {
+	const navigate = useNavigate();
+	const openCard = () => navigate(`${id}`);
+
 	return (
-		<CardContainer>
+		<CardContainer onClick={openCard}>
 			<p>{title}</p>
 			<SubContainer>
 				<div>
