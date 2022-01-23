@@ -2,15 +2,12 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {v4 as uuid} from "uuid";
-
+import {deleteCardsInList} from "../../redux/actionCreators/cardActionCreator";
 import {addList, changeListTitle, deleteList} from "../../redux/actionCreators/boardActionCreator";
-
 import HiddenInput from "../../components/HiddenInput";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
-
 import {Cancel, SubContainer, SubTitle} from "./styles";
-
 
 const ListElContainer = styled.div`
   display: flex;
@@ -50,7 +47,10 @@ const Lists = ({lists, boardId}) => {
 		setNewList("");
 		dispatch(addList(boardId, {title: newList, id: uuid()}));
 	};
-	const deleteEl = (listId) => dispatch(deleteList(boardId, listId));
+	const deleteEl = (listId) => {
+		dispatch(deleteList(boardId, listId));
+		dispatch(deleteCardsInList(boardId, listId));
+	};
 	const changeEl = (listId, title) => dispatch(changeListTitle(boardId, listId, title));
 
 	return (

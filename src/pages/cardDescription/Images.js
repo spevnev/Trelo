@@ -1,9 +1,7 @@
 import React, {useRef, useState} from "react";
 import styled from "styled-components";
-
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
-
 import {Container, SubTitle} from "./styles";
 
 const BlockContainer = styled.div`
@@ -93,9 +91,10 @@ const Overlay = ({src, close}) => {
 	);
 };
 
-const Image = ({src, openFull}) => {
+const Image = ({src, openFull, delImg}) => {
 	const deleteImage = e => {
 		e.stopPropagation();
+		delImg(src);
 	};
 
 	const downloadImage = e => {
@@ -110,7 +109,7 @@ const Image = ({src, openFull}) => {
 	);
 };
 
-const ImageInput = () => {
+const ImageInput = ({addImage}) => {
 	const input = useRef(null);
 
 	const preventDefault = e => e.preventDefault();
@@ -126,21 +125,19 @@ const ImageInput = () => {
 		if (file) {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			reader.onload = () => {
-				// reader.result
-			};
+			reader.onload = () => addImage(reader.result);
 		}
 	};
 
 	return (
 		<>
-			<input ref={input} style={{display: "none"}} accept="image/jpeg,image/png" id="upload" type="file" onChange={onImage}/>
-			<label htmlFor="upload"><AddImage onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>+</AddImage></label>
+			<input ref={input} style={{display: "none"}} accept="image/jpeg,image/png" id="uploadImage" type="file" onChange={onImage}/>
+			<label htmlFor="uploadImage"><AddImage onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>+</AddImage></label>
 		</>
 	);
 };
 
-const Images = () => {
+const Images = ({images, addImage, delImage}) => {
 	const [fullImg, setFullImg] = useState(null);
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
@@ -150,10 +147,8 @@ const Images = () => {
 			<SubTitle>Attached images</SubTitle>
 			{fullImg && <Overlay src={fullImg} close={() => setFullImg(null)}/>}
 			<BlockContainer>
-				<Image openFull={openFull} src="https://www.uedvision.com.ua/wp-content/uploads/2020/02/placeholder.png"/>
-				<Image openFull={openFull} src="https://www.uedvision.com.ua/wp-content/uploads/2020/02/placeholder.png"/>
-
-				<ImageInput/>
+				{images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur} src={cur}/>)}
+				<ImageInput addImage={addImage}/>
 			</BlockContainer>
 		</Container>
 	);

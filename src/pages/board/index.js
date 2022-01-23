@@ -20,12 +20,13 @@ const Lists = styled.div`
 const Board = () => {
 	const {boardId} = useParams();
 	const board = useSelector(state => state.board.filter(cur => cur.id === boardId)[0]);
+	const cards = useSelector(state => state.card.filter(cur => cur.id === boardId)[0].cards);
 
 	return (
 		<Container>
 			<NavBar boardId={boardId} title={board.title} isFavourite={board.isFavourite}/>
 
-			<Lists>{board.lists.map(cur => <List boardId={boardId} key={cur.id} {...cur}/>)}</Lists>
+			<Lists>{board.lists.map(cur => <List boardId={boardId} key={cur.id} {...cur} cards={cards.filter(card => card.listId === cur.id)}/>)}</Lists>
 		</Container>
 	);
 };

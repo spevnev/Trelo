@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-
+import ErrorMessage from "../../components/ErrorMessage";
 import {Container, SubTitle} from "./styles";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -22,15 +22,20 @@ const AddUserContainer = styled.div`
   }
 `;
 
-const AddUser = () => {
+const AddUser = ({addUser}) => {
 	const [name, setName] = useState("");
 
 	const onChange = e => setName(e.target.value);
 
+	const newUser = () => {
+		addUser(name);
+		setName("");
+	};
+
 	return (
 		<AddUserContainer>
 			<Input placeholder="Username" maxLength={20} onChange={onChange} value={name}/>
-			<Button>Add</Button>
+			<Button onClick={newUser}>Add</Button>
 		</AddUserContainer>
 	);
 };
@@ -42,15 +47,25 @@ const User = styled.img`
   margin-right: 5px;
 `;
 
-const Assigned = () => {
+const Assigned = ({assigned, users, addAssigned}) => {
+	const [msg, setMsg] = useState(null);
+
+	const addUser = username => {
+		const user = users.filter(cur => cur.username === username);
+		if (user.length === 1) return addAssigned(user);
+
+		setMsg("There is no user with that name in this project!");
+		setTimeout(() => setMsg(null), 1000);
+	};
+
 	return (
 		<Container>
 			<SubTitle>Assigned</SubTitle>
 			<div>
-				<User src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
-				<User src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
+				{assigned.map(user => <User src={user.icon} key={user.username} title={user.username}/>)}
 			</div>
-			<AddUser/>
+			<ErrorMessage>{msg}</ErrorMessage>
+			<AddUser addUser={addUser}/>
 		</Container>
 	);
 };

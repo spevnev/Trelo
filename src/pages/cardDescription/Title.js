@@ -1,13 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import HiddenInput from "../../components/HiddenInput";
 
 import {Container, SubTitle} from "./styles";
 
-const Title = () => {
-	const [title, setTitle] = useState("");
-
-	const onChange = e => setTitle(e.target.value);
-
+const Title = ({title, onChange}) => {
 	return (
 		<Container>
 			<SubTitle>Title</SubTitle>

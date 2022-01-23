@@ -25,12 +25,11 @@ const Icon = styled.img`
   margin-right: 5px;
 `;
 
-const File = ({filename}) => {
+const File = ({filename, delFile}) => {
 	const downloadFile = e => {
 	};
 
-	const deleteFile = e => {
-	};
+	const deleteFile = () => delFile(filename);
 
 	return (
 		<FileContainer>
@@ -58,7 +57,7 @@ const AddFile = styled.div`
   }
 `;
 
-const FileInput = () => {
+const FileInput = ({addFile}) => {
 	const input = useRef(null);
 
 	const preventDefault = e => e.preventDefault();
@@ -69,21 +68,20 @@ const FileInput = () => {
 	};
 
 	const onFile = e => {
-		const file = e.target.files[0];
+		const files = e.target.files;
 
-		if (file) {
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			reader.onload = () => {
-				// reader.result
-			};
+			reader.onload = () => addFile(file.name, reader.result);
 		}
 	};
 
 	return (
 		<>
-			<input ref={input} style={{display: "none"}} id="upload" type="file" onChange={onFile}/>
-			<label htmlFor="upload"><AddFile onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>Add file</AddFile></label>
+			<input ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile}/>
+			<label htmlFor="uploadFile"><AddFile onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>Add file</AddFile></label>
 		</>
 	);
 };
@@ -93,15 +91,24 @@ const BlockContainer = styled.div`
   flex-direction: column;
 `;
 
-const Files = () => {
+const Files = ({files, dispatchAddFile, delFile}) => {
+	const addFile = (filename, data) => {
+		while (files.filter(file => file.filename === filename).length > 0) {
+			const parts = filename.split(".");
+			if (parts.length !== 1)
+				parts[0] += Math.round(Math.random() * 100);
+			filename = parts.join(".");
+		}
+
+		dispatchAddFile(filename, data);
+	};
+
 	return (
 		<Container>
 			<SubTitle>Attached files</SubTitle>
 			<BlockContainer>
-				<File filename="filename.ext"/>
-				<File filename="file2.sth"/>
-
-				<FileInput/>
+				{files.map(file => <File key={file.filename} filename={file.filename} delFile={delFile}/>)}
+				<FileInput addFile={addFile}/>
 			</BlockContainer>
 		</Container>
 	);

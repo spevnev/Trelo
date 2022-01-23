@@ -2,11 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {v4 as uuid} from "uuid";
-
-import {addCard} from "../../redux/actionCreators/boardActionCreator";
-
 import Card from "./Card";
 import {useNavigate} from "react-router";
+import {addCard} from "../../redux/actionCreators/cardActionCreator";
 
 const Title = styled.p`
   font-size: 2rem;

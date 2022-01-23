@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-
-import textIcon from "../../assets/svg/paragraph-left.svg";
-import imageIcon from "../../assets/svg/images.svg";
 import {useNavigate} from "react-router";
+import textIcon from "../../assets/svg/paragraph-left.svg";
+import imageIcon from "../../assets/svg/image.svg";
+import imagesIcon from "../../assets/svg/images.svg";
+import fileIcon from "../../assets/svg/file-empty.svg";
+import filesIcon from "../../assets/svg/files-empty.svg";
 
 const CardContainer = styled.div`
   margin-bottom: 10px;
@@ -36,7 +38,7 @@ const UserIcon = styled.img`
   margin-left: 2px;
 `;
 
-const Card = ({title, id}) => {
+const Card = ({title, id, description, images, files}) => {
 	const navigate = useNavigate();
 	const openCard = () => navigate(`${id}`);
 
@@ -46,12 +48,12 @@ const Card = ({title, id}) => {
 
 			<SubContainer>
 				<div>
-					<Icon src={textIcon}/>
-					<Icon src={imageIcon}/>
+					{description.length > 0 && <Icon src={textIcon}/>}
+					{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
+					{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
 				</div>
 
 				<div>
-					<UserIcon src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
 					<UserIcon src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
 				</div>
 			</SubContainer>

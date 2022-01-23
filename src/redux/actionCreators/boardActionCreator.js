@@ -6,6 +6,11 @@ export const addBoard = (id) => ({
 	payload: {id},
 });
 
+export const deleteBoard = (id) => ({
+	type: types.deleteBoard,
+	payload: {id},
+});
+
 export const toggleFavouriteBoard = (id, isFavourite) => ({
 	type: types.toggleFavourite,
 	payload: {id, isFavourite},
@@ -46,10 +51,4 @@ export const deleteUser = (id, username) => ({
 export const changeUserRole = (id, username, isOwner) => ({
 	type: types.changeUserRole,
 	payload: {id, username, isOwner},
-});
-
-// Card
-export const addCard = (id, listId, cardId) => ({
-	type: types.addCard,
-	payload: {id, listId, cardId},
 });

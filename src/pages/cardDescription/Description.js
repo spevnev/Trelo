@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import styled from "styled-components";
 
 import {Container, SubTitle} from "./styles";
@@ -16,11 +16,7 @@ const DescriptionInput = styled.textarea`
   resize: none;
 `;
 
-const Description = () => {
-	const [description, setDescription] = useState("");
-
-	const onChange = e => setDescription(e.target.value);
-
+const Description = ({description, onChange}) => {
 	return (
 		<Container>
 			<SubTitle>Description</SubTitle>

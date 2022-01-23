@@ -1,5 +1,6 @@
 export default {
 	addBoard: "ADD_BOARD",
+	deleteBoard: "DELETE_BOARD",
 	toggleFavourite: "TOGGLE_FAVOURITE",
 	changeTitle: "CHANGE_TITLE",
 	addList: "ADD_LIST",
@@ -8,5 +9,4 @@ export default {
 	addUser: "ADD_USER",
 	deleteUser: "DELETE_ROLE",
 	changeUserRole: "CHANGE_USER_ROLE",
-	addCard: "ADD_CARD",
 };

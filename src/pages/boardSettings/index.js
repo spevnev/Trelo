@@ -2,14 +2,12 @@ import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
-
-import {changeBoardTitle} from "../../redux/actionCreators/boardActionCreator";
-
+import {changeBoardTitle, deleteBoard} from "../../redux/actionCreators/boardActionCreator";
 import arrowBack from "../../assets/svg/arrow-left.svg";
-
 import Users from "./Users";
 import Title from "./Title";
 import Lists from "./Lists";
+import Delete from "./Delete";
 
 const Container = styled.div`
   margin: 0 2vw;
@@ -34,9 +32,17 @@ const BoardSettings = () => {
 	const {boardId} = useParams();
 	const board = useSelector(state => state.board.filter(cur => cur.id === boardId)[0]);
 	const dispatch = useDispatch();
-
 	const navigate = useNavigate();
-	const goBack = () => navigate("../");
+
+	const goBack = () => {
+		if (board.title.length === 0 && board.lists.length === 0 && board.users.length === 1) delBoard();
+		else navigate("../");
+	};
+
+	const delBoard = () => {
+		dispatch(deleteBoard(boardId));
+		navigate("/");
+	};
 
 	return (
 		<Container>
@@ -48,6 +54,7 @@ const BoardSettings = () => {
 			<Title titleChange={title => dispatch(changeBoardTitle(boardId, title))} title={board.title}/>
 			<Lists lists={board.lists} boardId={boardId}/>
 			<Users users={board.users} boardId={boardId}/>
+			<Delete deleteBoard={delBoard}/>
 		</Container>
 	);
 };
