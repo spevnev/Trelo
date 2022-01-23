@@ -1,9 +1,10 @@
 import React from "react";
 import {useParams} from "react-router";
 import styled from "styled-components";
+import {useSelector} from "react-redux";
 
-import NavBar from "./NavBar";
 import List from "./List";
+import NavBar from "./NavBar";
 
 const Container = styled.div`
   display: flex;
@@ -18,14 +19,13 @@ const Lists = styled.div`
 
 const Board = () => {
 	const {boardId} = useParams();
+	const board = useSelector(state => state.board.filter(cur => cur.id === boardId)[0]);
 
 	return (
 		<Container>
-			<NavBar boardId={boardId}/>
-			<Lists>
-				<List title="List 1" cards={[{title: "Card 1", id: 1}, {title: "Card 2", id: 2}]}/>
-				<List title="List 2" cards={[{title: "Card 3", id: 3}, {title: "Card 4", id: 4}, {title: "Card 5", id: 5}]}/>
-			</Lists>
+			<NavBar boardId={boardId} title={board.title} isFavourite={board.isFavourite}/>
+
+			<Lists>{board.lists.map(cur => <List boardId={boardId} key={cur.id} {...cur}/>)}</Lists>
 		</Container>
 	);
 };

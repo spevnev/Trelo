@@ -6,12 +6,7 @@ import download from "../../assets/svg/download.svg";
 
 import {Container, SubTitle} from "./styles";
 
-const BlockContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const File = styled.div`
+const FileContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -30,6 +25,22 @@ const Icon = styled.img`
   margin-right: 5px;
 `;
 
+const File = ({filename}) => {
+	const downloadFile = e => {
+	};
+
+	const deleteFile = e => {
+	};
+
+	return (
+		<FileContainer>
+			<p>{filename}</p>
+			<Icon src={download} onClick={downloadFile}/>
+			<Icon src={cross} onClick={deleteFile}/>
+		</FileContainer>
+	);
+};
+
 const AddFile = styled.div`
   display: flex;
   justify-content: center;
@@ -47,7 +58,7 @@ const AddFile = styled.div`
   }
 `;
 
-const Files = () => {
+const FileInput = () => {
 	const input = useRef(null);
 
 	const preventDefault = e => e.preventDefault();
@@ -69,34 +80,28 @@ const Files = () => {
 		}
 	};
 
-	const downloadFile = e => {
-	};
+	return (
+		<>
+			<input ref={input} style={{display: "none"}} id="upload" type="file" onChange={onFile}/>
+			<label htmlFor="upload"><AddFile onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>Add file</AddFile></label>
+		</>
+	);
+};
 
-	const deleteFile = e => {
-	};
+const BlockContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
+const Files = () => {
 	return (
 		<Container>
 			<SubTitle>Attached files</SubTitle>
 			<BlockContainer>
-				<File>
-					<p>Filename.something</p>
-					<Icon src={download} onClick={downloadFile}/>
-					<Icon src={cross} onClick={deleteFile}/>
-				</File>
-				<File>
-					<p>Filename.something</p>
-					<Icon src={download} onClick={downloadFile}/>
-					<Icon src={cross} onClick={deleteFile}/>
-				</File>
-				<File>
-					<p>Filename.something</p>
-					<Icon src={download} onClick={downloadFile}/>
-					<Icon src={cross} onClick={deleteFile}/>
-				</File>
+				<File filename="filename.ext"/>
+				<File filename="file2.sth"/>
 
-				<input ref={input} style={{display: "none"}} id="upload" type="file" onChange={onFile}/>
-				<label htmlFor="upload"><AddFile onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>Add file</AddFile></label>
+				<FileInput/>
 			</BlockContainer>
 		</Container>
 	);

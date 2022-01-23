@@ -1,4 +1,5 @@
 import React from "react";
+import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router";
 import styled from "styled-components";
 
@@ -7,6 +8,7 @@ import starEmpty from "../../assets/svg/star-empty.svg";
 import cog from "../../assets/svg/cog.svg";
 
 import {BoardContainer} from "./styles";
+import {toggleFavouriteBoard} from "../../redux/actionCreators/boardActionCreator";
 
 const Title = styled.p`
   font-size: 1.8rem;
@@ -27,19 +29,22 @@ const Icon = styled.img`
 
 const Board = ({title, isFavourite, id}) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const openSettings = e => {
 		e.stopPropagation();
 		navigate(`/board/${id}/settings`);
 	};
+
 	const openBoard = () => navigate(`/board/${id}`);
 
 	const toggleFavourite = e => {
 		e.stopPropagation();
-
+		dispatch(toggleFavouriteBoard(id, !isFavourite));
 	};
 
 	return (
-		<BoardContainer onClick={openBoard}>
+		<BoardContainer onClick={openBoard} style={{order: isFavourite ? 0 : 1}}>
 			<Title>{title}</Title>
 
 			<Icons>

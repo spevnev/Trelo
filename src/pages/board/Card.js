@@ -43,6 +43,7 @@ const Card = ({title, id}) => {
 	return (
 		<CardContainer onClick={openCard}>
 			<p>{title}</p>
+
 			<SubContainer>
 				<div>
 					<Icon src={textIcon}/>

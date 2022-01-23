@@ -5,13 +5,6 @@ import {Container, SubTitle} from "./styles";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 
-const User = styled.img`
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  margin-right: 5px;
-`;
-
 const AddUserContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -41,6 +34,13 @@ const AddUser = () => {
 		</AddUserContainer>
 	);
 };
+
+const User = styled.img`
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  margin-right: 5px;
+`;
 
 const Assigned = () => {
 	return (

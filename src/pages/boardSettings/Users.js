@@ -1,5 +1,8 @@
 import React, {useState} from "react";
 import styled from "styled-components";
+import {useDispatch} from "react-redux";
+
+import {addUser, changeUserRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
 
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -37,6 +40,23 @@ const UserIcon = styled.img`
   margin: .5rem 0;
 `;
 
+const editor = {value: "editor", text: "Editor"};
+const owner = {value: "owner", text: "Owner"};
+const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => {
+	return (
+		<UserContainer>
+			<div>
+				<UserIcon src={userIcon}/>
+				<p>{username}</p>
+			</div>
+			<div>
+				<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : editor} options={isOwner ? [editor] : [owner]}/>
+				<Cancel onClick={() => deleteUser(username)}>&#x2716;</Cancel>
+			</div>
+		</UserContainer>
+	);
+};
+
 const NewUser = styled.div`
   display: flex;
   flex-direction: row;
@@ -49,57 +69,27 @@ const NewUser = styled.div`
   }
 `;
 
-const editor = {value: "editor", text: "Editor"};
-const owner = {value: "owner", text: "Owner"};
+const Users = ({users, boardId}) => {
+	const [newUsername, setNewUsername] = useState("");
+	const dispatch = useDispatch();
 
-const User = ({username, userIcon, isOwner, onSelect}) => {
-	return (
-		<UserContainer>
-			<div>
-				<UserIcon src={userIcon}/>
-				<p>{username}</p>
-			</div>
-			<div>
-				<SelectInput onSelect={val => onSelect(username, val)} initial={isOwner ? owner : editor} options={isOwner ? [editor] : [owner]}/>
-				<Cancel onClick={() => onSelect(username, null)}>&#x2716;</Cancel>
-			</div>
-		</UserContainer>
-	);
-};
+	const changeRole = (username, role) => dispatch(changeUserRole(boardId, username, role === "owner"));
+	const delUser = (username) => dispatch(deleteUser(boardId, username));
 
-const Users = () => {
-	const [users, setUsers] = useState([{username: "Username 1", userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: true},
-		{username: "Username 2", userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: false}]);
-	const [newUser, setNewUser] = useState("");
-
-	const onSelect = (username, val) => {
-		if (val === null) {
-			setUsers(users.filter(cur => cur.username !== username));
-			return;
-		}
-
-		const newUsers = [...users];
-		const el = newUsers.filter(cur => cur.username === username);
-
-		if (el.length !== 1) return;
-		el[0].isOwner = val === "owner";
-		setUsers(newUsers);
-	};
-
-	const addUser = () => {
-		setNewUser("");
-		setUsers([...users, {username: newUser, userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: false}]);
+	const newUser = () => {
+		setNewUsername("");
+		dispatch(addUser(boardId, {username: newUsername, userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: false}));
 	};
 
 	return (
 		<SubContainer>
 			<SubTitle>Users</SubTitle>
 
-			{users.map(cur => <User key={cur.username} onSelect={onSelect} {...cur}/>)}
+			{users.map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeRole} {...cur}/>)}
 
 			<NewUser>
-				<Input maxLength={20} placeholder="Username" value={newUser} onChange={e => setNewUser(e.target.value)}/>
-				<Button onClick={addUser}>Add</Button>
+				<Input maxLength={20} placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
+				<Button onClick={newUser}>Add</Button>
 			</NewUser>
 		</SubContainer>
 	);

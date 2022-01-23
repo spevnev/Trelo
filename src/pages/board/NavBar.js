@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import {useNavigate} from "react-router";
+import {useDispatch} from "react-redux";
+
+import {toggleFavouriteBoard} from "../../redux/actionCreators/boardActionCreator";
 
 import starEmpty from "../../assets/svg/star-empty.svg";
 import starFull from "../../assets/svg/star-full.svg";
@@ -29,18 +32,17 @@ const Icon = styled.img`
   height: 2rem;
 `;
 
-const NavBar = ({boardId, isFavourite}) => {
+const NavBar = ({boardId, title, isFavourite}) => {
 	const navigate = useNavigate();
-
 	const openSettings = () => navigate("settings");
+	const dispatch = useDispatch();
 
-	const toggleFavourite = () => {
-	};
+	const toggleFavourite = () => dispatch(toggleFavouriteBoard(boardId, !isFavourite));
 
 	return (
 		<NavBarContainer>
-			<NavEl><Title>Board #{boardId}</Title></NavEl>
-			<NavEl><Icon src={isFavourite ? starEmpty : starFull} onClick={toggleFavourite}/></NavEl>
+			<NavEl><Title>{title}</Title></NavEl>
+			<NavEl><Icon src={isFavourite ? starFull : starEmpty} onClick={toggleFavourite}/></NavEl>
 			<NavEl><Icon src={cog} onClick={openSettings}/></NavEl>
 		</NavBarContainer>
 	);

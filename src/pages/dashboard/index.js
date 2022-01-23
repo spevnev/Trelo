@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Board from "./Board";
 import NewBoard from "./NewBoard";
+import {useSelector} from "react-redux";
 
 const Boards = styled.div`
   margin: 15px 2vw;
@@ -13,13 +14,11 @@ const Boards = styled.div`
 `;
 
 const Dashboard = () => {
+	const boards = useSelector(state => state.board);
+
 	return (
 		<Boards>
-			<Board title="Board title 1" id={1} isFavourite={false}/>
-			<Board title="Board title 2" id={2} isFavourite={true}/>
-			<Board title="Board title 3" id={3} isFavourite={true}/>
-			<Board title="Board title 4" id={4} isFavourite={false}/>
-
+			{boards.map(cur => <Board key={cur.id} title={cur.title} id={cur.id} isFavourite={cur.isFavourite}/>)}
 			<NewBoard/>
 		</Boards>
 	);

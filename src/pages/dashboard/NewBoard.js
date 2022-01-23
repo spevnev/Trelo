@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import {useNavigate} from "react-router";
+import {v4 as uuid} from "uuid";
+import {useDispatch} from "react-redux";
+
+import {addBoard} from "../../redux/actionCreators/boardActionCreator";
 
 import {BoardContainer} from "./styles";
 
@@ -10,15 +14,17 @@ const CenteredText = styled.p`
 
 const NewBoard = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const openSettings = () => {
+		const boardId = uuid();
 
-		
-		navigate("/board/new/settings");
-	}
+		dispatch(addBoard(boardId));
+		navigate(`/board/${boardId}/settings`);
+	};
 
 	return (
-		<BoardContainer onClick={openSettings}>
+		<BoardContainer onClick={openSettings} style={{order: 999}}>
 			<CenteredText>New board</CenteredText>
 		</BoardContainer>
 	);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import styled from "styled-components";
 
 const Icon = styled.label`
@@ -19,6 +19,15 @@ const Icon = styled.label`
 `;
 
 const UserIcon = ({icon, setIcon}) => {
+	const input = useRef(null);
+
+	const preventDefault = e => e.preventDefault();
+	const onDrop = e => {
+		input.current.files = e.dataTransfer.files;
+		onFile({target: input.current});
+		e.preventDefault();
+	};
+
 	const onFile = e => {
 		const file = e.target.files[0];
 
@@ -33,8 +42,8 @@ const UserIcon = ({icon, setIcon}) => {
 
 	return (
 		<>
-			<Icon htmlFor="userIcon" image={icon}/>
-			<input accept="image/jpeg,image/png" onChange={onFile} id="userIcon" type="file" style={{display: "none"}}/>
+			<Icon htmlFor="userIcon" image={icon} onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}/>
+			<input ref={input} accept="image/jpeg,image/png" onChange={onFile} id="userIcon" type="file" style={{display: "none"}}/>
 		</>
 	);
 };

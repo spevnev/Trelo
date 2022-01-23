@@ -24,7 +24,7 @@ const Description = () => {
 	return (
 		<Container>
 			<SubTitle>Description</SubTitle>
-			<DescriptionInput onChange={onChange} value={description}/>
+			<DescriptionInput onChange={onChange} value={description} placeholder="Description"/>
 		</Container>
 	);
 };

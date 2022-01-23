@@ -17,7 +17,7 @@ const LoginForm = () => {
 			<Text>Log in</Text>
 			<Text secondary>Already signed up?</Text>
 
-			<Form onSubmit={submit}>
+			<Form>
 				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
 				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 

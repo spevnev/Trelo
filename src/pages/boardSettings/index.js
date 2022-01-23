@@ -1,6 +1,9 @@
 import React from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
+
+import {changeBoardTitle} from "../../redux/actionCreators/boardActionCreator";
 
 import arrowBack from "../../assets/svg/arrow-left.svg";
 
@@ -29,8 +32,10 @@ const GoBack = styled.div`
 
 const BoardSettings = () => {
 	const {boardId} = useParams();
-	const navigate = useNavigate();
+	const board = useSelector(state => state.board.filter(cur => cur.id === boardId)[0]);
+	const dispatch = useDispatch();
 
+	const navigate = useNavigate();
 	const goBack = () => navigate("../");
 
 	return (
@@ -40,9 +45,9 @@ const BoardSettings = () => {
 				Return to the board
 			</GoBack>
 
-			<Title/>
-			<Lists/>
-			<Users/>
+			<Title titleChange={title => dispatch(changeBoardTitle(boardId, title))} title={board.title}/>
+			<Lists lists={board.lists} boardId={boardId}/>
+			<Users users={board.users} boardId={boardId}/>
 		</Container>
 	);
 };

@@ -1,11 +1,16 @@
 import React, {useState} from "react";
 import styled from "styled-components";
+import {useDispatch} from "react-redux";
+import {v4 as uuid} from "uuid";
+
+import {addList, changeListTitle, deleteList} from "../../redux/actionCreators/boardActionCreator";
 
 import HiddenInput from "../../components/HiddenInput";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 
 import {Cancel, SubContainer, SubTitle} from "./styles";
+
 
 const ListElContainer = styled.div`
   display: flex;
@@ -14,6 +19,15 @@ const ListElContainer = styled.div`
   justify-content: space-between;
   width: 40rem;
 `;
+
+const ListEl = ({title, id, deleteEl, changeEl}) => {
+	return (
+		<ListElContainer>
+			<HiddenInput fontSize="2rem" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength={20}/>
+			<Cancel onClick={() => deleteEl(id)}>&#x2716;</Cancel>
+		</ListElContainer>
+	);
+};
 
 const NewList = styled.div`
   display: flex;
@@ -28,46 +42,23 @@ const NewList = styled.div`
   }
 `;
 
-const ListEl = ({title, id, onChange}) => {
-	return (
-		<ListElContainer>
-			<HiddenInput fontSize="2rem" placeholder="List title" onChange={e => onChange(id, e)} value={title} maxLength={20}/>
-			<Cancel onClick={() => onChange(id, null)}>&#x2716;</Cancel>
-		</ListElContainer>
-	);
-};
-
-const Lists = () => {
-	const [listEls, setListEls] = useState([{id: 1, title: "First list el"}, {id: 2, title: "Second list el"}]);
+const Lists = ({lists, boardId}) => {
 	const [newList, setNewList] = useState("");
-
-	const onChange = (id, e) => {
-		if (e === null) {
-			setListEls(listEls.filter(cur => cur.id !== id));
-			return;
-		}
-
-		const newListEls = [...listEls];
-
-		const el = newListEls.filter(cur => cur.id === id);
-
-		if (el.length !== 1) return;
-
-		el[0].title = e.target.value;
-		setListEls(newListEls);
-	};
+	const dispatch = useDispatch();
 
 	const addEl = () => {
 		setNewList("");
-		setListEls([...listEls, {title: newList, id: 3}]);
+		dispatch(addList(boardId, {title: newList, id: uuid()}));
 	};
+	const deleteEl = (listId) => dispatch(deleteList(boardId, listId));
+	const changeEl = (listId, title) => dispatch(changeListTitle(boardId, listId, title));
 
 	return (
 		<SubContainer>
 			<SubTitle>Lists</SubTitle>
 
-			{listEls.map(cur =>
-				<ListEl key={cur.id} {...cur} onChange={onChange}/>,
+			{lists.map(cur =>
+				<ListEl key={cur.id} {...cur} deleteEl={deleteEl} changeEl={changeEl}/>,
 			)}
 
 			<NewList>
