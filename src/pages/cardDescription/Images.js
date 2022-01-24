@@ -4,12 +4,6 @@ import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
 
-const BlockContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
 const Block = styled.div`
   width: 20rem;
   height: 10rem;
@@ -20,28 +14,6 @@ const Block = styled.div`
 
   &:hover {
     filter: brightness(90%);
-  }
-`;
-
-const Icon = styled.img`
-  width: 1.5rem;
-  height: 1.5rem;
-  margin: 2px;
-  opacity: 0;
-  transition: all .3s;
-`;
-
-const ImageContainer = styled(Block)`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  background: url("${props => props.src}");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-
-  &:hover ${Icon} {
-    opacity: 1;
   }
 `;
 
@@ -74,14 +46,6 @@ const Close = styled.img`
   cursor: pointer;
 `;
 
-const AddImage = styled(Block)`
-  display: flex;
-  background: #eee;
-  justify-content: center;
-  align-items: center;
-  font-size: 5rem;
-`;
-
 const Overlay = ({src, close}) => {
 	return (
 		<OverlayContainer>
@@ -90,6 +54,28 @@ const Overlay = ({src, close}) => {
 		</OverlayContainer>
 	);
 };
+
+const Icon = styled.img`
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 2px;
+  opacity: 0;
+  transition: all .3s;
+`;
+
+const ImageContainer = styled(Block)`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background: url("${props => props.src}");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  &:hover ${Icon} {
+    opacity: 1;
+  }
+`;
 
 const Image = ({src, openFull, delImg}) => {
 	const deleteImage = e => {
@@ -109,10 +95,19 @@ const Image = ({src, openFull, delImg}) => {
 	);
 };
 
+const AddImage = styled(Block)`
+  display: flex;
+  background: #eee;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;
+`;
+
 const ImageInput = ({addImage}) => {
 	const input = useRef(null);
 
 	const preventDefault = e => e.preventDefault();
+
 	const onDrop = e => {
 		input.current.files = e.dataTransfer.files;
 		onImage({target: input.current});
@@ -137,10 +132,20 @@ const ImageInput = ({addImage}) => {
 	);
 };
 
-const Images = ({images, addImage, delImage}) => {
+const BlockContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Images = ({images, commitChanges}) => {
 	const [fullImg, setFullImg] = useState(null);
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
+
+	const addImage = src => commitChanges({images: [...images, src]});
+
+	const delImage = src => commitChanges({images: images.filter(cur => cur !== src)});
 
 	return (
 		<Container>

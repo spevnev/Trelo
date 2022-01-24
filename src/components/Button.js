@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Button = styled.button`
-  font-size: ${props => props.fontSize || "1.8rem"};
+  font-size: 1.8rem;
   cursor: pointer;
   padding: 4px 8px;
   border: 1px solid #000;

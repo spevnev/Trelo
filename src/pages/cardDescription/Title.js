@@ -1,9 +1,10 @@
 import React from "react";
 import HiddenInput from "../../components/HiddenInput";
-
 import {Container, SubTitle} from "./styles";
 
-const Title = ({title, onChange}) => {
+const Title = ({title, commitChanges}) => {
+	const onChange = e => commitChanges({title: e.target.value});
+
 	return (
 		<Container>
 			<SubTitle>Title</SubTitle>

@@ -43,8 +43,12 @@ const cardReducer = (state = defaultState, action) => {
 			} : cur);
 		case types.changeCard:
 			return state.map(cur => cur.id === payload.boardId ? {...cur, cards: cur.cards.map(cur => cur.id === payload.id ? {...cur, ...payload.changes} : cur)} : cur);
+		case types.deleteCard:
+			return state.map(cur => cur.id === payload.boardId ? {...cur, cards: cur.cards.filter(cur => cur.id !== payload.id)} : cur);
 		case types.deleteCardsInList:
 			return state.map(cur => cur.id === payload.boardId ? {...cur, cards: cur.cards.filter(cur => cur.listId !== payload.listId)} : cur);
+		case types.deleteCardsInBoard:
+			return state.filter(cur => cur.id !== payload.boardId);
 		default:
 			return state;
 	}

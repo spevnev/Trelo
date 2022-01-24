@@ -15,6 +15,10 @@ const ListElContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 40rem;
+
+  & ${HiddenInput} {
+    font-size: 2rem;
+  }
 `;
 
 const ListEl = ({title, id, deleteEl, changeEl}) => {
@@ -47,10 +51,12 @@ const Lists = ({lists, boardId}) => {
 		setNewList("");
 		dispatch(addList(boardId, {title: newList, id: uuid()}));
 	};
+
 	const deleteEl = (listId) => {
 		dispatch(deleteList(boardId, listId));
 		dispatch(deleteCardsInList(boardId, listId));
 	};
+
 	const changeEl = (listId, title) => dispatch(changeListTitle(boardId, listId, title));
 
 	return (

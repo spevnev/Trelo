@@ -22,6 +22,7 @@ const UserIcon = ({icon, setIcon}) => {
 	const input = useRef(null);
 
 	const preventDefault = e => e.preventDefault();
+
 	const onDrop = e => {
 		input.current.files = e.dataTransfer.files;
 		onFile({target: input.current});

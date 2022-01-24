@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-
 import {Form, StyledButton, SubContainer, Text} from "./styles";
 import UserIcon from "./UserIcon";
 import Input from "../../components/Input";

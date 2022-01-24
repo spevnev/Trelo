@@ -1,13 +1,10 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
-
 import {addUser, changeUserRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
-
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
-
 import {Cancel, SubContainer, SubTitle} from "./styles";
 
 const UserContainer = styled.div`

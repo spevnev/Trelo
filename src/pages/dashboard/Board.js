@@ -2,11 +2,9 @@ import React from "react";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router";
 import styled from "styled-components";
-
 import starFull from "../../assets/svg/star-full.svg";
 import starEmpty from "../../assets/svg/star-empty.svg";
 import cog from "../../assets/svg/cog.svg";
-
 import {BoardContainer} from "./styles";
 import {toggleFavouriteBoard} from "../../redux/actionCreators/boardActionCreator";
 

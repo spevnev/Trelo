@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-
 import Board from "./Board";
 import NewBoard from "./NewBoard";
 import {useSelector} from "react-redux";
+import {getBoard} from "../../redux/selectors";
 
 const Boards = styled.div`
   margin: 15px 2vw;
@@ -14,7 +14,7 @@ const Boards = styled.div`
 `;
 
 const Dashboard = () => {
-	const boards = useSelector(state => state.board);
+	const boards = useSelector(getBoard());
 
 	return (
 		<Boards>

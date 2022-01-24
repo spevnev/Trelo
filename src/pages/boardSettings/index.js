@@ -3,36 +3,34 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {changeBoardTitle, deleteBoard} from "../../redux/actionCreators/boardActionCreator";
-import arrowBack from "../../assets/svg/arrow-left.svg";
 import Users from "./Users";
 import Title from "./Title";
 import Lists from "./Lists";
-import Delete from "./Delete";
+import Modal from "../../components/Modal";
+import GoBack from "../../components/GoBack";
+import {deleteCardsInBoard} from "../../redux/actionCreators/cardActionCreator";
+import {getBoard} from "../../redux/selectors";
 
 const Container = styled.div`
   margin: 0 2vw;
 `;
 
-const GoBack = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  cursor: pointer;
+const DeleteText = styled.p`
+  color: #f66666;
   font-size: 1.8rem;
-  margin: 2vh 0;
+  cursor: pointer;
+  transition: all .3s;
 
-  & img {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 10px;
+  &:hover {
+    color: #ff0000;
   }
 `;
 
 const BoardSettings = () => {
 	const {boardId} = useParams();
-	const board = useSelector(state => state.board.filter(cur => cur.id === boardId)[0]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const board = useSelector(getBoard(boardId));
 
 	const goBack = () => {
 		if (board.title.length === 0 && board.lists.length === 0 && board.users.length === 1) delBoard();
@@ -41,20 +39,17 @@ const BoardSettings = () => {
 
 	const delBoard = () => {
 		dispatch(deleteBoard(boardId));
+		dispatch(deleteCardsInBoard(boardId));
 		navigate("/");
 	};
 
 	return (
 		<Container>
-			<GoBack onClick={goBack}>
-				<img src={arrowBack} alt=""/>
-				Return to the board
-			</GoBack>
-
+			<GoBack onClick={goBack}>Return to the board</GoBack>
 			<Title titleChange={title => dispatch(changeBoardTitle(boardId, title))} title={board.title}/>
 			<Lists lists={board.lists} boardId={boardId}/>
 			<Users users={board.users} boardId={boardId}/>
-			<Delete deleteBoard={delBoard}/>
+			<Modal prompt="Are you sure you want to delete this board?" onContinue={delBoard}><DeleteText>Delete board</DeleteText></Modal>
 		</Container>
 	);
 };

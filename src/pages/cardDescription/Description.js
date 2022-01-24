@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-
 import {Container, SubTitle} from "./styles";
 
 const DescriptionInput = styled.textarea`
@@ -16,7 +15,9 @@ const DescriptionInput = styled.textarea`
   resize: none;
 `;
 
-const Description = ({description, onChange}) => {
+const Description = ({description, commitChanges}) => {
+	const onChange = e => commitChanges({description: e.target.value});
+
 	return (
 		<Container>
 			<SubTitle>Description</SubTitle>

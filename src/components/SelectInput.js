@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-
 import dropDown from "../assets/svg/arrow_drop_down.svg";
 
 const SelectContainer = styled.div`
@@ -17,7 +16,7 @@ const StyledSelect = styled.select`
   background: none;
   cursor: pointer;
   padding: 2px 16px 2px 4px;
-  font-size: ${props => props.fontSize || "1.6rem"};
+  font-size: 1.6rem;
 `;
 
 const Icon = styled.img`

@@ -15,7 +15,17 @@ export const changeCard = (boardId, cardId, changes) => ({
 	payload: {boardId, id: cardId, changes},
 });
 
+export const deleteCard = (boardId, id) => ({
+	type: types.deleteCard,
+	payload: {boardId, id},
+});
+
 export const deleteCardsInList = (boardId, listId) => ({
 	type: types.deleteCardsInList,
 	payload: {boardId, listId},
+});
+
+export const deleteCardsInBoard = boardId => ({
+	type: types.deleteCardsInBoard,
+	payload: {boardId},
 });

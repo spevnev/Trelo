@@ -47,12 +47,12 @@ const User = styled.img`
   margin-right: 5px;
 `;
 
-const Assigned = ({assigned, users, addAssigned}) => {
+const Assigned = ({assigned, users, commitChanges}) => {
 	const [msg, setMsg] = useState(null);
 
 	const addUser = username => {
 		const user = users.filter(cur => cur.username === username);
-		if (user.length === 1) return addAssigned(user);
+		if (user.length === 1) return commitChanges({assigned: [...assigned, user[0]]});
 
 		setMsg("There is no user with that name in this project!");
 		setTimeout(() => setMsg(null), 1000);

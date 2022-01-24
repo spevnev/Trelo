@@ -1,9 +1,7 @@
 import React, {useRef} from "react";
 import styled from "styled-components";
-
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
-
 import {Container, SubTitle} from "./styles";
 
 const FileContainer = styled.div`
@@ -91,7 +89,7 @@ const BlockContainer = styled.div`
   flex-direction: column;
 `;
 
-const Files = ({files, dispatchAddFile, delFile}) => {
+const Files = ({files, commitChanges}) => {
 	const addFile = (filename, data) => {
 		while (files.filter(file => file.filename === filename).length > 0) {
 			const parts = filename.split(".");
@@ -100,8 +98,10 @@ const Files = ({files, dispatchAddFile, delFile}) => {
 			filename = parts.join(".");
 		}
 
-		dispatchAddFile(filename, data);
+		commitChanges({files: [...files, {filename, data}]});
 	};
+
+	const delFile = filename => commitChanges({files: files.filter(cur => cur.filename !== filename)});
 
 	return (
 		<Container>
