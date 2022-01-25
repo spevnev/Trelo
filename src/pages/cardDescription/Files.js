@@ -1,8 +1,11 @@
-import React, {useRef} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
+import HiddenInput from "../../components/HiddenInput";
+import ErrorMessage from "../../components/ErrorMessage";
+import {v4 as uuid} from "uuid";
 
 const FileContainer = styled.div`
   display: flex;
@@ -10,7 +13,7 @@ const FileContainer = styled.div`
   align-items: center;
   margin: 5px 0;
 
-  & p {
+  & ${HiddenInput} {
     font-size: 2rem;
     margin-right: 20px;
   }
@@ -23,18 +26,30 @@ const Icon = styled.img`
   margin-right: 5px;
 `;
 
-const File = ({filename, delFile}) => {
+const File = ({filename, delFile, renameFile}) => {
+	const [msg, setMsg] = useState(null);
+
 	const downloadFile = e => {
 	};
 
 	const deleteFile = () => delFile(filename);
 
+	const rename = e => {
+		if (e.target.value.length === 0) setMsg("File name can't be empty!");
+		else setMsg(null);
+
+		renameFile(filename, e.target.value);
+	};
+
 	return (
-		<FileContainer>
-			<p>{filename}</p>
-			<Icon src={download} onClick={downloadFile}/>
-			<Icon src={cross} onClick={deleteFile}/>
-		</FileContainer>
+		<>
+			<FileContainer>
+				<HiddenInput placeholder="File name" onChange={rename} value={filename}/>
+				<Icon src={download} onClick={downloadFile}/>
+				<Icon src={cross} onClick={deleteFile}/>
+			</FileContainer>
+			<ErrorMessage>{msg}</ErrorMessage>
+		</>
 	);
 };
 
@@ -98,16 +113,18 @@ const Files = ({files, commitChanges}) => {
 			filename = parts.join(".");
 		}
 
-		commitChanges({files: [...files, {filename, data}]});
+		commitChanges({files: [...files, {filename, data, id: uuid()}]});
 	};
 
 	const delFile = filename => commitChanges({files: files.filter(cur => cur.filename !== filename)});
+
+	const renameFile = (filename, newFilename) => commitChanges({files: files.map(cur => cur.filename === filename ? {...cur, filename: newFilename} : cur)});
 
 	return (
 		<Container>
 			<SubTitle>Attached files</SubTitle>
 			<BlockContainer>
-				{files.map(file => <File key={file.filename} filename={file.filename} delFile={delFile}/>)}
+				{files.map(file => <File key={file.id} filename={file.filename} renameFile={renameFile} delFile={delFile}/>)}
 				<FileInput addFile={addFile}/>
 			</BlockContainer>
 		</Container>

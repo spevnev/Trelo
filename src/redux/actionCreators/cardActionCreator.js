@@ -29,3 +29,8 @@ export const deleteCardsInBoard = boardId => ({
 	type: types.deleteCardsInBoard,
 	payload: {boardId},
 });
+
+export const deleteAssignedInCards = (boardId, username) => ({
+	type: types.deleteAssignedInCards,
+	payload: {boardId, username},
+});

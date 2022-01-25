@@ -25,6 +25,7 @@ const CardDescription = () => {
 	const navigate = useNavigate();
 	const card = useSelector(getCard(boardId, cardId));
 	const users = useSelector(getBoard(boardId)).users;
+	const lists = useSelector(getBoard(boardId)).lists;
 
 	const goBack = () => {
 		if (isCardEmpty(card))
@@ -47,7 +48,7 @@ const CardDescription = () => {
 	return (
 		<Container>
 			<GoBack onClick={goBack}>Return to the board</GoBack>
-			<Title title={card.title} commitChanges={commitChanges}/>
+			<Title lists={lists} listId={card.listId} title={card.title} commitChanges={commitChanges}/>
 			<Assigned assigned={card.assigned} users={users} commitChanges={commitChanges}/>
 			<Description description={card.description} commitChanges={commitChanges}/>
 			<Images images={card.images} commitChanges={commitChanges}/>
