@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import ErrorMessage from "../../components/ErrorMessage";
 import {Container, SubTitle} from "./styles";
+import trashCursor from "../../assets/cursor.cur";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 
@@ -45,6 +46,12 @@ const User = styled.img`
   height: 3rem;
   border-radius: 50%;
   margin-right: 5px;
+  cursor: url(${trashCursor}), pointer;
+  transition: all .3s;
+
+  &:hover {
+    filter: brightness(90%);
+  }
 `;
 
 const Assigned = ({assigned, users, commitChanges}) => {
@@ -58,11 +65,15 @@ const Assigned = ({assigned, users, commitChanges}) => {
 		setTimeout(() => setMsg(null), 1000);
 	};
 
+	const deleteUser = username => {
+		commitChanges({assigned: assigned.filter(cur => cur.username !== username)});
+	};
+
 	return (
 		<Container>
 			<SubTitle>Assigned</SubTitle>
 			<div>
-				{assigned.map(user => <User src={user.icon} key={user.username} title={user.username}/>)}
+				{assigned.map(user => <User onClick={() => deleteUser(user.username)} src={user.icon} key={user.username} title={user.username}/>)}
 			</div>
 			<ErrorMessage>{msg}</ErrorMessage>
 			<AddUser addUser={addUser}/>

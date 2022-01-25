@@ -25,11 +25,11 @@ const Icon = styled.img`
   right: -4px;
 `;
 
-const SelectInput = ({initial, options, onSelect}) => {
+const SelectInput = ({initial, options, onSelect, className}) => {
 	const onChange = e => onSelect(e.target.value);
 
 	return (
-		<SelectContainer>
+		<SelectContainer className={className}>
 			<StyledSelect onChange={onChange}>
 				<option value={initial.value}>{initial.text}</option>
 				{options.map(cur =>

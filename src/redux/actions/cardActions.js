@@ -5,4 +5,5 @@ export default {
 	deleteCard: "DELETE_CARD",
 	deleteCardsInList: "DELETE_CARDS_LIST",
 	deleteCardsInBoard: "DELETE_CARDS_BOARD",
+	deleteAssignedInCards: "DELETE_CARDS_ASSIGNED",
 };

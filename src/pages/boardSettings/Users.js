@@ -6,6 +6,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
 import {Cancel, SubContainer, SubTitle} from "./styles";
+import {deleteAssignedInCards} from "../../redux/actionCreators/cardActionCreator";
 
 const UserContainer = styled.div`
   display: flex;
@@ -71,7 +72,11 @@ const Users = ({users, boardId}) => {
 	const dispatch = useDispatch();
 
 	const changeRole = (username, role) => dispatch(changeUserRole(boardId, username, role === "owner"));
-	const delUser = (username) => dispatch(deleteUser(boardId, username));
+
+	const delUser = (username) => {
+		dispatch(deleteUser(boardId, username));
+		dispatch(deleteAssignedInCards(boardId, username));
+	};
 
 	const newUser = () => {
 		setNewUsername("");
