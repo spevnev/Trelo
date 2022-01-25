@@ -5,6 +5,7 @@ import {v4 as uuid} from "uuid";
 import Card from "./Card";
 import {useNavigate} from "react-router";
 import {addCard} from "../../redux/actionCreators/cardActionCreator";
+import {Droppable} from "react-beautiful-dnd";
 
 const Title = styled.p`
   font-size: 2rem;
@@ -17,7 +18,6 @@ const ListContainer = styled.div`
   margin-right: 3rem;
   padding: 8px 12px;
   border-radius: 5px;
-  height: 100%;
 `;
 
 const AddCard = styled.p`
@@ -37,13 +37,18 @@ const List = ({title, cards, boardId, id}) => {
 	};
 
 	return (
-		<ListContainer>
-			<Title>{title}</Title>
-
-			{cards && cards.map(card => <Card key={card.id} {...card}/>)}
-
-			<AddCard onClick={newCard}>+ Add card</AddCard>
-		</ListContainer>
+		<Droppable droppableId={id}>
+			{provided => (
+				<div ref={provided.innerRef} {...provided.droppableProps}>
+					<ListContainer>
+						<Title>{title}</Title>
+						{cards && cards.map((card, i) => <Card key={card.id} i={i} {...card}/>)}
+						{provided.placeholder}
+						<AddCard onClick={newCard}>+ Add card</AddCard>
+					</ListContainer>
+				</div>
+			)}
+		</Droppable>
 	);
 };
 

@@ -6,6 +6,7 @@ import imageIcon from "../../assets/svg/image.svg";
 import imagesIcon from "../../assets/svg/images.svg";
 import fileIcon from "../../assets/svg/file-empty.svg";
 import filesIcon from "../../assets/svg/files-empty.svg";
+import {Draggable} from "react-beautiful-dnd";
 
 const CardContainer = styled.div`
   margin-bottom: 10px;
@@ -37,27 +38,32 @@ const UserIcon = styled.img`
   border-radius: 50%;
   margin-left: 2px;
 `;
-
-const Card = ({title, id, description, images, files}) => {
+const Card = ({title, id, description, images, files, i}) => {
 	const navigate = useNavigate();
 	const openCard = () => navigate(`${id}`);
 
 	return (
-		<CardContainer onClick={openCard}>
-			<p>{title}</p>
+		<Draggable draggableId={id} index={i}>
+			{provided => (
+				<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+					<CardContainer onClick={openCard}>
+						<p>{title}</p>
 
-			<SubContainer>
-				<div>
-					{description.length > 0 && <Icon src={textIcon}/>}
-					{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
-					{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
-				</div>
+						<SubContainer>
+							<div>
+								{description.length > 0 && <Icon src={textIcon}/>}
+								{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
+								{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
+							</div>
 
-				<div>
-					<UserIcon src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
+							<div>
+								<UserIcon src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
+							</div>
+						</SubContainer>
+					</CardContainer>
 				</div>
-			</SubContainer>
-		</CardContainer>
+			)}
+		</Draggable>
 	);
 };
 
