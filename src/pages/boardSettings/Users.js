@@ -38,7 +38,7 @@ const UserIcon = styled.img`
   margin: .5rem 0;
 `;
 
-const editor = {value: "editor", text: "Editor"};
+const user = {value: "user", text: "User"};
 const owner = {value: "owner", text: "Owner"};
 const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => {
 	return (
@@ -48,7 +48,7 @@ const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => {
 				<p>{username}</p>
 			</div>
 			<div>
-				<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : editor} options={isOwner ? [editor] : [owner]}/>
+				<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : user} options={isOwner ? [user] : [owner]}/>
 				<Cancel onClick={() => deleteUser(username)}>&#x2716;</Cancel>
 			</div>
 		</UserContainer>

@@ -5,11 +5,17 @@ import Input from "../../components/Input";
 import ErrorMessage from "../../components/ErrorMessage";
 
 const LoginForm = () => {
-	const [error, setError] = useState();
+	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: ""});
 
-	const submit = () => {
+	const error = text => {
+		setMsg(text);
+		setTimeout(() => setMsg(null), 3000);
+	};
 
+	const submit = () => {
+		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
+		if (formState.password.length < 8) return error("Password can't be less than 8 characters!");
 	};
 
 	return (
@@ -21,7 +27,7 @@ const LoginForm = () => {
 				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
 				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 
-				<ErrorMessage>{error}</ErrorMessage>
+				<ErrorMessage>{msg}</ErrorMessage>
 
 				<StyledButton onClick={submit}>Log in</StyledButton>
 			</Form>
