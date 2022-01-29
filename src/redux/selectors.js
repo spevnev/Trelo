@@ -1,7 +1,25 @@
 export const getBoards = () => state => state.board;
 
-export const getBoard = id => state => state.board.filter(cur => cur.id === id)[0];
+export const getBoard = id => state => {
+	const board = state.board.filter(cur => cur.id === id);
+	if (board.length !== 1) return null;
 
-export const getCards = id => state => state.card.filter(cur => cur.id === id)[0].cards;
+	return board[0];
+};
 
-export const getCard = (boardId, cardId) => state => state.card.filter(cur => cur.id === boardId)[0].cards.filter(cur => cur.id === cardId)[0];
+export const getCards = id => state => {
+	const cards = state.card.filter(cur => cur.id === id);
+	if (cards.length !== 1) return null;
+
+	return cards[0].cards;
+};
+
+export const getCard = (boardId, cardId) => state => {
+	const cards = getCards(boardId)(state);
+	if (cards === null) return null;
+
+	const card = cards.filter(cur => cur.id === cardId);
+	if (card.length !== 1) return null;
+
+	return card[0];
+};

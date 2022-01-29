@@ -1,8 +1,8 @@
 import types from "../actions/cardActions";
 
-export const addCardBoard = boardId => ({
+export const addCardBoard = (boardId, cards) => ({
 	type: types.addCardBoard,
-	payload: {boardId},
+	payload: {boardId, cards},
 });
 
 export const addCard = (boardId, listId, cardId) => ({

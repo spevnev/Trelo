@@ -1,4 +1,5 @@
 export default {
+	setStatus: "SET_STATUS",
 	addBoard: "ADD_BOARD",
 	deleteBoard: "DELETE_BOARD",
 	toggleFavourite: "TOGGLE_FAVOURITE",

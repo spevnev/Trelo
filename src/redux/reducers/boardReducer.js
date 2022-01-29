@@ -1,19 +1,14 @@
 import types from "../actions/boardActions";
 
-const CURRENT_USER = {username: "CURRENT USER", userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: true};
-const defaultState = [{
-	title: "Board 1", isFavourite: false, id: "1",
-	users: [{username: "Username 1", userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: true},
-		{username: "Username 2", userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: false}],
-	lists: [{title: "First list", id: "1"}, {title: "List", id: "2"}],
-}];
-
-const boardReducer = (state = defaultState, action) => {
+const boardReducer = (state = [], action) => {
 	const payload = action.payload;
 
 	switch (action.type) {
+		case types.setStatus:
+			return state.map(cur => cur.id === payload.id ? {...cur, status: payload.status} : cur);
+
 		case types.addBoard:
-			return [...state, {title: "", isFavourite: false, id: payload.id, lists: [], users: [CURRENT_USER]}];
+			return [...state, payload.board];
 		case types.deleteBoard:
 			return state.filter(cur => cur.id !== payload.id);
 		case types.toggleFavourite:

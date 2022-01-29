@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,6 +7,7 @@ import NavBar from "./NavBar";
 import {getBoard, getCards} from "../../redux/selectors";
 import {DragDropContext} from "react-beautiful-dnd";
 import {changeCard} from "../../redux/actionCreators/cardActionCreator";
+import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
 
 const Container = styled.div`
   display: flex;
@@ -25,12 +26,19 @@ const Board = () => {
 	const board = useSelector(getBoard(boardId));
 	const cards = useSelector(getCards(boardId));
 
+	useEffect(() => {
+		if (board === null) dispatch(fetchBoard(boardId));
+	}, []);
+
 	const onDragEnd = e => {
 		const cardId = e.draggableId;
 		const listId = e.destination.droppableId;
 
 		dispatch(changeCard(boardId, cardId, {listId}));
 	};
+
+	if (board === null || board.status === "LOADING")
+		return <h1>LOADING</h1>;
 
 	return (
 		<Container>

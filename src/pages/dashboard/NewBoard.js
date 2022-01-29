@@ -2,8 +2,7 @@ import styled from "styled-components";
 import {useNavigate} from "react-router";
 import {v4 as uuid} from "uuid";
 import {useDispatch} from "react-redux";
-import {addBoard} from "../../redux/actionCreators/boardActionCreator";
-import {addCardBoard} from "../../redux/actionCreators/cardActionCreator";
+import {newBoard} from "../../redux/actionCreators/boardActionCreator";
 import {BoardContainer} from "./styles";
 
 const CenteredText = styled.p`
@@ -17,9 +16,7 @@ const NewBoard = () => {
 
 	const openSettings = () => {
 		const boardId = uuid();
-
-		dispatch(addBoard(boardId));
-		dispatch(addCardBoard(boardId));
+		dispatch(newBoard(boardId));
 		navigate(`/board/${boardId}/settings`);
 	};
 
