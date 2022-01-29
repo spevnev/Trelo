@@ -1,10 +1,16 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Form, StyledButton, SubContainer, Text} from "./styles";
 import UserIcon from "./UserIcon";
 import Input from "../../components/Input";
 import ErrorMessage from "../../components/ErrorMessage";
+import {useDispatch} from "react-redux";
+import {signup} from "../../redux/actionCreators/userActionCreator";
+import {useNavigate} from "react-router";
 
+let timeout = null;
 const SignupForm = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: "", confirm: "", icon: ""});
 
@@ -12,16 +18,20 @@ const SignupForm = () => {
 
 	const error = text => {
 		setMsg(text);
-		setTimeout(() => setMsg(null), 3000);
+		timeout = setTimeout(() => setMsg(null), 3000);
 	};
 
 	const submit = () => {
 		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
-		if (formState.password.length < 8) return error("Password can't be less than 8 characters!");
+		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
 		if (formState.password != formState.confirm) return error("Passwords don't match!");
 		if (formState.icon.length === 0) return error("You must have icon!");
 
+		dispatch(signup(formState.username, formState.password, navigate, error));
 	};
+
+	// To clean up the timeout
+	useEffect(() => () => clearTimeout(timeout), []);
 
 	return (
 		<SubContainer colour="c0c0c0">

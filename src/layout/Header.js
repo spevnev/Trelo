@@ -2,6 +2,8 @@ import React from "react";
 import {useNavigate} from "react-router";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
+import {useSelector} from "react-redux";
+import {getUser} from "../redux/selectors";
 
 const HeaderContainer = styled.div`
   width: 100vw;
@@ -40,20 +42,19 @@ const UserIcon = styled.div`
 
 const Header = () => {
 	const navigate = useNavigate();
+	const user = useSelector(getUser()) || {username: "", userIcon: ""};
 
-	return (
-		<HeaderContainer>
+	return (<HeaderContainer>
 			<Container style={{cursor: "pointer"}} onClick={() => navigate("/")}>
 				<img src={logo} width="32px" height="32px" alt=""/>
 				<Title>Trelo</Title>
 			</Container>
 
 			<Container>
-				<Username>Username</Username>
-				<UserIcon image="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
+				<Username>{user.username}</Username>
+				<UserIcon image={user.userIcon}/>
 			</Container>
-		</HeaderContainer>
-	);
+		</HeaderContainer>);
 };
 
 export default Header;

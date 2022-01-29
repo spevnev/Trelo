@@ -1,5 +1,7 @@
 export const getBoards = () => state => state.board;
 
+export const getUser = () => state => state.user;
+
 export const getBoard = id => state => {
 	const board = state.board.filter(cur => cur.id === id);
 	if (board.length !== 1) return null;

@@ -25,11 +25,13 @@ export const addBoard = board => ({
 	payload: {board},
 });
 
-export const newBoard = id => (dispatch) => {
+export const newBoard = id => (dispatch, getState) => {
 	dispatch({
 		type: cardTypes.addCardBoard,
 		payload: {boardId: id, cards: []},
 	});
+
+	console.log(getState())
 
 	dispatch({
 		type: types.addBoard,
