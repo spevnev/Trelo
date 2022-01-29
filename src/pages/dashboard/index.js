@@ -18,7 +18,7 @@ const Dashboard = () => {
 
 	return (
 		<Boards>
-			{boards.map(cur => <Board key={cur.id} title={cur.title} id={cur.id} isFavourite={cur.isFavourite}/>)}
+			{boards.filter(cur => cur.status === "READY").map(cur => <Board key={cur.id} title={cur.title} id={cur.id} isFavourite={cur.isFavourite}/>)}
 			<NewBoard/>
 		</Boards>
 	);

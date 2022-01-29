@@ -1,6 +1,9 @@
-export const getBoard = axios => async (id) => {
+export const getBoard = axios => async id => {
 	const res = await axios.get(`http://localhost:3000/api/board/${id}`).catch(e => console.log("Error", e));
+	return res && res.status === 200 ? res.data : null;
+};
 
-	if (res.status === 200) return res.data;
-	return null;
+export const deleteBoard = axios => async id => {
+	const res = await axios.delete(`http://localhost:3000/api/board/${id}`).catch(e => console.log("Error", e));
+	return res && res.status === 200;
 };

@@ -37,8 +37,11 @@ const Board = () => {
 		dispatch(changeCard(boardId, cardId, {listId}));
 	};
 
-	if (board === null || board.status === "LOADING")
-		return <h1>LOADING</h1>;
+	if (!board || board.status === "LOADING")
+		return <h1>Loading...</h1>;
+
+	if (board.status === "ERROR")
+		return <h1>Error</h1>;
 
 	return (
 		<Container>

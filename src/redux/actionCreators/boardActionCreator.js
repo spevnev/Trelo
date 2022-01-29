@@ -9,12 +9,14 @@ const setStatus = (id, status) => ({
 });
 
 export const fetchBoard = id => async (dispatch, getState, {board, card}) => {
-	dispatch(setStatus(id, "LOADING"));
+	dispatch(addBoard({id, status: "LOADING"}));
 
-	dispatch(addCardBoard(id, (await card.getCards(id)).cards));
-	dispatch(addBoard(await board.getBoard(id)));
+	const cards = (await card.getCards(id));
+	const brd = await board.getBoard(id);
+	if (brd === null || cards === null) return dispatch(setStatus(id, "ERROR"));
 
-	dispatch(setStatus(id, "READY"));
+	dispatch(addCardBoard(id, cards.cards));
+	dispatch(addBoard({...brd, status: "READY"}));
 };
 
 // Board
@@ -33,9 +35,9 @@ export const newBoard = id => (dispatch) => {
 		type: types.addBoard,
 		payload: {
 			id,
-			status: "READY",
 			board: {
 				title: "",
+				status: "READY",
 				isFavourite: false,
 				id,
 				lists: [],
@@ -45,10 +47,14 @@ export const newBoard = id => (dispatch) => {
 	});
 };
 
-export const deleteBoard = (id) => ({
-	type: types.deleteBoard,
-	payload: {id},
-});
+export const deleteBoard = (id) => async (dispatch, getState, {board}) => {
+	const res = await board.deleteBoard(id);
+
+	dispatch({
+		type: types.deleteBoard,
+		payload: {id},
+	});
+};
 
 export const toggleFavouriteBoard = (id, isFavourite) => ({
 	type: types.toggleFavourite,

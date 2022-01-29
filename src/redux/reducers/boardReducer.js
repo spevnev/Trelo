@@ -8,7 +8,10 @@ const boardReducer = (state = [], action) => {
 			return state.map(cur => cur.id === payload.id ? {...cur, status: payload.status} : cur);
 
 		case types.addBoard:
-			return [...state, payload.board];
+			const l = state.filter(cur => cur.id === payload.board.id).length;
+			if (l === 0) return [...state, payload.board];
+
+			return state.map(cur => cur.id === payload.board.id ? payload.board : cur);
 		case types.deleteBoard:
 			return state.filter(cur => cur.id !== payload.id);
 		case types.toggleFavourite:
