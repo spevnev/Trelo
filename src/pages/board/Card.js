@@ -38,31 +38,30 @@ const UserIcon = styled.img`
   border-radius: 50%;
   margin-left: 2px;
 `;
-const Card = ({title, id, description, images, files, i}) => {
+
+const Card = ({title, id, description, images, assigned, files, i}) => {
 	const navigate = useNavigate();
 	const openCard = () => navigate(`${id}`);
 
 	return (
 		<Draggable draggableId={id} index={i}>
-			{provided => (
-				<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-					<CardContainer onClick={openCard}>
-						<p>{title}</p>
+			{provided => (<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+				<CardContainer onClick={openCard}>
+					<p>{title}</p>
 
-						<SubContainer>
-							<div>
-								{description.length > 0 && <Icon src={textIcon}/>}
-								{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
-								{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
-							</div>
+					<SubContainer>
+						<div>
+							{description.length > 0 && <Icon src={textIcon}/>}
+							{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
+							{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
+						</div>
 
-							<div>
-								<UserIcon src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png"/>
-							</div>
-						</SubContainer>
-					</CardContainer>
-				</div>
-			)}
+						<div>
+							{assigned.map(cur => <UserIcon key={cur.username} title={cur.username} src={cur.userIcon}/>)}
+						</div>
+					</SubContainer>
+				</CardContainer>
+			</div>)}
 		</Draggable>
 	);
 };

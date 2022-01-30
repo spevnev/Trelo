@@ -18,7 +18,7 @@ const Icon = styled.label`
   }
 `;
 
-const UserIcon = ({icon, setIcon}) => {
+const UserIcon = ({icon, setIcon, error}) => {
 	const input = useRef(null);
 
 	const preventDefault = e => e.preventDefault();
@@ -33,6 +33,8 @@ const UserIcon = ({icon, setIcon}) => {
 		const file = e.target.files[0];
 
 		if (file) {
+			if (file.size > 1024 * 1024) return error("Image is too big! Max size - 1 MB.");
+
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
 			reader.onload = () => {

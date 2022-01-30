@@ -44,17 +44,22 @@ const Header = () => {
 	const navigate = useNavigate();
 	const user = useSelector(getUser()) || {username: "", userIcon: ""};
 
-	return (<HeaderContainer>
-			<Container style={{cursor: "pointer"}} onClick={() => navigate("/")}>
-				<img src={logo} width="32px" height="32px" alt=""/>
-				<Title>Trelo</Title>
-			</Container>
+	const logout = () => {
+		localStorage.removeItem("JWT");
+		window.location.reload();
+	};
 
-			<Container>
-				<Username>{user.username}</Username>
-				<UserIcon image={user.userIcon}/>
-			</Container>
-		</HeaderContainer>);
+	return (<HeaderContainer>
+		<Container style={{cursor: "pointer"}} onClick={() => navigate("/")}>
+			<img src={logo} width="32px" height="32px" alt=""/>
+			<Title>Trelo</Title>
+		</Container>
+
+		<Container>
+			<Username>{user.username}</Username>
+			<UserIcon onClick={logout} image={user.userIcon}/>
+		</Container>
+	</HeaderContainer>);
 };
 
 export default Header;

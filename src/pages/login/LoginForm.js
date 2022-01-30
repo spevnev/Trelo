@@ -4,12 +4,10 @@ import Input from "../../components/Input";
 import ErrorMessage from "../../components/ErrorMessage";
 import {useDispatch} from "react-redux";
 import {login} from "../../redux/actionCreators/userActionCreator";
-import {useNavigate} from "react-router";
 
 let timeout = null;
 const LoginForm = () => {
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: ""});
 
@@ -22,26 +20,25 @@ const LoginForm = () => {
 		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
 		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
 
-		dispatch(login(formState.username, formState.password, navigate));
+		dispatch(login(formState.username, formState.password, error));
 	};
-
 
 	// To clean up the timeout
 	useEffect(() => () => clearTimeout(timeout), []);
 
 	return (<SubContainer colour="f0f0f0">
-			<Text>Log in</Text>
-			<Text secondary>Already signed up?</Text>
+		<Text>Log in</Text>
+		<Text secondary>Already signed up?</Text>
 
-			<Form>
-				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
-				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
+		<Form>
+			<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
+			<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 
-				<ErrorMessage>{msg}</ErrorMessage>
+			<ErrorMessage>{msg}</ErrorMessage>
 
-				<StyledButton onClick={submit}>Log in</StyledButton>
-			</Form>
-		</SubContainer>);
+			<StyledButton onClick={submit}>Log in</StyledButton>
+		</Form>
+	</SubContainer>);
 };
 
 export default LoginForm;

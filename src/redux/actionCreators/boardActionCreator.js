@@ -31,20 +31,12 @@ export const newBoard = id => (dispatch, getState) => {
 		payload: {boardId: id, cards: []},
 	});
 
-	console.log(getState())
-
+	const curUser = {...getState().user, isOwner: true};
 	dispatch({
 		type: types.addBoard,
 		payload: {
 			id,
-			board: {
-				title: "",
-				status: "READY",
-				isFavourite: false,
-				id,
-				lists: [],
-				users: [{username: "CURRENT_USER", userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: true}],
-			},
+			board: {title: "", status: "READY", isFavourite: false, id, lists: [], users: [curUser]},
 		},
 	});
 };
