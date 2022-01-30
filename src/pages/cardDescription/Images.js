@@ -5,7 +5,7 @@ import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
 
 const Block = styled.div`
-  width: 20rem;
+  min-width: 20rem;
   height: 10rem;
   margin-right: 2rem;
   cursor: pointer;
@@ -136,6 +136,7 @@ const BlockContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex-wrap: wrap;
 `;
 
 const Images = ({images, commitChanges}) => {

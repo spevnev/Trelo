@@ -13,7 +13,7 @@ const UserContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 40rem;
+  max-width: 35rem;
 
   & p {
     font-size: 1.8rem;
@@ -59,11 +59,13 @@ const NewUser = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 40rem;
+  max-width: 35rem;
+  width: 95vw;
   margin-top: 10px;
 
   & ${Input} {
-    width: 30rem;
+    max-width: 25rem;
+    width: 70vw;
   }
 `;
 

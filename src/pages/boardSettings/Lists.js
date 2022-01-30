@@ -14,8 +14,9 @@ const ListElContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 40rem;
-
+  max-width: 35rem;
+  width: 95vw;
+  
   & ${HiddenInput} {
     font-size: 2rem;
   }
@@ -36,10 +37,12 @@ const NewList = styled.div`
   align-items: center;
   margin-top: 10px;
   justify-content: space-between;
-  width: 40rem;
+  max-width: 35rem;
+  width: 95vw;
 
   & ${Input} {
-    width: 30rem;
+    max-width: 25rem;
+    width: 70vw;
   }
 `;
 

@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 export const SubContainer = styled.div`
   width: 50%;
   height: 100%;
-  padding: 2vh 2vw;
+  padding: 1.5rem 2rem;
   background: ${props => `#${props.colour}`};
   display: flex;
   flex-direction: column;
