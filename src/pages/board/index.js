@@ -8,6 +8,8 @@ import {getBoard, getCards} from "../../redux/selectors";
 import {DragDropContext} from "react-beautiful-dnd";
 import {changeCard} from "../../redux/actionCreators/cardActionCreator";
 import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
+import PageLoading from "../../components/PageLoading";
+import PageError from "../../components/PageError";
 
 const Container = styled.div`
   display: flex;
@@ -38,10 +40,10 @@ const Board = () => {
 	};
 
 	if (!board || board.status === "LOADING")
-		return <h1>Loading...</h1>;
+		return <PageLoading/>;
 
 	if (board.status === "ERROR")
-		return <h1>Error</h1>;
+		return <PageError>This board doesn't exist or you aren't a member of it!</PageError>;
 
 	return (
 		<Container>

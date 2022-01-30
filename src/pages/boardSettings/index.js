@@ -10,6 +10,8 @@ import Modal from "../../components/Modal";
 import GoBack from "../../components/GoBack";
 import {deleteCardsInBoard} from "../../redux/actionCreators/cardActionCreator";
 import {getBoard} from "../../redux/selectors";
+import PageError from "../../components/PageError";
+import PageLoading from "../../components/PageLoading";
 
 const Container = styled.div`
   margin: 0 2vw;
@@ -42,6 +44,12 @@ const BoardSettings = () => {
 		dispatch(deleteCardsInBoard(boardId));
 		navigate("/");
 	};
+
+	if (!board || board.status === "ERROR")
+		return <PageError>This board doesn't exist........</PageError>;
+
+	if (board.status === "LOADING")
+		return <PageLoading/>;
 
 	return (
 		<Container>

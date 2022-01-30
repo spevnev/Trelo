@@ -11,6 +11,7 @@ import Files from "./Files";
 import GoBack from "../../components/GoBack";
 import Modal from "../../components/Modal";
 import {getBoard, getCard} from "../../redux/selectors";
+import PageError from "../../components/PageError";
 
 const Container = styled.div`
   margin: 0 2vw;
@@ -24,8 +25,7 @@ const CardDescription = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const card = useSelector(getCard(boardId, cardId));
-	const users = useSelector(getBoard(boardId)).users;
-	const lists = useSelector(getBoard(boardId)).lists;
+	const board = useSelector(getBoard(boardId));
 
 	const goBack = () => {
 		if (isCardEmpty(card))
@@ -41,9 +41,14 @@ const CardDescription = () => {
 		navigate("../");
 	};
 
-	const cancel = () => setOpen(false);
-
 	const commitChanges = changes => dispatch(changeCard(boardId, cardId, changes));
+
+
+	if (!board || board.status !== "READY")
+		return <PageError>This card doesn't exist!</PageError>;
+
+	const users = board.users;
+	const lists = board.lists;
 
 	return (
 		<Container>
@@ -53,7 +58,7 @@ const CardDescription = () => {
 			<Description description={card.description} commitChanges={commitChanges}/>
 			<Images images={card.images} commitChanges={commitChanges}/>
 			<Files files={card.files} commitChanges={commitChanges}/>
-			<Modal onCancel={cancel} onContinue={delCard} isOpenProp={isOpen} prompt="Title can't be empty! Do you want to delete this card?"/>
+			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenProp={isOpen} prompt="Title can't be empty! Do you want to delete this card?"/>
 		</Container>
 	);
 };
