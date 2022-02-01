@@ -6,10 +6,10 @@ import List from "./List";
 import NavBar from "./NavBar";
 import {getBoard, getCards} from "../../redux/selectors";
 import {DragDropContext} from "react-beautiful-dnd";
-import {changeCard} from "../../redux/actionCreators/cardActionCreator";
 import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
 import PageLoading from "../../components/PageLoading";
 import PageError from "../../components/PageError";
+import {reorderCard} from "../../redux/actionCreators/cardActionCreator";
 
 const Container = styled.div`
   display: flex;
@@ -36,7 +36,7 @@ const Board = () => {
 		const cardId = e.draggableId;
 		const listId = e.destination.droppableId;
 
-		dispatch(changeCard(boardId, cardId, {listId}));
+		dispatch(reorderCard(boardId, cardId, listId));
 	};
 
 	if (!board || board.status === "LOADING")

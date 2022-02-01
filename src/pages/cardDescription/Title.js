@@ -3,6 +3,8 @@ import HiddenInput from "../../components/HiddenInput";
 import {Container, SubTitle} from "./styles";
 import SelectInput from "../../components/SelectInput";
 import styled from "styled-components";
+import {useDispatch} from "react-redux";
+import {changeCardTitle, reorderCard} from "../../redux/actionCreators/cardActionCreator";
 
 const Select = styled(SelectInput)`
   border: none;
@@ -12,10 +14,12 @@ const Select = styled(SelectInput)`
   width: fit-content;
 `;
 
-const Title = ({lists, listId, title, commitChanges}) => {
-	const onChange = e => commitChanges({title: e.target.value});
+const Title = ({lists, listId, title, ids}) => {
+	const dispatch = useDispatch();
 
-	const onSelect = listId => commitChanges({listId});
+	const onChange = e => dispatch(changeCardTitle(...ids, e.target.value));
+
+	const onSelect = listId => dispatch(reorderCard(...ids, listId));
 
 	const curList = lists.filter(cur => cur.id === listId)[0];
 	const otherLists = lists.filter(cur => cur.id !== listId);

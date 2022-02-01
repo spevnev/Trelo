@@ -3,6 +3,8 @@ import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
+import {useDispatch} from "react-redux";
+import {addCardImage, deleteCardImage} from "../../redux/actionCreators/cardActionCreator";
 
 const Block = styled.div`
   min-width: 20rem;
@@ -139,14 +141,15 @@ const BlockContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const Images = ({images, commitChanges}) => {
+const Images = ({images, ids}) => {
+	const dispatch = useDispatch();
 	const [fullImg, setFullImg] = useState(null);
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
-	const addImage = src => commitChanges({images: [...images, src]});
+	const addImage = src => dispatch(addCardImage(...ids, src));
 
-	const delImage = src => commitChanges({images: images.filter(cur => cur !== src)});
+	const delImage = src => dispatch(deleteCardImage(...ids, src));
 
 	return (
 		<Container>

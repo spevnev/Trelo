@@ -41,8 +41,9 @@ export const newBoard = id => (dispatch, getState) => {
 	});
 };
 
-export const deleteBoard = (id) => async (dispatch, getState, {board}) => {
+export const deleteBoard = id => async (dispatch, getState, {board}) => {
 	const res = await board.deleteBoard(id);
+	if (!res) return;
 
 	dispatch({
 		type: types.deleteBoard,

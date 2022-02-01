@@ -6,14 +6,13 @@ const boardReducer = (state = [], action) => {
 	switch (action.type) {
 		case types.setStatus:
 			return state.map(cur => cur.id === payload.id ? {...cur, status: payload.status} : cur);
-
 		case types.addBoard:
 			const l = state.filter(cur => cur.id === payload.board.id).length;
 			if (l === 0) return [...state, payload.board];
-
 			return state.map(cur => cur.id === payload.board.id ? payload.board : cur);
 		case types.deleteBoard:
 			return state.filter(cur => cur.id !== payload.id);
+
 		case types.toggleFavourite:
 			return state.map(cur => cur.id === payload.id ? {...cur, isFavourite: payload.isFavourite} : cur);
 		case types.changeTitle:
@@ -35,6 +34,8 @@ const boardReducer = (state = [], action) => {
 				...cur,
 				users: cur.users.map(cur => cur.username === payload.username ? {...cur, isOwner: payload.isOwner} : cur),
 			} : cur);
+		case types.changeUser:
+			return state.map(cur => cur.id = payload.id ? {...cur, users: payload.users} : cur);
 
 		default:
 			return state;

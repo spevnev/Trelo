@@ -5,6 +5,8 @@ import {Container, SubTitle} from "./styles";
 import trashCursor from "../../assets/cursor.cur";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import {useDispatch} from "react-redux";
+import {addCardAssigned, deleteCardAssigned} from "../../redux/actionCreators/cardActionCreator";
 
 const AddUserContainer = styled.div`
   display: flex;
@@ -33,12 +35,10 @@ const AddUser = ({addUser}) => {
 		setName("");
 	};
 
-	return (
-		<AddUserContainer>
+	return (<AddUserContainer>
 			<Input placeholder="Username" maxLength={20} onChange={onChange} value={name}/>
 			<Button onClick={newUser}>Add</Button>
-		</AddUserContainer>
-	);
+		</AddUserContainer>);
 };
 
 const User = styled.img`
@@ -54,31 +54,28 @@ const User = styled.img`
   }
 `;
 
-const Assigned = ({assigned, users, commitChanges}) => {
+const Assigned = ({assigned, users, ids}) => {
+	const dispatch = useDispatch();
 	const [msg, setMsg] = useState(null);
 
 	const addUser = username => {
 		const user = users.filter(cur => cur.username === username);
-		if (user.length === 1) return commitChanges({assigned: [...assigned, user[0]]});
+		if (user.length === 1) return dispatch(addCardAssigned(...ids, user[0]));
 
 		setMsg("There is no user with that name in this project!");
 		setTimeout(() => setMsg(null), 1000);
 	};
 
-	const deleteUser = username => {
-		commitChanges({assigned: assigned.filter(cur => cur.username !== username)});
-	};
+	const deleteUser = username => dispatch(deleteCardAssigned(...ids, username));
 
-	return (
-		<Container>
+	return (<Container>
 			<SubTitle>Assigned</SubTitle>
 			<div>
 				{assigned.map(user => <User onClick={() => deleteUser(user.username)} src={user.icon} key={user.username} title={user.username}/>)}
 			</div>
 			<ErrorMessage>{msg}</ErrorMessage>
 			<AddUser addUser={addUser}/>
-		</Container>
-	);
+		</Container>);
 };
 
 export default Assigned;
