@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteCard} from "../../redux/actionCreators/cardActionCreator";
+import {changeCard, deleteCard} from "../../redux/actionCreators/cardActionCreator";
 import Title from "./Title";
 import Assigned from "./Assigned";
 import Description from "./Description";
@@ -22,7 +22,6 @@ const isCardEmpty = card => card.title.length === 0 && card.description.length =
 const CardDescription = () => {
 	const [isOpen, setOpen] = useState(false);
 	const {boardId, cardId} = useParams();
-	const ids = [boardId, cardId];
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const card = useSelector(getCard(boardId, cardId));
@@ -42,6 +41,9 @@ const CardDescription = () => {
 		navigate("../");
 	};
 
+	const commitChanges = changes => dispatch(changeCard(boardId, cardId, changes));
+
+
 	if (!board || board.status !== "READY")
 		return <PageError>This card doesn't exist!</PageError>;
 
@@ -51,11 +53,11 @@ const CardDescription = () => {
 	return (
 		<Container>
 			<GoBack onClick={goBack}>Return to the board</GoBack>
-			<Title lists={lists} listId={card.listId} title={card.title} ids={ids}/>
-			<Assigned assigned={card.assigned} users={users} ids={ids}/>
-			<Description description={card.description} ids={ids}/>
-			<Images images={card.images} ids={ids}/>
-			<Files files={card.files} ids={ids}/>
+			<Title lists={lists} listId={card.listId} title={card.title} commitChanges={commitChanges}/>
+			<Assigned assigned={card.assigned} users={users} commitChanges={commitChanges}/>
+			<Description description={card.description} commitChanges={commitChanges}/>
+			<Images images={card.images} commitChanges={commitChanges}/>
+			<Files files={card.files} commitChanges={commitChanges}/>
 			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenProp={isOpen} prompt="Title can't be empty! Do you want to delete this card?"/>
 		</Container>
 	);

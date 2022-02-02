@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import {Container, SubTitle} from "./styles";
-import {useDispatch} from "react-redux";
-import {changeCardDescription} from "../../redux/actionCreators/cardActionCreator";
 
 const DescriptionInput = styled.textarea`
   background: #f4f4f4;
@@ -17,10 +15,8 @@ const DescriptionInput = styled.textarea`
   resize: none;
 `;
 
-const Description = ({description, ids}) => {
-	const dispatch = useDispatch();
-
-	const onChange = e => dispatch(changeCardDescription(...ids, e.target.value));
+const Description = ({description, commitChanges}) => {
+	const onChange = e => commitChanges({description: e.target.value});
 
 	return (
 		<Container>

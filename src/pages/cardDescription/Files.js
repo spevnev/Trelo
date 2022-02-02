@@ -6,8 +6,6 @@ import {Container, SubTitle} from "./styles";
 import HiddenInput from "../../components/HiddenInput";
 import ErrorMessage from "../../components/ErrorMessage";
 import {v4 as uuid} from "uuid";
-import {useDispatch} from "react-redux";
-import {addCardFile, deleteCardFile, renameCardFile} from "../../redux/actionCreators/cardActionCreator";
 
 const FileContainer = styled.div`
   display: flex;
@@ -106,9 +104,7 @@ const BlockContainer = styled.div`
   flex-direction: column;
 `;
 
-const Files = ({files, ids}) => {
-	const dispatch = useDispatch();
-
+const Files = ({files, commitChanges}) => {
 	const addFile = (filename, data) => {
 		while (files.filter(file => file.filename === filename).length > 0) {
 			const parts = filename.split(".");
@@ -117,12 +113,12 @@ const Files = ({files, ids}) => {
 			filename = parts.join(".");
 		}
 
-		dispatch(addCardFile(...ids, {filename, data, id: uuid()}));
+		commitChanges({files: [...files, {filename, data, id: uuid()}]});
 	};
 
-	const delFile = filename => dispatch(deleteCardFile(...ids, filename));
+	const delFile = filename => commitChanges({files: files.filter(cur => cur.filename !== filename)});
 
-	const renameFile = (filename, newFilename) => dispatch(renameCardFile(...ids, filename, newFilename));
+	const renameFile = (filename, newFilename) => commitChanges({files: files.map(cur => cur.filename === filename ? {...cur, filename: newFilename} : cur)});
 
 	return (
 		<Container>

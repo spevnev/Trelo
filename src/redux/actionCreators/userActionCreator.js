@@ -2,7 +2,6 @@ import types from "../actions/userActions";
 
 export const fetchUser = () => async (dispatch, getState, {user}) => {
 	const data = await user.fetchData();
-	if (!data) return;
 
 	dispatch({type: types.setUser, payload: {user: data}});
 };

@@ -45,17 +45,21 @@ const BoardSettings = () => {
 		navigate("/");
 	};
 
-	if (!board || board.status === "ERROR") return <PageError>This board doesn't exist........</PageError>;
+	if (!board || board.status === "ERROR")
+		return <PageError>This board doesn't exist........</PageError>;
 
-	if (board.status === "LOADING") return <PageLoading/>;
+	if (board.status === "LOADING")
+		return <PageLoading/>;
 
-	return (<Container>
-		<GoBack onClick={goBack}>Return to the board</GoBack>
-		<Title titleChange={title => dispatch(changeBoardTitle(boardId, title))} title={board.title}/>
-		<Lists lists={board.lists} boardId={boardId}/>
-		<Users users={board.users} boardId={boardId}/>
-		<Modal prompt="Are you sure you want to delete this board?" onContinue={delBoard}><DeleteText>Delete board</DeleteText></Modal>
-	</Container>);
+	return (
+		<Container>
+			<GoBack onClick={goBack}>Return to the board</GoBack>
+			<Title titleChange={title => dispatch(changeBoardTitle(boardId, title))} title={board.title}/>
+			<Lists lists={board.lists} boardId={boardId}/>
+			<Users users={board.users} boardId={boardId}/>
+			<Modal prompt="Are you sure you want to delete this board?" onContinue={delBoard}><DeleteText>Delete board</DeleteText></Modal>
+		</Container>
+	);
 };
 
 export default BoardSettings;
