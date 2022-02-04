@@ -6,6 +6,19 @@ import trashCursor from "../../assets/cursor.cur";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 
+const User = styled.img`
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  margin-right: 5px;
+  cursor: url(${trashCursor}), pointer;
+  transition: all .3s;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+`;
+
 const AddUserContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -23,39 +36,28 @@ const AddUserContainer = styled.div`
   }
 `;
 
+
 const AddUser = ({addUser}) => {
 	const [name, setName] = useState("");
 
-	const onChange = e => setName(e.target.value);
 
 	const newUser = () => {
 		addUser(name);
 		setName("");
 	};
 
+
 	return (
 		<AddUserContainer>
-			<Input placeholder="Username" maxLength={20} onChange={onChange} value={name}/>
+			<Input placeholder="Username" maxLength={20} onChange={e => setName(e.target.value)} value={name}/>
 			<Button onClick={newUser}>Add</Button>
 		</AddUserContainer>
 	);
 };
 
-const User = styled.img`
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  margin-right: 5px;
-  cursor: url(${trashCursor}), pointer;
-  transition: all .3s;
-
-  &:hover {
-    filter: brightness(90%);
-  }
-`;
-
 const Assigned = ({assigned, users, commitChanges}) => {
 	const [msg, setMsg] = useState(null);
+
 
 	const addUser = username => {
 		const user = users.filter(cur => cur.username === username);
@@ -65,16 +67,17 @@ const Assigned = ({assigned, users, commitChanges}) => {
 		setTimeout(() => setMsg(null), 1000);
 	};
 
-	const deleteUser = username => {
-		commitChanges({assigned: assigned.filter(cur => cur.username !== username)});
-	};
+	const deleteUser = username => commitChanges({assigned: assigned.filter(cur => cur.username !== username)});
+
 
 	return (
 		<Container>
 			<SubTitle>Assigned</SubTitle>
+
 			<div>
 				{assigned.map(user => <User onClick={() => deleteUser(user.username)} src={user.icon} key={user.username} title={user.username}/>)}
 			</div>
+
 			<ErrorMessage>{msg}</ErrorMessage>
 			<AddUser addUser={addUser}/>
 		</Container>

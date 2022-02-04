@@ -9,13 +9,6 @@ const Button = styled.button`
   border-radius: 5px;
   transition: all .3s;
 
-  ${props => props.primary ? `
-	background: #4040ff;
-	color: #fff;
-	` : `
-	background: #f0f0f0;
-	color: #000;
-  `}
   &:hover {
     filter: brightness(90%);
   }
@@ -23,6 +16,14 @@ const Button = styled.button`
   &:active {
     transform: translateY(1px);
   }
+
+  ${props => props.primary ? `
+	background: #4040ff;
+	color: #fff;
+	` : `
+	background: #f0f0f0;
+	color: #000;
+  `}
 `;
 
 export default Button;

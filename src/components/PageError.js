@@ -27,12 +27,11 @@ const Link = styled.p`
 const PageError = ({children}) => {
 	const navigate = useNavigate();
 
-	const goBack = () => navigate("/");
 
 	return (
 		<Centre>
 			<h1>{children}</h1>
-			<Link onClick={goBack}>Go back</Link>
+			<Link onClick={() => navigate("/")}>Go back</Link>
 		</Centre>
 	);
 };

@@ -17,13 +17,11 @@ const GoBackContainer = styled.div`
   }
 `;
 
-const GoBack = ({onClick, children}) => {
-	return (
-		<GoBackContainer onClick={onClick}>
-			<img src={arrowBack} alt=""/>
-			{children}
-		</GoBackContainer>
-	);
-};
+const GoBack = ({onClick, children}) => (
+	<GoBackContainer onClick={onClick}>
+		<img src={arrowBack} alt=""/>
+		{children}
+	</GoBackContainer>
+);
 
 export default GoBack;

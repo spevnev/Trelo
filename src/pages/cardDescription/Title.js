@@ -12,19 +12,17 @@ const Select = styled(SelectInput)`
   width: fit-content;
 `;
 
+
 const Title = ({lists, listId, title, commitChanges}) => {
-	const onChange = e => commitChanges({title: e.target.value});
-
-	const onSelect = listId => commitChanges({listId});
-
 	const curList = lists.filter(cur => cur.id === listId)[0];
 	const otherLists = lists.filter(cur => cur.id !== listId);
 
 	return (
 		<Container>
 			<SubTitle>Title</SubTitle>
-			<HiddenInput placeholder="Card title" onChange={onChange} value={title}/>
-			<Select onSelect={onSelect} initial={{text: curList.title, value: listId}} options={otherLists.map(cur => ({text: cur.title, value: cur.id}))}/>
+			<HiddenInput placeholder="Card title" onChange={e => commitChanges({title: e.target.value})} value={title}/>
+			<Select onSelect={listId => commitChanges({listId})} initial={{text: curList.title, value: listId}}
+					options={otherLists.map(cur => ({text: cur.title, value: cur.id}))}/>
 		</Container>
 	);
 };

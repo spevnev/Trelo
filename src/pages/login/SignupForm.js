@@ -12,7 +12,10 @@ const SignupForm = () => {
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: "", confirm: "", icon: ""});
 
-	const setIcon = (icon) => setFormState({...formState, icon});
+	useEffect(() => () => clearTimeout(timeout), []);
+
+
+	const setIcon = icon => setFormState({...formState, icon});
 
 	const error = text => {
 		setMsg(text);
@@ -28,10 +31,9 @@ const SignupForm = () => {
 		dispatch(signup(formState, error));
 	};
 
-	// To clean up the timeout
-	useEffect(() => () => clearTimeout(timeout), []);
 
-	return (<SubContainer colour="c0c0c0">
+	return (
+		<SubContainer colour="c0c0c0">
 			<Text>Sign up</Text>
 			<Text secondary>Don't have account yet?</Text>
 
@@ -46,7 +48,8 @@ const SignupForm = () => {
 
 				<StyledButton primary onClick={submit}>Sign up</StyledButton>
 			</Form>
-		</SubContainer>);
+		</SubContainer>
+	);
 };
 
 export default SignupForm;

@@ -46,14 +46,20 @@ const Close = styled.img`
   cursor: pointer;
 `;
 
-const Overlay = ({src, close}) => {
-	return (
-		<OverlayContainer>
-			<Close src={cross} onClick={close}/>
-			<OverlayImage src={src}/>
-		</OverlayContainer>
-	);
-};
+const AddImage = styled(Block)`
+  display: flex;
+  background: #eee;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;
+`;
+
+const BlockContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+`;
 
 const Icon = styled.img`
   width: 1.5rem;
@@ -77,6 +83,14 @@ const ImageContainer = styled(Block)`
   }
 `;
 
+
+const Overlay = ({src, close}) => (
+	<OverlayContainer>
+		<Close src={cross} onClick={close}/>
+		<OverlayImage src={src}/>
+	</OverlayContainer>
+);
+
 const Image = ({src, openFull, delImg}) => {
 	const deleteImage = e => {
 		e.stopPropagation();
@@ -95,16 +109,9 @@ const Image = ({src, openFull, delImg}) => {
 	);
 };
 
-const AddImage = styled(Block)`
-  display: flex;
-  background: #eee;
-  justify-content: center;
-  align-items: center;
-  font-size: 5rem;
-`;
-
 const ImageInput = ({addImage}) => {
 	const input = useRef(null);
+
 
 	const preventDefault = e => e.preventDefault();
 
@@ -124,6 +131,7 @@ const ImageInput = ({addImage}) => {
 		}
 	};
 
+
 	return (
 		<>
 			<input ref={input} style={{display: "none"}} accept="image/jpeg,image/png" id="uploadImage" type="file" onChange={onImage}/>
@@ -132,15 +140,9 @@ const ImageInput = ({addImage}) => {
 	);
 };
 
-const BlockContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: wrap;
-`;
-
 const Images = ({images, commitChanges}) => {
 	const [fullImg, setFullImg] = useState(null);
+
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
@@ -148,12 +150,16 @@ const Images = ({images, commitChanges}) => {
 
 	const delImage = src => commitChanges({images: images.filter(cur => cur !== src)});
 
+
 	return (
 		<Container>
-			<SubTitle>Attached images</SubTitle>
 			{fullImg && <Overlay src={fullImg} close={() => setFullImg(null)}/>}
+
+			<SubTitle>Attached images</SubTitle>
+
 			<BlockContainer>
 				{images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur} src={cur}/>)}
+
 				<ImageInput addImage={addImage}/>
 			</BlockContainer>
 		</Container>

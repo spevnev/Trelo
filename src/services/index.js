@@ -1,6 +1,6 @@
 import axios from "axios";
-import {deleteBoard, getBoard} from "./board";
-import {getCards} from "./cards";
+import {changeBoard, createBoard, deleteBoard, getBoard} from "./board";
+import {changeCard, getCards} from "./cards";
 import {fetchData, login, signup} from "./user";
 import {getToken} from "./jwt";
 
@@ -15,10 +15,9 @@ client.interceptors.request.use(req => {
 
 export default () => ({
 	board: {
-		getBoard: getBoard(client),
-		deleteBoard: deleteBoard(client),
+		getBoard: getBoard(client), deleteBoard: deleteBoard(client), changeBoard: changeBoard(client), createBoard: createBoard(client),
 	}, card: {
-		getCards: getCards(client),
+		getCards: getCards(client), changeCard: changeCard(client),
 	}, user: {
 		signup: signup(client), login: login(client), fetchData: fetchData(client),
 	},

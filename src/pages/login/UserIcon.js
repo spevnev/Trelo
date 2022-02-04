@@ -18,8 +18,10 @@ const Icon = styled.label`
   }
 `;
 
+
 const UserIcon = ({icon, setIcon, error}) => {
 	const input = useRef(null);
+
 
 	const preventDefault = e => e.preventDefault();
 
@@ -42,6 +44,7 @@ const UserIcon = ({icon, setIcon, error}) => {
 			};
 		}
 	};
+
 
 	return (
 		<>

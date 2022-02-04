@@ -43,10 +43,12 @@ const Modal = ({onContinue, onCancel, children, prompt, isOpenProp}) => {
 
 	useEffect(() => setIsOpen(isOpenProp), [isOpenProp]);
 
+
 	const cancel = () => {
 		setIsOpen(false);
 		onCancel();
 	};
+
 
 	return (
 		<>

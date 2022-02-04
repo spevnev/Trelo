@@ -19,8 +19,17 @@ const Container = styled.div`
 const Lists = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 20px;
+  margin: 2rem 0;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+    opacity: 0;
+  }
 `;
+
 
 const Board = () => {
 	const dispatch = useDispatch();
@@ -28,32 +37,30 @@ const Board = () => {
 	const board = useSelector(getBoard(boardId));
 	const cards = useSelector(getCards(boardId));
 
+
 	useEffect(() => {
 		if (board === null) dispatch(fetchBoard(boardId));
 	}, []);
+
+	if (!board || board.status === "LOADING") return <PageLoading/>;
+	if (board.status === "ERROR") return <PageError>This board doesn't exist or you aren't a member of it!</PageError>;
+
 
 	const onDragEnd = e => {
 		const cardId = e.draggableId;
 		const listId = e.destination.droppableId;
 
-		dispatch(changeCard(boardId, cardId, {listId}));
+		dispatch(changeCard(boardId, cardId, {...cards.filter(cur => cur.id === cardId)[0], listId}));
 	};
 
-	if (!board || board.status === "LOADING")
-		return <PageLoading/>;
-
-	if (board.status === "ERROR")
-		return <PageError>This board doesn't exist or you aren't a member of it!</PageError>;
 
 	return (
 		<Container>
-			<NavBar boardId={boardId} title={board.title} isFavourite={board.isFavourite}/>
+			<NavBar board={board}/>
 
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Lists>
-					{board.lists.map(cur =>
-						<List boardId={boardId} key={cur.id} {...cur} cards={cards.filter(card => card.listId === cur.id)}/>,
-					)}
+					{board.lists.map(cur => <List boardId={boardId} key={cur.id} {...cur} cards={cards.filter(card => card.listId === cur.id)}/>)}
 				</Lists>
 			</DragDropContext>
 		</Container>

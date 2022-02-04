@@ -25,21 +25,18 @@ const Icon = styled.img`
   right: -4px;
 `;
 
-const SelectInput = ({initial, options, onSelect, className}) => {
-	const onChange = e => onSelect(e.target.value);
+const SelectInput = ({initial, options, onSelect, className}) => (
+	<SelectContainer className={className}>
+		<StyledSelect onChange={e => onSelect(e.target.value)}>
+			<option value={initial.value}>{initial.text}</option>
 
-	return (
-		<SelectContainer className={className}>
-			<StyledSelect onChange={onChange}>
-				<option value={initial.value}>{initial.text}</option>
-				{options.map(cur =>
-					<option value={cur.value} key={cur.value}>{cur.text}</option>,
-				)}
-			</StyledSelect>
+			{options.map(cur =>
+				<option value={cur.value} key={cur.value}>{cur.text}</option>,
+			)}
+		</StyledSelect>
 
-			<Icon src={dropDown}/>
-		</SelectContainer>
-	);
-};
+		<Icon src={dropDown}/>
+	</SelectContainer>
+);
 
 export default SelectInput;

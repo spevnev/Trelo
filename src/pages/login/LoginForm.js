@@ -11,6 +11,9 @@ const LoginForm = () => {
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: ""});
 
+	useEffect(() => () => clearTimeout(timeout), []);
+
+
 	const error = text => {
 		setMsg(text);
 		timeout = setTimeout(() => setMsg(null), 3000);
@@ -23,22 +26,22 @@ const LoginForm = () => {
 		dispatch(login(formState.username, formState.password, error));
 	};
 
-	// To clean up the timeout
-	useEffect(() => () => clearTimeout(timeout), []);
 
-	return (<SubContainer colour="f0f0f0">
-		<Text>Log in</Text>
-		<Text secondary>Already signed up?</Text>
+	return (
+		<SubContainer colour="f0f0f0">
+			<Text>Log in</Text>
+			<Text secondary>Already signed up?</Text>
 
-		<Form>
-			<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
-			<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
+			<Form>
+				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
+				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 
-			<ErrorMessage>{msg}</ErrorMessage>
+				<ErrorMessage>{msg}</ErrorMessage>
 
-			<StyledButton onClick={submit}>Log in</StyledButton>
-		</Form>
-	</SubContainer>);
+				<StyledButton onClick={submit}>Log in</StyledButton>
+			</Form>
+		</SubContainer>
+	);
 };
 
 export default LoginForm;

@@ -76,41 +76,48 @@ const Link = styled.p`
   color: #3333cc;
 `;
 
-const Login = () => {
+
+const Compact = () => {
 	const [isLogin, setLogin] = useState(true);
 
-	return (
-		<Container>
-			<TitleContainer>
-				<img src={logo} width="64px" height="64px" alt=""/>
-				<Title>Trelo</Title>
-			</TitleContainer>
 
-			{window.innerWidth < 800 ?
-				isLogin ?
-					<SmallWrapper>
-						<LoginForm/>
-						<LinkContainer bg="f0f0f0">
-							<p>Don't have account yet?</p>
-							<Link onClick={() => setLogin(false)}>Sign up</Link>
-						</LinkContainer>
-					</SmallWrapper>
-					:
-					<SmallWrapper>
-						<SignupForm/>
-						<LinkContainer bg="c0c0c0">
-							<p>Already have an account?</p>
-							<Link onClick={() => setLogin(true)}>Log in</Link>
-						</LinkContainer>
-					</SmallWrapper>
-				:
-				<Wrapper>
-					<LoginForm/>
-					<SignupForm/>
-				</Wrapper>
-			}
-		</Container>
+	if (isLogin) return (
+		<SmallWrapper>
+			<LoginForm/>
+			<LinkContainer bg="f0f0f0">
+				<p>Don't have account yet?</p>
+				<Link onClick={() => setLogin(false)}>Sign up</Link>
+			</LinkContainer>
+		</SmallWrapper>
+	);
+
+	return (
+		<SmallWrapper>
+			<SignupForm/>
+			<LinkContainer bg="c0c0c0">
+				<p>Already have an account?</p>
+				<Link onClick={() => setLogin(true)}>Log in</Link>
+			</LinkContainer>
+		</SmallWrapper>
 	);
 };
+
+const Login = () => (
+	<Container>
+		<TitleContainer>
+			<img src={logo} width="64px" height="64px" alt=""/>
+			<Title>Trelo</Title>
+		</TitleContainer>
+
+		{window.innerWidth < 800 ?
+			<Compact/>
+			:
+			<Wrapper>
+				<LoginForm/>
+				<SignupForm/>
+			</Wrapper>
+		}
+	</Container>
+);
 
 export default Login;

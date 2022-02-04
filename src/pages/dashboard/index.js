@@ -13,6 +13,7 @@ const Boards = styled.div`
   flex-wrap: wrap;
 `;
 
+
 const Dashboard = () => {
 	const boards = useSelector(getBoards());
 

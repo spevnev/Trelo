@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,40 +12,56 @@ import GoBack from "../../components/GoBack";
 import Modal from "../../components/Modal";
 import {getBoard, getCard} from "../../redux/selectors";
 import PageError from "../../components/PageError";
+import useDebounce from "../../components/useDebounce";
+import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
+import PageLoading from "../../components/PageLoading";
 
-const Container = styled.div`
-  margin: 0 2vw;
-`;
+const Container = styled.div`margin: 0 2vw;`;
+
 
 const isCardEmpty = card => card.title.length === 0 && card.description.length === 0 && card.assigned.length === 0 && card.images.length === 0 && card.files.length === 0;
 
 const CardDescription = () => {
-	const [isOpen, setOpen] = useState(false);
-	const {boardId, cardId} = useParams();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const {boardId, cardId} = useParams();
 	const card = useSelector(getCard(boardId, cardId));
 	const board = useSelector(getBoard(boardId));
+	const [isOpen, setOpen] = useState(false);
 
-	const goBack = () => {
-		if (isCardEmpty(card))
-			delCard();
-		else if (card.title.length === 0)
-			setOpen(true);
-		else
-			navigate("../");
+
+	const initialState = card && board && board.status === "READY" ? card : null;
+	const saveChanges = state => dispatch(changeCard(boardId, cardId, state));
+	const [state, setState, isSaved, clearTimer] = useDebounce(saveChanges, initialState);
+
+	useEffect(() => {
+		if (board === null) dispatch(fetchBoard(boardId));
+	}, []);
+
+	useEffect(() => {
+		if (!state && card) setState(card, false);
+	}, [card]);
+
+
+	if (!board || board.status === "ERROR") return <PageError>This card doesn't exist!</PageError>;
+	if (!card || board.status === "LOADING" && 1) return <PageLoading/>;
+
+
+	const goBack = async () => {
+		if (!isSaved) await saveChanges(state);
+
+		if (isCardEmpty(card)) return delCard(); else if (card.title.length === 0) return setOpen(true);
+
+		clearTimer();
+		navigate("../");
 	};
 
 	const delCard = () => {
 		dispatch(deleteCard(boardId, cardId));
+		clearTimer();
 		navigate("../");
 	};
 
-	const commitChanges = changes => dispatch(changeCard(boardId, cardId, changes));
-
-
-	if (!board || board.status !== "READY")
-		return <PageError>This card doesn't exist!</PageError>;
 
 	const users = board.users;
 	const lists = board.lists;
@@ -53,12 +69,13 @@ const CardDescription = () => {
 	return (
 		<Container>
 			<GoBack onClick={goBack}>Return to the board</GoBack>
-			<Title lists={lists} listId={card.listId} title={card.title} commitChanges={commitChanges}/>
-			<Assigned assigned={card.assigned} users={users} commitChanges={commitChanges}/>
-			<Description description={card.description} commitChanges={commitChanges}/>
-			<Images images={card.images} commitChanges={commitChanges}/>
-			<Files files={card.files} commitChanges={commitChanges}/>
 			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenProp={isOpen} prompt="Title can't be empty! Do you want to delete this card?"/>
+
+			<Title lists={lists} listId={state.listId} title={state.title} commitChanges={setState}/>
+			<Assigned assigned={state.assigned} users={users} commitChanges={setState}/>
+			<Description description={state.description} commitChanges={setState}/>
+			<Images images={state.images} commitChanges={setState}/>
+			<Files files={state.files} commitChanges={setState}/>
 		</Container>
 	);
 };

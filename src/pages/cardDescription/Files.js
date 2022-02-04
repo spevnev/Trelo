@@ -26,32 +26,10 @@ const Icon = styled.img`
   margin-right: 5px;
 `;
 
-const File = ({filename, delFile, renameFile}) => {
-	const [msg, setMsg] = useState(null);
-
-	const downloadFile = e => {
-	};
-
-	const deleteFile = () => delFile(filename);
-
-	const rename = e => {
-		if (e.target.value.length === 0) setMsg("File name can't be empty!");
-		else setMsg(null);
-
-		renameFile(filename, e.target.value);
-	};
-
-	return (
-		<>
-			<FileContainer>
-				<HiddenInput placeholder="File name" onChange={rename} value={filename}/>
-				<Icon src={download} onClick={downloadFile}/>
-				<Icon src={cross} onClick={deleteFile}/>
-			</FileContainer>
-			<ErrorMessage>{msg}</ErrorMessage>
-		</>
-	);
-};
+const BlockContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const AddFile = styled.div`
   display: flex;
@@ -70,10 +48,42 @@ const AddFile = styled.div`
   }
 `;
 
+
+const File = ({filename, delFile, renameFile}) => {
+	const [msg, setMsg] = useState(null);
+
+
+	const downloadFile = e => {
+	};
+
+	const deleteFile = () => delFile(filename);
+
+	const rename = e => {
+		if (e.target.value.length === 0) setMsg("File name can't be empty!");
+		else setMsg(null);
+
+		renameFile(filename, e.target.value);
+	};
+
+
+	return (
+		<>
+			<FileContainer>
+				<HiddenInput placeholder="File name" onChange={rename} value={filename}/>
+				<Icon src={download} onClick={downloadFile}/>
+				<Icon src={cross} onClick={deleteFile}/>
+			</FileContainer>
+			<ErrorMessage>{msg}</ErrorMessage>
+		</>
+	);
+};
+
 const FileInput = ({addFile}) => {
 	const input = useRef(null);
 
+
 	const preventDefault = e => e.preventDefault();
+
 	const onDrop = e => {
 		input.current.files = e.dataTransfer.files;
 		onFile({target: input.current});
@@ -91,6 +101,7 @@ const FileInput = ({addFile}) => {
 		}
 	};
 
+
 	return (
 		<>
 			<input ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile}/>
@@ -98,11 +109,6 @@ const FileInput = ({addFile}) => {
 		</>
 	);
 };
-
-const BlockContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 const Files = ({files, commitChanges}) => {
 	const addFile = (filename, data) => {
@@ -120,9 +126,11 @@ const Files = ({files, commitChanges}) => {
 
 	const renameFile = (filename, newFilename) => commitChanges({files: files.map(cur => cur.filename === filename ? {...cur, filename: newFilename} : cur)});
 
+
 	return (
 		<Container>
 			<SubTitle>Attached files</SubTitle>
+
 			<BlockContainer>
 				{files.map(file => <File key={file.id} filename={file.filename} renameFile={renameFile} delFile={delFile}/>)}
 				<FileInput addFile={addFile}/>

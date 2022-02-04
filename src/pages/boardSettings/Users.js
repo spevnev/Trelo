@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
-import {addUser, changeUserRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
@@ -38,23 +37,6 @@ const UserIcon = styled.img`
   margin: .5rem 0;
 `;
 
-const user = {value: "user", text: "User"};
-const owner = {value: "owner", text: "Owner"};
-const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => {
-	return (
-		<UserContainer>
-			<div>
-				<UserIcon src={userIcon}/>
-				<p>{username}</p>
-			</div>
-			<div>
-				<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : user} options={isOwner ? [user] : [owner]}/>
-				<Cancel onClick={() => deleteUser(username)}>&#x2716;</Cancel>
-			</div>
-		</UserContainer>
-	);
-};
-
 const NewUser = styled.div`
   display: flex;
   flex-direction: row;
@@ -69,21 +51,43 @@ const NewUser = styled.div`
   }
 `;
 
-const Users = ({users, boardId}) => {
+
+const user = {value: "user", text: "User"};
+const owner = {value: "owner", text: "Owner"};
+
+const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => {
+	return (
+		<UserContainer>
+			<div>
+				<UserIcon src={userIcon}/>
+				<p>{username}</p>
+			</div>
+
+			<div>
+				<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : user} options={isOwner ? [user] : [owner]}/>
+				<Cancel onClick={() => deleteUser(username)}>&#x2716;</Cancel>
+			</div>
+		</UserContainer>
+	);
+};
+
+const Users = ({users, boardId, setState}) => {
 	const [newUsername, setNewUsername] = useState("");
 	const dispatch = useDispatch();
 
-	const changeRole = (username, role) => dispatch(changeUserRole(boardId, username, role === "owner"));
 
-	const delUser = (username) => {
-		dispatch(deleteUser(boardId, username));
+	const changeRole = (username, role) => setState({users: users.map(cur => cur.username === username ? {...cur, isOwner: role === "owner"} : cur)});
+
+	const delUser = username => {
+		setState({users: users.filter(cur => cur.username !== username)});
 		dispatch(deleteAssignedInCards(boardId, username));
 	};
 
 	const newUser = () => {
+		if (users.filter(cur => cur.username === newUsername).length === 0) setState({users: [...users, newUsername]});
 		setNewUsername("");
-		dispatch(addUser(boardId, {username: newUsername, userIcon: "https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png", isOwner: false}));
 	};
+
 
 	return (
 		<SubContainer>

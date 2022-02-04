@@ -17,21 +17,23 @@ const App = () => {
 		if (getToken() !== null) dispatch(fetchUser());
 	}, []);
 
-	return (<Routes>
-		<Route path="/login" element={getToken() !== null ? <Navigate to="/"/> : <Login/>}/>
+	return (
+		<Routes>
+			<Route path="/login" element={getToken() !== null ? <Navigate to="/"/> : <Login/>}/>
 
-		<Route path="/" element={<Layout>{getToken() !== null ? <Outlet/> : <Navigate to="/login"/>}</Layout>}>
-			<Route index element={<Dashboard/>}/>
+			<Route path="/" element={<Layout>{getToken() !== null ? <Outlet/> : <Navigate to="/login"/>}</Layout>}>
+				<Route index element={<Dashboard/>}/>
 
-			<Route path="board/:boardId">
-				<Route index element={<Board/>}/>
-				<Route path="settings" element={<BoardSettings/>}/>
-				<Route path=":cardId" element={<CardDescription/>}/>
+				<Route path="board/:boardId">
+					<Route index element={<Board/>}/>
+					<Route path="settings" element={<BoardSettings/>}/>
+					<Route path=":cardId" element={<CardDescription/>}/>
+				</Route>
 			</Route>
-		</Route>
 
-		<Route path="*" element={<Navigate to="/"/>}/>
-	</Routes>);
+			<Route path="*" element={<Navigate to="/"/>}/>
+		</Routes>
+	);
 };
 
 export default App;

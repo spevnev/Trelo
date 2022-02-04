@@ -10,15 +10,18 @@ const CenteredText = styled.p`
   margin: auto;
 `;
 
+
 const NewBoard = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
 
 	const openSettings = () => {
 		const boardId = uuid();
 		dispatch(newBoard(boardId));
 		navigate(`/board/${boardId}/settings`);
 	};
+
 
 	return (
 		<BoardContainer onClick={openSettings} style={{order: 999}}>

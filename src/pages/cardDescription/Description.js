@@ -15,15 +15,12 @@ const DescriptionInput = styled.textarea`
   resize: none;
 `;
 
-const Description = ({description, commitChanges}) => {
-	const onChange = e => commitChanges({description: e.target.value});
 
-	return (
-		<Container>
-			<SubTitle>Description</SubTitle>
-			<DescriptionInput onChange={onChange} value={description} placeholder="Description"/>
-		</Container>
-	);
-};
+const Description = ({description, commitChanges}) => (
+	<Container>
+		<SubTitle>Description</SubTitle>
+		<DescriptionInput onChange={e => commitChanges({description: e.target.value})} value={description} placeholder="Description"/>
+	</Container>
+);
 
 export default Description;

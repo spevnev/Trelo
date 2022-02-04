@@ -15,9 +15,17 @@ const Title = styled.p`
 const ListContainer = styled.div`
   width: 25rem;
   background: #aaa;
-  margin-right: 3rem;
+  margin: 0 1.5rem;
   padding: 8px 12px;
   border-radius: 5px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+    opacity: 0;
+  }
 `;
 
 const AddCard = styled.p`
@@ -25,9 +33,11 @@ const AddCard = styled.p`
   font-size: 1.4rem;
 `;
 
+
 const List = ({title, cards, boardId, id}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 
 	const newCard = () => {
 		const cardId = uuid();
@@ -36,18 +46,17 @@ const List = ({title, cards, boardId, id}) => {
 		navigate(cardId);
 	};
 
+
 	return (
 		<Droppable droppableId={id}>
-			{provided => (
-				<div ref={provided.innerRef} {...provided.droppableProps}>
-					<ListContainer>
-						<Title>{title}</Title>
-						{cards && cards.map((card, i) => <Card key={card.id} i={i} {...card}/>)}
-						{provided.placeholder}
-						<AddCard onClick={newCard}>+ Add card</AddCard>
-					</ListContainer>
-				</div>
-			)}
+			{provided => (<div ref={provided.innerRef} {...provided.droppableProps}>
+				<ListContainer>
+					<Title>{title}</Title>
+					{cards && cards.map((card, i) => <Card key={card.id} i={i} {...card}/>)}
+					{provided.placeholder}
+					<AddCard onClick={newCard}>+ Add card</AddCard>
+				</ListContainer>
+			</div>)}
 		</Droppable>
 	);
 };
