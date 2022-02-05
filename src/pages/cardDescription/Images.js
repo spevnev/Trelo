@@ -3,6 +3,7 @@ import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
+import {v4 as uuid} from "uuid";
 
 const Block = styled.div`
   min-width: 20rem;
@@ -91,10 +92,10 @@ const Overlay = ({src, close}) => (
 	</OverlayContainer>
 );
 
-const Image = ({src, openFull, delImg}) => {
+const Image = ({src, openFull, delImg, id}) => {
 	const deleteImage = e => {
 		e.stopPropagation();
-		delImg(src);
+		delImg(id);
 	};
 
 	const downloadImage = e => {
@@ -146,9 +147,9 @@ const Images = ({images, commitChanges}) => {
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
-	const addImage = src => commitChanges({images: [...images, src]});
+	const addImage = src => commitChanges({images: [...images, {src, id: uuid()}]});
 
-	const delImage = src => commitChanges({images: images.filter(cur => cur !== src)});
+	const delImage = id => commitChanges({images: images.filter(cur => cur.id !== id)});
 
 
 	return (
@@ -158,7 +159,7 @@ const Images = ({images, commitChanges}) => {
 			<SubTitle>Attached images</SubTitle>
 
 			<BlockContainer>
-				{images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur} src={cur}/>)}
+				{images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur.id} {...cur}/>)}
 
 				<ImageInput addImage={addImage}/>
 			</BlockContainer>

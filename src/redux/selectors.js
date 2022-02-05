@@ -8,6 +8,8 @@ export const getBoard = id => state => {
 	return board[0];
 };
 
+export const getUserBoards = () => state => state.user.boards;
+
 export const getBoards = () => state => state.board;
 
 

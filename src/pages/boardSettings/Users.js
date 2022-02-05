@@ -1,11 +1,13 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
 import {Cancel, SubContainer, SubTitle} from "./styles";
-import {deleteAssignedInCards} from "../../redux/actionCreators/cardActionCreator";
+import {addUser, changeBoards, deleteUser} from "../../redux/actionCreators/userActionCreator";
+import {getUser} from "../../redux/selectors";
+import {useNavigate} from "react-router";
 
 const UserContainer = styled.div`
   display: flex;
@@ -55,45 +57,77 @@ const NewUser = styled.div`
 const user = {value: "user", text: "User"};
 const owner = {value: "owner", text: "Owner"};
 
-const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => {
-	return (
-		<UserContainer>
-			<div>
-				<UserIcon src={userIcon}/>
-				<p>{username}</p>
-			</div>
+const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => (
+	<UserContainer style={{order: isOwner ? 1 : 0}}>
+		<div>
+			<UserIcon src={userIcon}/>
+			<p>{username}</p>
+		</div>
 
-			<div>
-				<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : user} options={isOwner ? [user] : [owner]}/>
-				<Cancel onClick={() => deleteUser(username)}>&#x2716;</Cancel>
-			</div>
-		</UserContainer>
-	);
-};
+		<div>
+			<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : user} options={isOwner ? [user] : [owner]}/>
+			<Cancel onClick={() => deleteUser(username)}>&#x2716;</Cancel>
+		</div>
+	</UserContainer>
+);
 
-const Users = ({users, boardId, setState}) => {
+const CurUser = ({username, userIcon, isOwner, leave}) => (
+	<UserContainer style={{order: isOwner ? 1 : 0}}>
+		<div>
+			<UserIcon src={userIcon}/>
+			<p>{username}</p>
+		</div>
+
+		<div>
+			<h2>{isOwner ? owner.text : user.text}</h2>
+			<Cancel onClick={leave}>&#x2716;</Cancel>
+		</div>
+	</UserContainer>
+);
+
+const Users = ({users, boardId, setState, open}) => {
 	const [newUsername, setNewUsername] = useState("");
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const curUser = useSelector(getUser());
 
 
-	const changeRole = (username, role) => setState({users: users.map(cur => cur.username === username ? {...cur, isOwner: role === "owner"} : cur)});
+	const changeRole = (username, role) => {
+		if (role !== "owner" && users.filter(cur => cur.isOwner).length === 1) return;
+		setState({users: users.map(cur => cur.username === username ? {...cur, isOwner: role === "owner"} : cur)});
+	};
 
 	const delUser = username => {
 		setState({users: users.filter(cur => cur.username !== username)});
-		dispatch(deleteAssignedInCards(boardId, username));
+		dispatch(deleteUser(boardId, username));
+	};
+
+	const leave = () => {
+		if (users.length === 1) return open();
+
+		setState({users: users.filter(cur => cur.username !== curUser.username)});
+		dispatch(changeBoards(curUser.boards.filter(cur => cur.id !== boardId)));
+		navigate("/");
 	};
 
 	const newUser = () => {
-		if (users.filter(cur => cur.username === newUsername).length === 0) setState({users: [...users, newUsername]});
-		setNewUsername("");
+		if (users.filter(cur => cur.username === newUsername).length !== 0) return;
+
+		dispatch(addUser(boardId, newUsername, () => {
+			setState({users: [...users, {username: newUsername, isOwner: false}]});
+			setNewUsername("");
+		}));
 	};
 
+
+	const board = curUser.boards.filter(cur => cur.id === boardId);
 
 	return (
 		<SubContainer>
 			<SubTitle>Users</SubTitle>
 
-			{users.map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeRole} {...cur}/>)}
+			<CurUser leave={leave} username={curUser.username} userIcon={curUser.userIcon} isOwner={board.length === 1 ? board[0].isOwner : false}/>
+			{users.filter(cur => cur.username !== curUser.username).map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeRole} {...cur}/>)}
 
 			<NewUser>
 				<Input maxLength={20} placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>

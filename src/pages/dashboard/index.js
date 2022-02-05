@@ -3,7 +3,8 @@ import styled from "styled-components";
 import Board from "./Board";
 import NewBoard from "./NewBoard";
 import {useSelector} from "react-redux";
-import {getBoards} from "../../redux/selectors";
+import {getUserBoards} from "../../redux/selectors";
+import PageLoading from "../../components/PageLoading";
 
 const Boards = styled.div`
   margin: 15px 2vw;
@@ -15,11 +16,15 @@ const Boards = styled.div`
 
 
 const Dashboard = () => {
-	const boards = useSelector(getBoards());
+	const boards = useSelector(getUserBoards());
+
+
+	if (!boards) return <PageLoading/>;
+
 
 	return (
 		<Boards>
-			{boards.filter(cur => cur.status === "READY").map(cur => <Board key={cur.id} title={cur.title} id={cur.id} isFavourite={cur.isFavourite}/>)}
+			{boards.map(cur => <Board key={cur.id} {...cur}/>)}
 			<NewBoard/>
 		</Boards>
 	);

@@ -1,6 +1,7 @@
 import types from "../actions/boardActions";
 import cardTypes from "../actions/cardActions";
 import {addCardBoard} from "./cardActionCreator";
+import {changeBoards} from "./userActionCreator";
 
 const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}});
 
@@ -19,7 +20,9 @@ export const fetchBoard = id => async (dispatch, getState, {board, card}) => {
 
 
 export const newBoard = id => async (dispatch, getState, {board}) => {
-	const boardObject = {title: "New Board", id, lists: [], users: [{...getState().user, isOwner: true}]};
+	const user = getState().user;
+
+	const boardObject = {title: "New Board", id, lists: [], users: [{...user, boards: undefined, isOwner: true}]};
 
 	if (await board.createBoard(boardObject) === null) return;
 
@@ -35,10 +38,12 @@ export const newBoard = id => async (dispatch, getState, {board}) => {
 			board: {...boardObject, status: "READY"},
 		},
 	});
+
+	dispatch(changeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
 };
 
-export const deleteBoard = id => async (dispatch, getState, {board}) => {
-	await board.deleteBoard(id);
+export const deleteBoard = id => (dispatch, getState, {board}) => {
+	board.deleteBoard(id);
 
 	dispatch({
 		type: types.deleteBoard,
@@ -46,8 +51,8 @@ export const deleteBoard = id => async (dispatch, getState, {board}) => {
 	});
 };
 
-export const changeBoard = (id, newBoard) => async (dispatch, getState, {board}) => {
-	await board.changeBoard(id, newBoard);
+export const changeBoard = (id, newBoard) => (dispatch, getState, {board}) => {
+	board.changeBoard(id, newBoard);
 
 	dispatch({
 		type: types.changeBoard,

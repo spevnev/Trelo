@@ -4,9 +4,14 @@ export const addCardBoard = (boardId, cards) => ({type: types.addCardBoard, payl
 export const addCard = (boardId, listId, id) => ({type: types.addCard, payload: {boardId, listId, id}});
 
 export const deleteCard = (boardId, id) => ({type: types.deleteCard, payload: {boardId, id}});
-export const deleteCardsInList = (boardId, listId) => ({type: types.deleteCardsInList, payload: {boardId, listId}});
+
+export const deleteCardsInList = (boardId, listId) => (dispatch, getState, {}) => {
+	getState().card.filter(cur => cur.id === boardId)[0].cards.forEach(cur => {
+		if (cur.listId === listId) dispatch(deleteCard(boardId, cur.id));
+	});
+};
+
 export const deleteCardsInBoard = boardId => ({type: types.deleteCardsInBoard, payload: {boardId}});
-export const deleteAssignedInCards = (boardId, username) => ({type: types.deleteAssignedInCards, payload: {boardId, username}});
 
 export const changeCard = (boardId, id, newCard) => async (dispatch, getState, {card}) => {
 	await card.changeCard(boardId, id, newCard);

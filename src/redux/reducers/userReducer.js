@@ -7,6 +7,9 @@ const userReducer = (state = {}, action) => {
 		case types.setUser:
 			return payload.user;
 
+		case types.changeBoards:
+			return {...state, boards: payload.newBoards};
+
 		default:
 			return state;
 	}

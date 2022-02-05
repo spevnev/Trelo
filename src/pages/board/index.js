@@ -60,7 +60,7 @@ const Board = () => {
 
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Lists>
-					{board.lists.map(cur => <List boardId={boardId} key={cur.id} {...cur} cards={cards.filter(card => card.listId === cur.id)}/>)}
+					{board.lists.map(cur => <List boardId={boardId} key={cur.id} {...cur} cards={cards ? cards.filter(card => card.listId === cur.id) : []}/>)}
 				</Lists>
 			</DragDropContext>
 		</Container>

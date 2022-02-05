@@ -1,7 +1,7 @@
 import axios from "axios";
 import {changeBoard, createBoard, deleteBoard, getBoard} from "./board";
 import {changeCard, getCards} from "./cards";
-import {fetchData, login, signup} from "./user";
+import {addUser, changeBoards, deleteUser, fetchData, login, signup} from "./user";
 import {getToken} from "./jwt";
 
 const client = axios.create({baseURL: "http://localhost:3000/api/"});
@@ -19,6 +19,6 @@ export default () => ({
 	}, card: {
 		getCards: getCards(client), changeCard: changeCard(client),
 	}, user: {
-		signup: signup(client), login: login(client), fetchData: fetchData(client),
+		signup: signup(client), login: login(client), fetchData: fetchData(client), addUser: addUser(client), deleteUser: deleteUser(client), changeBoards: changeBoards(client),
 	},
 });

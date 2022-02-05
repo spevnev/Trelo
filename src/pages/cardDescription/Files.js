@@ -11,7 +11,6 @@ const FileContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 5px 0;
 
   & ${HiddenInput} {
     font-size: 2rem;
@@ -49,20 +48,18 @@ const AddFile = styled.div`
 `;
 
 
-const File = ({filename, delFile, renameFile}) => {
+const File = ({filename, delFile, renameFile, id}) => {
 	const [msg, setMsg] = useState(null);
 
 
 	const downloadFile = e => {
 	};
 
-	const deleteFile = () => delFile(filename);
-
 	const rename = e => {
 		if (e.target.value.length === 0) setMsg("File name can't be empty!");
 		else setMsg(null);
 
-		renameFile(filename, e.target.value);
+		renameFile(id, e.target.value);
 	};
 
 
@@ -71,8 +68,9 @@ const File = ({filename, delFile, renameFile}) => {
 			<FileContainer>
 				<HiddenInput placeholder="File name" onChange={rename} value={filename}/>
 				<Icon src={download} onClick={downloadFile}/>
-				<Icon src={cross} onClick={deleteFile}/>
+				<Icon src={cross} onClick={() => delFile(id)}/>
 			</FileContainer>
+
 			<ErrorMessage>{msg}</ErrorMessage>
 		</>
 	);
@@ -111,20 +109,11 @@ const FileInput = ({addFile}) => {
 };
 
 const Files = ({files, commitChanges}) => {
-	const addFile = (filename, data) => {
-		while (files.filter(file => file.filename === filename).length > 0) {
-			const parts = filename.split(".");
-			if (parts.length !== 1)
-				parts[0] += Math.round(Math.random() * 100);
-			filename = parts.join(".");
-		}
+	const addFile = (filename, data) => commitChanges({files: [...files, {filename, data, id: uuid()}]});
 
-		commitChanges({files: [...files, {filename, data, id: uuid()}]});
-	};
+	const delFile = id => commitChanges({files: files.filter(cur => cur.id !== id)});
 
-	const delFile = filename => commitChanges({files: files.filter(cur => cur.filename !== filename)});
-
-	const renameFile = (filename, newFilename) => commitChanges({files: files.map(cur => cur.filename === filename ? {...cur, filename: newFilename} : cur)});
+	const renameFile = (id, newFilename) => commitChanges({files: files.map(cur => cur.id === id ? {...cur, filename: newFilename} : cur)});
 
 
 	return (
@@ -132,7 +121,7 @@ const Files = ({files, commitChanges}) => {
 			<SubTitle>Attached files</SubTitle>
 
 			<BlockContainer>
-				{files.map(file => <File key={file.id} filename={file.filename} renameFile={renameFile} delFile={delFile}/>)}
+				{files.map(file => <File key={file.id} {...file} renameFile={renameFile} delFile={delFile}/>)}
 				<FileInput addFile={addFile}/>
 			</BlockContainer>
 		</Container>

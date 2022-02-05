@@ -1,11 +1,13 @@
 import React from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 import styled from "styled-components";
 import starFull from "../../assets/svg/star-full.svg";
 import starEmpty from "../../assets/svg/star-empty.svg";
 import cog from "../../assets/svg/cog.svg";
 import {BoardContainer} from "./styles";
+import {getUser} from "../../redux/selectors";
+import {changeBoards} from "../../redux/actionCreators/userActionCreator";
 
 const Title = styled.p`
   font-size: 1.8rem;
@@ -25,10 +27,10 @@ const Icon = styled.img`
 `;
 
 
-const Board = ({title, isFavourite, id}) => {
+const Board = ({title, isFavourite, isOwner, id}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
+	const boards = useSelector(getUser()).boards;
 
 	const openSettings = e => {
 		e.stopPropagation();
@@ -37,6 +39,7 @@ const Board = ({title, isFavourite, id}) => {
 
 	const toggleFavourite = e => {
 		e.stopPropagation();
+		dispatch(changeBoards(boards.map(cur => cur.id === id ? {...cur, isFavourite: !cur.isFavourite} : cur)));
 	};
 
 
@@ -46,7 +49,7 @@ const Board = ({title, isFavourite, id}) => {
 
 			<Icons>
 				<Icon onClick={toggleFavourite} src={isFavourite ? starFull : starEmpty}/>
-				<Icon onClick={openSettings} src={cog}/>
+				{isOwner && <Icon onClick={openSettings} src={cog}/>}
 			</Icons>
 		</BoardContainer>
 	);
