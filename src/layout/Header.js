@@ -27,6 +27,7 @@ const Title = styled.p`
 
 const Username = styled.p`
   font-size: 18px;
+  text-transform: capitalize;
 `;
 
 const UserIcon = styled.div`

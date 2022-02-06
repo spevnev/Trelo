@@ -1,5 +1,5 @@
 import types from "../actions/userActions";
-import boardTypes from "../actions/boardActions";
+import {changeBoard} from "./boardActionCreator";
 
 export const fetchUser = () => async (dispatch, getState, {user}) => {
 	const data = await user.fetchData();
@@ -7,26 +7,9 @@ export const fetchUser = () => async (dispatch, getState, {user}) => {
 	dispatch({type: types.setUser, payload: {user: data}});
 };
 
-export const addUser = (id, username, onSuccess) => async (dispatch, getState, {user}) => {
-	const [error, data] = await user.addUser(username, id);
-	if (error) return;
-
-	onSuccess();
-	const board = getState().board.filter(cur => cur.id === id)[0];
-	dispatch({type: boardTypes.changeBoard, payload: {id, board: {...board, users: [...board.users, {...data, isOwner: false}]}}});
-};
-
-export const deleteUser = (id, username) => async (dispatch, getState, {user}) => {
-	const [error, data] = await user.deleteUser(username, id);
-	if (error) return;
-
-	const board = getState().board.filter(cur => cur.id === id)[0];
-	dispatch({type: boardTypes.changeBoard, payload: {id, board: {...board, users: board.users.filter(cur => cur.username !== username)}}});
-};
-
 export const login = (username, password, setError) => async (dispatch, getState, {user}) => {
 	const [error, data] = await user.login(username, password);
-	if (error) return setError("Invalid username or password!");
+	if (error) return setError(error);
 
 	localStorage.setItem("JWT", data.token);
 
@@ -45,9 +28,41 @@ export const signup = (userData, setError) => async (dispatch, getState, {user})
 	window.location.reload();
 };
 
+export const leave = boardId => async (dispatch, getState, {user}) => {
+	const data = await user.leave(boardId);
+	if (data === null) return;
+
+	dispatch(changeBoards(getState().user.boards.filter(cur => cur.id !== boardId)));
+};
+
 export const changeBoards = newBoards => async (dispatch, getState, {user}) => {
 	const data = await user.changeBoards(newBoards);
 	if (data === null) return;
 
 	dispatch({type: types.changeBoards, payload: {newBoards}});
+};
+
+export const addUser = (id, username, onSuccess, onError) => async (dispatch, getState, {user}) => {
+	const [error, data] = await user.addUser(username, id);
+	if (error) return onError(error);
+
+	onSuccess();
+	const board = getState().board.filter(cur => cur.id === id)[0];
+	dispatch(changeBoard(id, {...board, users: [...board.users, {...data, isOwner: false}]}));
+};
+
+export const deleteUser = (id, username) => async (dispatch, getState, {user}) => {
+	const [error] = await user.deleteUser(username, id);
+	if (error) return;
+
+	const board = getState().board.filter(cur => cur.id === id)[0];
+	dispatch(changeBoard(id, {...board, users: board.users.filter(cur => cur.username !== username)}));
+};
+
+export const changeRole = (id, username, isOwner) => async (dispatch, getState, {user}) => {
+	const data = await user.changeRole(id, username, isOwner);
+	if (data === null) return;
+
+	const board = getState().board.filter(cur => cur.id === id)[0];
+	dispatch(changeBoard(id, {...board, users: board.users.map(cur => cur.username === username ? {...cur, isOwner} : cur)}));
 };

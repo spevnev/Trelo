@@ -23,7 +23,7 @@ const LoginForm = () => {
 		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
 		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
 
-		dispatch(login(formState.username, formState.password, error));
+		dispatch(login(formState.username.toLowerCase(), formState.password, error));
 	};
 
 

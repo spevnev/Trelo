@@ -5,9 +5,10 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
 import {Cancel, SubContainer, SubTitle} from "./styles";
-import {addUser, changeBoards, deleteUser} from "../../redux/actionCreators/userActionCreator";
+import {addUser, changeBoards, changeRole, deleteUser} from "../../redux/actionCreators/userActionCreator";
 import {getUser} from "../../redux/selectors";
 import {useNavigate} from "react-router";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const UserContainer = styled.div`
   display: flex;
@@ -53,6 +54,11 @@ const NewUser = styled.div`
   }
 `;
 
+const Username = styled.p`
+  font-size: 1.8rem;
+  text-transform: capitalize;
+`;
+
 
 const user = {value: "user", text: "User"};
 const owner = {value: "owner", text: "Owner"};
@@ -61,7 +67,7 @@ const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
 			<UserIcon src={userIcon}/>
-			<p>{username}</p>
+			<Username>{username}</Username>
 		</div>
 
 		<div>
@@ -75,7 +81,7 @@ const CurUser = ({username, userIcon, isOwner, leave}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
 			<UserIcon src={userIcon}/>
-			<p>{username}</p>
+			<Username>{username}</Username>
 		</div>
 
 		<div>
@@ -86,15 +92,23 @@ const CurUser = ({username, userIcon, isOwner, leave}) => (
 );
 
 const Users = ({users, boardId, setState, open}) => {
+	const [msg, setMsg] = useState(null);
 	const [newUsername, setNewUsername] = useState("");
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const curUser = useSelector(getUser());
 
 
-	const changeRole = (username, role) => {
-		if (role !== "owner" && users.filter(cur => cur.isOwner).length === 1) return;
-		setState({users: users.map(cur => cur.username === username ? {...cur, isOwner: role === "owner"} : cur)});
+	const error = errorMsg => {
+		setMsg(errorMsg);
+		setTimeout(() => setMsg(null), 3000);
+	};
+
+	const changeUserRole = (username, role) => {
+		const isOwner = role === "owner";
+		if (!isOwner && users.filter(cur => cur.isOwner).length === 1) return;
+
+		dispatch(changeRole(boardId, username, isOwner));
 	};
 
 	const delUser = username => {
@@ -103,7 +117,8 @@ const Users = ({users, boardId, setState, open}) => {
 	};
 
 	const leave = () => {
-		if (users.length === 1) return open();
+		if (users.length === 1) return open("If you leave, the board will be deleted.");
+		if (users.filter(cur => cur.isOwner).length === 1) return open("If you leave, the board will be deleted, because you're the last owner.");
 
 		setState({users: users.filter(cur => cur.username !== curUser.username)});
 		dispatch(changeBoards(curUser.boards.filter(cur => cur.id !== boardId)));
@@ -111,12 +126,12 @@ const Users = ({users, boardId, setState, open}) => {
 	};
 
 	const newUser = () => {
-		if (users.filter(cur => cur.username === newUsername).length !== 0) return;
+		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length !== 0) return error("This user is already in the board!");
 
-		dispatch(addUser(boardId, newUsername, () => {
-			setState({users: [...users, {username: newUsername, isOwner: false}]});
+		dispatch(addUser(boardId, newUsername.toLowerCase(), () => {
+			setState({users: [...users, {username: newUsername.toLowerCase(), isOwner: false}]});
 			setNewUsername("");
-		}));
+		}, error));
 	};
 
 
@@ -127,7 +142,8 @@ const Users = ({users, boardId, setState, open}) => {
 			<SubTitle>Users</SubTitle>
 
 			<CurUser leave={leave} username={curUser.username} userIcon={curUser.userIcon} isOwner={board.length === 1 ? board[0].isOwner : false}/>
-			{users.filter(cur => cur.username !== curUser.username).map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeRole} {...cur}/>)}
+			{users.filter(cur => cur.username !== curUser.username).map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeUserRole} {...cur}/>)}
+			<ErrorMessage>{msg}</ErrorMessage>
 
 			<NewUser>
 				<Input maxLength={20} placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>

@@ -9,6 +9,7 @@ const Overlay = styled.div`
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
 `;
 
 const ModalContainer = styled.div`
@@ -46,7 +47,7 @@ const Modal = ({onContinue, onCancel, children, prompt, isOpenProp}) => {
 
 	const cancel = () => {
 		setIsOpen(false);
-		onCancel();
+		if (onCancel) onCancel();
 	};
 
 

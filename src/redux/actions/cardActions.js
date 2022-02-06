@@ -3,5 +3,5 @@ export default {
 	addCard: "ADD_CARD",
 	changeCard: "CHANGE_CARD",
 	deleteCard: "DELETE_CARD",
-	deleteCardsInBoard: "DELETE_CARDS_BOARD",
+	deleteCardBoard: "DELETE_CARD_BOARD",
 };

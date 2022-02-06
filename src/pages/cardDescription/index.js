@@ -49,7 +49,7 @@ const CardDescription = () => {
 
 	const goBack = async () => {
 		if (!isSaved) await saveChanges(state);
-
+		
 		if (isCardEmpty(card)) return delCard(); else if (card.title.length === 0) return setOpen(true);
 
 		clearTimer();

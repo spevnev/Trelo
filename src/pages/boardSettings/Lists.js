@@ -7,6 +7,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import {Cancel, SubContainer, SubTitle} from "./styles";
 import {v4 as uuid} from "uuid";
+import Modal from "../../components/Modal";
 
 const ListElContainer = styled.div`
   display: flex;
@@ -40,7 +41,9 @@ const NewList = styled.div`
 const ListEl = ({title, id, deleteEl, changeEl}) => (
 	<ListElContainer>
 		<HiddenInput fontSize="2rem" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength={20}/>
-		<Cancel onClick={() => deleteEl(id)}>&#x2716;</Cancel>
+		<Modal onContinue={() => deleteEl(id)} prompt="If you delete this list, all cards in it will be deleted too!">
+			<Cancel>&#x2716;</Cancel>
+		</Modal>
 	</ListElContainer>
 );
 

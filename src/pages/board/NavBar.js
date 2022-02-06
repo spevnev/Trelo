@@ -6,7 +6,7 @@ import starFull from "../../assets/svg/star-full.svg";
 import cog from "../../assets/svg/cog.svg";
 import exit from "../../assets/svg/exit.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBoards} from "../../redux/actionCreators/userActionCreator";
+import {changeBoards, leave} from "../../redux/actionCreators/userActionCreator";
 import {getUser} from "../../redux/selectors";
 
 const NavBarContainer = styled.div`
@@ -42,7 +42,9 @@ const NavBar = ({board}) => {
 
 	const toggleFavourite = () => dispatch(changeBoards(boards.map(cur => cur.id === board.id ? {...cur, isFavourite: !cur.isFavourite} : cur)));
 
-	const leave = () => {
+	const leaveBoard = () => {
+		dispatch(leave(board.id));
+		navigate("/");
 	};
 
 
@@ -53,7 +55,7 @@ const NavBar = ({board}) => {
 			{userBoard.isOwner ?
 				<NavEl><Icon src={cog} onClick={() => navigate("settings")}/></NavEl>
 				:
-				<NavEl><Icon src={exit} onClick={() => leave()}/></NavEl>
+				<NavEl><Icon style={{marginLeft: 2, width: "1.8rem"}} src={exit} onClick={leaveBoard}/></NavEl>
 			}
 		</NavBarContainer>
 	);

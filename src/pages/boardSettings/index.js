@@ -8,7 +8,7 @@ import Title from "./Title";
 import Lists from "./Lists";
 import Modal from "../../components/Modal";
 import GoBack from "../../components/GoBack";
-import {deleteCardsInBoard} from "../../redux/actionCreators/cardActionCreator";
+import {deleteCardBoard} from "../../redux/actionCreators/cardActionCreator";
 import {getBoard, getUser} from "../../redux/selectors";
 import PageError from "../../components/PageError";
 import PageLoading from "../../components/PageLoading";
@@ -34,6 +34,7 @@ const DeleteText = styled.p`
 const isEmpty = state => state.title.length === 0 && state.lists.length === 0 && state.users.length === 1;
 
 const BoardSettings = () => {
+	const [prompt, setPrompt] = useState("Are you sure you want to delete this board?");
 	const [isOpen, setOpen] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -67,7 +68,7 @@ const BoardSettings = () => {
 		if (board.length === 1 && !boards[0].isOwner) return <Navigate to="../"/>;
 	}
 
-	
+
 	const goBack = () => {
 		if (!isSaved) saveChanges(state);
 
@@ -79,10 +80,19 @@ const BoardSettings = () => {
 
 	const delBoard = () => {
 		dispatch(deleteBoard(boardId));
-		dispatch(deleteCardsInBoard(boardId));
+		dispatch(deleteCardBoard(boardId));
 
 		clearTimer();
 		navigate("/");
+	};
+
+	const open = text => {
+		setOpen(true);
+		setPrompt(text);
+
+		setTimeout(() => {
+			setPrompt("Are you sure you want to delete this board?");
+		}, 3000);
 	};
 
 
@@ -92,8 +102,8 @@ const BoardSettings = () => {
 
 			<Title titleChange={title => setState({title})} title={state.title}/>
 			<Lists lists={state.lists} boardId={boardId} setState={setState}/>
-			<Users users={state.users} boardId={boardId} open={() => setOpen(true)} setState={setState}/>
-			<Modal isOpenProp={isOpen} prompt="Are you sure you want to delete this board?" onCancel={() => setOpen(false)} onContinue={delBoard}>
+			<Users users={state.users} boardId={boardId} open={open} setState={setState}/>
+			<Modal isOpenProp={isOpen} prompt={prompt} onCancel={() => setOpen(false)} onContinue={delBoard}>
 				<DeleteText>Delete board</DeleteText>
 			</Modal>
 		</Container>
