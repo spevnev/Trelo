@@ -1,6 +1,6 @@
 import axios from "axios";
 import {changeBoard, createBoard, deleteBoard, getBoard} from "./board";
-import {changeCard, getCards} from "./cards";
+import {changeCard, getCards} from "./card";
 import {addUser, changeBoards, changeRole, deleteUser, fetchData, leave, login, signup} from "./user";
 import {getToken} from "./jwt";
 

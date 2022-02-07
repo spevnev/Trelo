@@ -65,7 +65,7 @@ const BoardSettings = () => {
 	if (state.status === "LOADING") return <PageLoading/>;
 	if (user.boards) {
 		const boards = user.boards.filter(cur => cur.id === boardId);
-		if (board.length === 1 && !boards[0].isOwner) return <Navigate to="../"/>;
+		if (boards.length === 1 && !boards[0].isOwner) return <Navigate to="../"/>;
 	}
 
 
