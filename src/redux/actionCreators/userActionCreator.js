@@ -36,8 +36,10 @@ export const leave = boardId => async (dispatch, getState, {user}) => {
 };
 
 export const changeBoards = newBoards => async (dispatch, getState, {user}) => {
-	const data = await user.changeBoards(newBoards);
-	if (data === null) return;
+	if (newBoards.filter(cur => cur.title.length === 0).length === 0) {
+		const data = await user.changeBoards(newBoards);
+		if (data === null) return;
+	}
 
 	dispatch({type: types.changeBoards, payload: {newBoards}});
 };

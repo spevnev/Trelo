@@ -52,7 +52,7 @@ export const deleteBoard = id => (dispatch, getState, {board}) => {
 };
 
 export const changeBoard = (id, newBoard) => (dispatch, getState, {board}) => {
-	board.changeBoard(id, {...newBoard, status: undefined});
+	if (newBoard.title.length > 0) board.changeBoard(id, {...newBoard, status: undefined});
 
 	dispatch({
 		type: types.changeBoard,
