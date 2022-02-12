@@ -1,6 +1,6 @@
 import axios from "axios";
 import {changeBoard, createBoard, deleteBoard, getBoard} from "./board";
-import {changeCard, getCards} from "./card";
+import {addCard, changeCard, deleteCard, getCards} from "./card";
 import {addUser, changeBoards, changeRole, deleteUser, fetchData, leave, login, signup} from "./user";
 import {getToken} from "./jwt";
 
@@ -22,6 +22,8 @@ export default () => ({
 	}, card: {
 		getCards: getCards(client),
 		changeCard: changeCard(client),
+		addCard: addCard(client),
+		deleteCard: deleteCard(client),
 	}, user: {
 		signup: signup(client),
 		login: login(client),

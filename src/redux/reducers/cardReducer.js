@@ -1,7 +1,5 @@
 import types from "../actions/cardActions";
 
-const emptyCard = (id, listId) => ({title: "", id: id, listId: listId, description: "", images: [], files: [], assigned: []});
-
 const cardReducer = (state = [], action) => {
 	const payload = action.payload;
 
@@ -14,7 +12,7 @@ const cardReducer = (state = [], action) => {
 			return state.filter(cur => cur.id !== payload.boardId);
 
 		case types.addCard:
-			return changeBoard(cur => ({...cur, cards: [...cur.cards, emptyCard(payload.id, payload.listId)]}));
+			return changeBoard(cur => ({...cur, cards: [...cur.cards, payload.card]}));
 		case types.deleteCard:
 			return changeBoard(cur => ({...cur, cards: cur.cards.filter(cur => cur.id !== payload.id)}));
 		case types.changeCard:

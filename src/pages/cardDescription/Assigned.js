@@ -61,10 +61,11 @@ const Assigned = ({assigned, users, commitChanges}) => {
 
 	const addUser = username => {
 		const user = users.filter(cur => cur.username === username);
-		if (user.length === 1) return commitChanges({assigned: [...assigned, user[0]]});
+		if (user.length === 1 && assigned.filter(cur => cur.username === username).length === 0)
+			return commitChanges({assigned: [...assigned, user[0]]});
 
 		setMsg("There is no user with that name in this project!");
-		setTimeout(() => setMsg(null), 1000);
+		setTimeout(() => setMsg(null), 2000);
 	};
 
 	const deleteUser = username => commitChanges({assigned: assigned.filter(cur => cur.username !== username)});

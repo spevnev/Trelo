@@ -45,6 +45,8 @@ export const newBoard = id => async (dispatch, getState, {board}) => {
 export const deleteBoard = id => (dispatch, getState, {board}) => {
 	board.deleteBoard(id);
 
+	dispatch(changeBoards(getState().user.boards.filter(cur => cur.id !== id)));
+
 	dispatch({
 		type: types.deleteBoard,
 		payload: {id},

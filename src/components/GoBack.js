@@ -3,7 +3,7 @@ import arrowBack from "../assets/svg/arrow-left.svg";
 import styled from "styled-components";
 
 const GoBackContainer = styled.div`
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   align-items: center;
   cursor: pointer;
