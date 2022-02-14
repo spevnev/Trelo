@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import ErrorMessage from "../../components/ErrorMessage";
 import {Container, SubTitle} from "./styles";
 import trashCursor from "../../assets/cursor.cur";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const User = styled.img`
   width: 3rem;
@@ -55,20 +55,20 @@ const AddUser = ({addUser}) => {
 	);
 };
 
-const Assigned = ({assigned, users, commitChanges}) => {
+const Assigned = ({assignedNames, users, commitChanges}) => {
 	const [msg, setMsg] = useState(null);
+	const assigned = users.filter(cur => assignedNames.indexOf(cur.username) !== -1);
 
 
 	const addUser = username => {
-		const user = users.filter(cur => cur.username === username);
-		if (user.length === 1 && assigned.filter(cur => cur.username === username).length === 0)
-			return commitChanges({assigned: [...assigned, user[0]]});
+		if (users.filter(cur => cur.username === username).length === 1 && assigned.filter(cur => cur.username === username).length === 0)
+			return commitChanges({assigned: [...assignedNames, username]});
 
 		setMsg("There is no user with that name in this project!");
 		setTimeout(() => setMsg(null), 2000);
 	};
 
-	const deleteUser = username => commitChanges({assigned: assigned.filter(cur => cur.username !== username)});
+	const deleteUser = username => commitChanges({assigned: assignedNames.filter(cur => cur !== username)});
 
 
 	return (
@@ -76,7 +76,11 @@ const Assigned = ({assigned, users, commitChanges}) => {
 			<SubTitle>Assigned</SubTitle>
 
 			<div>
-				{assigned.map(user => <User onClick={() => deleteUser(user.username)} src={user.icon} key={user.username} title={user.username}/>)}
+				{assigned.map(user =>
+					<User onClick={() => deleteUser(user.username)}
+						  src={(user.icon && user.icon.id && user.icon.ext) && `http://localhost:3000/static/icons/${user.icon.id}.${user.icon.ext}`}
+						  key={user.username} title={user.username}/>,
+				)}
 			</div>
 
 			<ErrorMessage>{msg}</ErrorMessage>

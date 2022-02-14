@@ -1,7 +1,7 @@
 import React from "react";
 import {useNavigate} from "react-router";
 import styled from "styled-components";
-import logo from "../assets/logo.png";
+import logo from "../assets/imgs/logo.png";
 import {useSelector} from "react-redux";
 import {getUser} from "../redux/selectors";
 
@@ -43,24 +43,32 @@ const UserIcon = styled.div`
 
 const Header = () => {
 	const navigate = useNavigate();
-	const user = useSelector(getUser()) || {username: "", userIcon: ""};
+	const user = useSelector(getUser());
+
 
 	const logout = () => {
 		localStorage.removeItem("JWT");
 		window.location.reload();
 	};
 
-	return (<HeaderContainer>
-		<Container style={{cursor: "pointer"}} onClick={() => navigate("/")}>
-			<img src={logo} width="32px" height="32px" alt=""/>
-			<Title>Trelo</Title>
-		</Container>
 
-		<Container>
-			<Username>{user.username}</Username>
-			<UserIcon onClick={logout} image={user.userIcon}/>
-		</Container>
-	</HeaderContainer>);
+	if (!user) return null;
+
+
+	return (
+		<HeaderContainer>
+			<Container style={{cursor: "pointer"}} onClick={() => navigate("/")}>
+				<img src={logo} width="32px" height="32px" alt=""/>
+				<Title>Trelo</Title>
+			</Container>
+
+			<Container>
+				<Username>{user.username}</Username>
+				{(user.icon && user.icon.id && user.icon.ext) &&
+					<UserIcon onClick={logout} image={`http://localhost:3000/static/icons/${user.icon.id}.${user.icon.ext}`}/>}
+			</Container>
+		</HeaderContainer>
+	);
 };
 
 export default Header;

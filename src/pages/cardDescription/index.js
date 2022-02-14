@@ -51,17 +51,18 @@ const CardDescription = () => {
 	const saveChanges = state => dispatch(changeCard(boardId, state));
 	const [state, setState, isSaved, clearTimer] = useDebounce(saveChanges, initialState);
 
+
 	useEffect(() => {
 		if (board === null) dispatch(fetchBoard(boardId));
 	}, []);
 
 	useEffect(() => {
-		if (!state && card) setState(card, false);
+		if (card) setState(card, false);
 	}, [card]);
 
 
-	if (!board || board.status === "ERROR") return <PageError>This card doesn't exist!</PageError>;
-	if (!state || board.status === "LOADING") return <PageLoading/>;
+	if (!board || !state || board.status === "ERROR") return <PageError>This card doesn't exist!</PageError>;
+	if (board.status === "LOADING") return <PageLoading/>;
 
 
 	const openModal = text => {
@@ -98,10 +99,10 @@ const CardDescription = () => {
 			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenProp={isOpen} prompt={modalText}/>
 
 			<Title lists={lists} listId={state.listId} title={state.title} commitChanges={setState}/>
-			<Assigned assigned={state.assigned} users={users} commitChanges={setState}/>
+			<Assigned assignedNames={state.assigned} users={users} commitChanges={setState}/>
 			<Description description={state.description} commitChanges={setState}/>
-			<Images images={state.images} commitChanges={setState}/>
-			<Files files={state.files} commitChanges={setState}/>
+			<Images state={state} boardId={boardId} commitChanges={setState}/>
+			<Files state={state} boardId={boardId} commitChanges={setState}/>
 		</Container>
 	);
 };

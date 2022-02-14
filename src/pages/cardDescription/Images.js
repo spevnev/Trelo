@@ -1,9 +1,12 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
-import {v4 as uuid} from "uuid";
+import {useDispatch} from "react-redux";
+import {addImage} from "../../redux/actionCreators/cardActionCreator";
+import bundle from "../../services";
+import imagePlaceholder from "../../assets/imgs/imagePlaceholder.png";
 
 const Block = styled.div`
   min-width: 20rem;
@@ -78,6 +81,7 @@ const ImageContainer = styled(Block)`
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  transition: all .3s ease-in;
 
   &:hover ${Icon} {
     opacity: 1;
@@ -92,19 +96,29 @@ const Overlay = ({src, close}) => (
 	</OverlayContainer>
 );
 
-const Image = ({src, openFull, delImg, id}) => {
+const Image = ({boardId, openFull, delImg, id, ext}) => {
+	const [src, setSrc] = useState(imagePlaceholder);
+
+
+	useEffect(() => {
+		if (id && ext) bundle.file.getImage(boardId, id, ext).then(data => setSrc(data));
+	}, []);
+
+
 	const deleteImage = e => {
 		e.stopPropagation();
 		delImg(id);
 	};
 
-	const downloadImage = e => {
+	const downloadImageLocal = e => {
 		e.stopPropagation();
+		bundle.file.downloadImage(boardId, id, ext);
 	};
+
 
 	return (
 		<ImageContainer onClick={openFull} src={src}>
-			<Icon src={download} onClick={downloadImage}/>
+			<Icon src={download} onClick={downloadImageLocal}/>
 			<Icon src={cross} onClick={deleteImage}/>
 		</ImageContainer>
 	);
@@ -128,28 +142,30 @@ const ImageInput = ({addImage}) => {
 		if (file) {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			reader.onload = () => addImage(reader.result);
+			if (file.name.split(".").length === 1) return;
+			reader.onload = () => addImage(file.name.split(".")[1], reader.result);
 		}
 	};
 
 
 	return (
 		<>
-			<input ref={input} style={{display: "none"}} accept="image/jpeg,image/png" id="uploadImage" type="file" onChange={onImage}/>
+			<input ref={input} style={{display: "none"}} accept="image/*" id="uploadImage" type="file" onChange={onImage}/>
 			<label htmlFor="uploadImage"><AddImage onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>+</AddImage></label>
 		</>
 	);
 };
 
-const Images = ({images, commitChanges}) => {
+const Images = ({boardId, state, commitChanges}) => {
 	const [fullImg, setFullImg] = useState(null);
+	const dispatch = useDispatch();
 
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
-	const addImage = src => commitChanges({images: [...images, {src, id: uuid()}]});
+	const delImage = id => commitChanges({images: state.images.filter(cur => cur.id !== id)});
 
-	const delImage = id => commitChanges({images: images.filter(cur => cur.id !== id)});
+	const addImageLocal = (ext, data) => dispatch(addImage(boardId, state, data, ext));
 
 
 	return (
@@ -159,9 +175,9 @@ const Images = ({images, commitChanges}) => {
 			<SubTitle>Attached images</SubTitle>
 
 			<BlockContainer>
-				{images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur.id} {...cur}/>)}
+				{state.images.map(cur => <Image openFull={openFull} boardId={boardId} delImg={delImage} key={cur.id} {...cur}/>)}
 
-				<ImageInput addImage={addImage}/>
+				<ImageInput addImage={addImageLocal}/>
 			</BlockContainer>
 		</Container>
 	);

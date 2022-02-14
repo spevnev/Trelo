@@ -63,10 +63,10 @@ const Username = styled.p`
 const user = {value: "user", text: "User"};
 const owner = {value: "owner", text: "Owner"};
 
-const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => (
+const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={userIcon}/>
+			<UserIcon src={icon}/>
 			<Username>{username}</Username>
 		</div>
 
@@ -77,10 +77,10 @@ const User = ({username, userIcon, isOwner, deleteUser, changeRole}) => (
 	</UserContainer>
 );
 
-const CurUser = ({username, userIcon, isOwner, leave}) => (
+const CurUser = ({username, icon, isOwner, leave}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={userIcon}/>
+			<UserIcon src={icon}/>
 			<Username>{username}</Username>
 		</div>
 
@@ -141,7 +141,8 @@ const Users = ({users, boardId, setState, open}) => {
 		<SubContainer>
 			<SubTitle>Users</SubTitle>
 
-			<CurUser leave={leave} username={curUser.username} userIcon={curUser.userIcon} isOwner={board.length === 1 ? board[0].isOwner : false}/>
+			<CurUser leave={leave} username={curUser.username} icon={`http://localhost:3000/static/icons/${curUser.icon.id}.${curUser.icon.ext}`}
+					 isOwner={board.length === 1 ? board[0].isOwner : false}/>
 			{users.filter(cur => cur.username !== curUser.username).map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeUserRole} {...cur}/>)}
 			<ErrorMessage>{msg}</ErrorMessage>
 

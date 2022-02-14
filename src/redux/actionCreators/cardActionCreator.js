@@ -31,3 +31,17 @@ export const changeCard = (boardId, newCard) => async (dispatch, getState, {card
 
 	dispatch({type: types.changeCard, payload: {boardId, id: newCard.id, newCard}});
 };
+
+export const addFile = (boardId, card, filename, data) => async (dispatch, getState, {file}) => {
+	const [error, id] = await file.uploadFile(boardId, data);
+	if (error) return;
+
+	dispatch(changeCard(boardId, {...card, files: [...card.files, {filename, id}]}));
+};
+
+export const addImage = (boardId, card, data, ext) => async (dispatch, getState, {file}) => {
+	const [error, id] = await file.uploadImage(boardId, data, ext);
+	if (error) return;
+
+	dispatch(changeCard(boardId, {...card, images: [...card.images, {id, ext}]}));
+};

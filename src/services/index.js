@@ -1,8 +1,9 @@
-import axios from "axios";
 import {changeBoard, createBoard, deleteBoard, getBoard} from "./board";
 import {addCard, changeCard, deleteCard, getCards} from "./card";
 import {addUser, changeBoards, changeRole, deleteUser, fetchData, leave, login, signup} from "./user";
+import {downloadFile, downloadImage, getImage, uploadFile, uploadImage} from "./file";
 import {getToken} from "./jwt";
+import axios from "axios";
 
 const client = axios.create({baseURL: "http://localhost:3000/api/"});
 
@@ -13,7 +14,8 @@ client.interceptors.request.use(req => {
 	return req;
 });
 
-export default () => ({
+
+export default {
 	board: {
 		getBoard: getBoard(client),
 		deleteBoard: deleteBoard(client),
@@ -33,5 +35,11 @@ export default () => ({
 		changeRole: changeRole(client),
 		changeBoards: changeBoards(client),
 		leave: leave(client),
+	}, file: {
+		uploadFile: uploadFile(client),
+		uploadImage: uploadImage(client),
+		getImage: getImage(client),
+		downloadFile: downloadFile(client),
+		downloadImage: downloadImage(client),
 	},
-});
+};

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/imgs/logo.png";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import ErrorMessage from "../../components/ErrorMessage";

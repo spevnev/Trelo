@@ -13,6 +13,11 @@ const DescriptionInput = styled.textarea`
   padding: .6rem 1.2rem;
   font-size: 1.8rem;
   resize: none;
+  transition: all .3s;
+
+  &:hover, &:focus {
+    background: #fbfbfb;
+  }
 `;
 
 

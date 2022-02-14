@@ -4,8 +4,15 @@ import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
 import HiddenInput from "../../components/HiddenInput";
-import ErrorMessage from "../../components/ErrorMessage";
-import {v4 as uuid} from "uuid";
+import {useDispatch} from "react-redux";
+import {addFile} from "../../redux/actionCreators/cardActionCreator";
+import bundle from "../../services/";
+
+const ErrorMessage = styled.p`
+  font-size: 12px;
+  color: #ff5e5e;
+  margin: 1px 2px;
+`;
 
 const FileContainer = styled.div`
   display: flex;
@@ -48,12 +55,11 @@ const AddFile = styled.div`
 `;
 
 
-const File = ({filename, delFile, renameFile, id}) => {
+const File = ({filename, delFile, renameFile, id, boardId}) => {
 	const [msg, setMsg] = useState(null);
 
 
-	const downloadFile = e => {
-	};
+	const downloadFile = () => bundle.file.downloadFile(boardId, id, filename);
 
 	const rename = e => {
 		if (e.target.value.length === 0) setMsg("File name can't be empty!");
@@ -108,12 +114,15 @@ const FileInput = ({addFile}) => {
 	);
 };
 
-const Files = ({files, commitChanges}) => {
-	const addFile = (filename, data) => commitChanges({files: [...files, {filename, data, id: uuid()}]});
+const Files = ({state, boardId, commitChanges}) => {
+	const dispatch = useDispatch();
 
-	const delFile = id => commitChanges({files: files.filter(cur => cur.id !== id)});
 
-	const renameFile = (id, newFilename) => commitChanges({files: files.map(cur => cur.id === id ? {...cur, filename: newFilename} : cur)});
+	const addFileLocal = (filename, data) => dispatch(addFile(boardId, state, filename, data));
+
+	const delFile = id => commitChanges({files: state.files.filter(cur => cur.id !== id)});
+
+	const renameFile = (id, newFilename) => commitChanges({files: state.files.map(cur => cur.id === id ? {...cur, filename: newFilename} : cur)});
 
 
 	return (
@@ -121,8 +130,8 @@ const Files = ({files, commitChanges}) => {
 			<SubTitle>Attached files</SubTitle>
 
 			<BlockContainer>
-				{files.map(file => <File key={file.id} {...file} renameFile={renameFile} delFile={delFile}/>)}
-				<FileInput addFile={addFile}/>
+				{state.files.map(file => <File key={file.id} {...file} renameFile={renameFile} boardId={boardId} delFile={delFile}/>)}
+				<FileInput addFile={addFileLocal}/>
 			</BlockContainer>
 		</Container>
 	);

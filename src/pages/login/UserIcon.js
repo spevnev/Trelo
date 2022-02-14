@@ -39,9 +39,8 @@ const UserIcon = ({icon, setIcon, error}) => {
 
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			reader.onload = () => {
-				setIcon(reader.result);
-			};
+			if (file.name.split(".").length === 1) return;
+			reader.onload = () => setIcon({data: reader.result, ext: file.name.split(".")[1]});
 		}
 	};
 

@@ -58,7 +58,10 @@ const Card = ({title, id, description, images, assigned, files, i}) => {
 						</div>
 
 						<div>
-							{assigned.map(cur => <UserIcon key={cur.username} title={cur.username} src={cur.userIcon}/>)}
+							{assigned.map(cur =>
+								<UserIcon key={cur.username} title={cur.username}
+										  src={(cur.icon && cur.icon.id && cur.icon.ext) && `http://localhost:3000/static/icons/${cur.icon.id}.${cur.icon.ext}`}/>,
+							)}
 						</div>
 					</SubContainer>
 				</CardContainer>

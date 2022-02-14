@@ -26,7 +26,7 @@ const SignupForm = () => {
 		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
 		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
 		if (formState.password != formState.confirm) return error("Passwords don't match!");
-		if (formState.icon.length === 0) return error("You must have icon!");
+		if (formState.icon.ext.length === 0) return error("You must have icon!");
 
 		dispatch(signup({...formState, username: formState.username.toLowerCase()}, error));
 	};
@@ -38,7 +38,7 @@ const SignupForm = () => {
 			<Text secondary>Don't have account yet?</Text>
 
 			<Form>
-				<UserIcon setIcon={setIcon} icon={formState.icon} error={error}/>
+				<UserIcon setIcon={setIcon} icon={formState.icon.data} error={error}/>
 
 				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
 				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>

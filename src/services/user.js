@@ -3,8 +3,8 @@ export const login = axios => async (username, password) => {
 	return res && res.status === 200 ? res.data : null;
 };
 
-export const signup = axios => async (username, password, userIcon) => {
-	const res = await axios.post("/user/signup", {username: username.toLowerCase(), password, userIcon}).catch(e => console.log(e));
+export const signup = axios => async (username, password, icon) => {
+	const res = await axios.post("/user/signup", {username: username.toLowerCase(), password, icon}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
 
