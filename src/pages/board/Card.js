@@ -40,7 +40,7 @@ const UserIcon = styled.img`
 `;
 
 
-const Card = ({title, id, description, images, assigned, files, i}) => {
+const Card = ({title, id, description, images, assigned, files, i, users}) => {
 	const navigate = useNavigate();
 
 
@@ -58,7 +58,7 @@ const Card = ({title, id, description, images, assigned, files, i}) => {
 						</div>
 
 						<div>
-							{assigned.map(cur =>
+							{users.filter(cur => assigned.indexOf(cur.username) !== -1).map(cur =>
 								<UserIcon key={cur.username} title={cur.username}
 										  src={(cur.icon && cur.icon.id && cur.icon.ext) && `http://localhost:3000/static/icons/${cur.icon.id}.${cur.icon.ext}`}/>,
 							)}

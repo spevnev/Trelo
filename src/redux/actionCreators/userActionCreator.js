@@ -2,7 +2,11 @@ import types from "../actions/userActions";
 import {changeBoard} from "./boardActionCreator";
 
 export const fetchUser = () => async (dispatch, getState, {user}) => {
-	const data = await user.fetchData();
+	const [error, data] = await user.fetchData();
+	if (error) {
+		localStorage.removeItem("JWT");
+		window.location.reload();
+	}
 
 	dispatch({type: types.setUser, payload: {user: data}});
 };

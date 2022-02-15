@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,10 +11,8 @@ import Files from "./Files";
 import GoBack from "../../components/GoBack";
 import Modal from "../../components/Modal";
 import {getBoard, getCard} from "../../redux/selectors";
-import PageError from "../../components/PageError";
-import useDebounce from "../../components/useDebounce";
+import usePageState from "../../hooks/usePageState";
 import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
-import PageLoading from "../../components/PageLoading";
 import deleteIcon from "../../assets/svg/cross.svg";
 
 const Container = styled.div`
@@ -40,29 +38,28 @@ const isCardEmpty = card => card.title.length === 0 && card.description.length =
 const CardDescription = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
 	const {boardId, cardId} = useParams();
 	const card = useSelector(getCard(boardId, cardId));
 	const board = useSelector(getBoard(boardId));
+
 	const [modalText, setText] = useState();
 	const [isOpen, setOpen] = useState(false);
 
 
-	const initialState = card && board && board.status === "READY" ? card : null;
-	const saveChanges = state => dispatch(changeCard(boardId, state));
-	const [state, setState, isSaved, clearTimer] = useDebounce(saveChanges, initialState);
+	const [pageState, state, setState, isSaved, clearTimer] = usePageState(
+		() => {
+			if (board && card && board.status === "READY") return card;
 
+			if (!board) dispatch(fetchBoard(boardId));
+			return null;
+		},
+		state => !board || !state || board.status === "ERROR", "This card doesn't exist!",
+		() => board.status === "LOADING", card,
+		state => dispatch(changeCard(boardId, state)),
+	);
 
-	useEffect(() => {
-		if (board === null) dispatch(fetchBoard(boardId));
-	}, []);
-
-	useEffect(() => {
-		if (card) setState(card, false);
-	}, [card]);
-
-
-	if (!board || !state || board.status === "ERROR") return <PageError>This card doesn't exist!</PageError>;
-	if (board.status === "LOADING") return <PageLoading/>;
+	if (pageState) return pageState;
 
 
 	const openModal = text => {
@@ -71,7 +68,7 @@ const CardDescription = () => {
 	};
 
 	const goBack = async () => {
-		if (!isSaved) await saveChanges(state);
+		if (!isSaved) await dispatch(changeCard(boardId, state));
 
 		if (isCardEmpty(card)) return delCard();
 		else if (card.title.length === 0) return openModal("Title can't be empty! Do you want to delete this card?");

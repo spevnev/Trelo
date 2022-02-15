@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuid} from "uuid";
 import Card from "./Card";
 import {useNavigate} from "react-router";
 import {addCard} from "../../redux/actionCreators/cardActionCreator";
 import {Droppable} from "react-beautiful-dnd";
+import {getBoard} from "../../redux/selectors";
 
 const Title = styled.p`
   font-size: 2rem;
@@ -37,6 +38,7 @@ const AddCard = styled.p`
 const List = ({title, cards, boardId, id}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const users = useSelector(getBoard(boardId)).users;
 
 
 	const newCard = () => {
@@ -49,14 +51,16 @@ const List = ({title, cards, boardId, id}) => {
 
 	return (
 		<Droppable droppableId={id}>
-			{provided => (<div ref={provided.innerRef} {...provided.droppableProps}>
-				<ListContainer>
-					<Title>{title}</Title>
-					{cards && cards.map((card, i) => <Card key={card.id} i={i} {...card}/>)}
-					{provided.placeholder}
-					<AddCard onClick={newCard}>+ Add card</AddCard>
-				</ListContainer>
-			</div>)}
+			{provided => (
+				<div ref={provided.innerRef} {...provided.droppableProps}>
+					<ListContainer>
+						<Title>{title}</Title>
+						{cards && cards.map((card, i) => <Card key={card.id} users={users} boardId={boardId} i={i} {...card}/>)}
+						{provided.placeholder}
+						<AddCard onClick={newCard}>+ Add card</AddCard>
+					</ListContainer>
+				</div>
+			)}
 		</Droppable>
 	);
 };
