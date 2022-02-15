@@ -118,7 +118,7 @@ const Files = ({state, boardId, commitChanges}) => {
 	const dispatch = useDispatch();
 
 
-	const addFileLocal = (filename, data) => dispatch(addFile(boardId, state, filename, data));
+	const addFileLocal = (filename, data) => state.files.length < 10 && dispatch(addFile(boardId, state, filename, data));
 
 	const delFile = id => commitChanges({files: state.files.filter(cur => cur.id !== id)});
 
@@ -131,7 +131,8 @@ const Files = ({state, boardId, commitChanges}) => {
 
 			<BlockContainer>
 				{state.files.map(file => <File key={file.id} {...file} renameFile={renameFile} boardId={boardId} delFile={delFile}/>)}
-				<FileInput addFile={addFileLocal}/>
+
+				{state.files.length < 10 && <FileInput addFile={addFileLocal}/>}
 			</BlockContainer>
 		</Container>
 	);

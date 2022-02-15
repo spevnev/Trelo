@@ -20,7 +20,7 @@ const Title = ({lists, listId, title, commitChanges}) => {
 	return (
 		<Container>
 			<SubTitle>Title</SubTitle>
-			<HiddenInput placeholder="Card title" onChange={e => commitChanges({title: e.target.value})} value={title}/>
+			<HiddenInput maxLength="64" placeholder="Card title" onChange={e => commitChanges({title: e.target.value})} value={title}/>
 			<Select onSelect={listId => commitChanges({listId})} initial={{text: curList.title, value: listId}}
 					options={otherLists.map(cur => ({text: cur.title, value: cur.id}))}/>
 		</Container>

@@ -14,10 +14,11 @@ const ListElContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  max-width: 35rem;
+  max-width: 40rem;
   width: 95vw;
 
   & ${HiddenInput} {
+    width: 30rem;
     font-size: 2rem;
   }
 `;
@@ -28,11 +29,11 @@ const NewList = styled.div`
   align-items: center;
   margin-top: 10px;
   justify-content: space-between;
-  max-width: 35rem;
+  max-width: 40rem;
   width: 95vw;
 
   & ${Input} {
-    max-width: 25rem;
+    max-width: 30rem;
     width: 70vw;
   }
 `;
@@ -40,7 +41,7 @@ const NewList = styled.div`
 
 const ListEl = ({title, id, deleteEl, changeEl}) => (
 	<ListElContainer>
-		<HiddenInput fontSize="2rem" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength={20}/>
+		<HiddenInput fontSize="2rem" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength="20"/>
 		<Modal onContinue={() => deleteEl(id)} prompt="If you delete this list, all cards in it will be deleted too!">
 			<Cancel>&#x2716;</Cancel>
 		</Modal>
@@ -72,7 +73,7 @@ const Lists = ({lists, boardId, setState}) => {
 			{lists.map(cur => <ListEl key={cur.id} {...cur} deleteEl={deleteEl} changeEl={changeEl}/>)}
 
 			<NewList>
-				<Input placeholder="List title" maxLength={20} onChange={e => setNewList(e.target.value)} value={newList}/>
+				<Input placeholder="List title" maxLength="20" onChange={e => setNewList(e.target.value)} value={newList}/>
 				<Button onClick={addEl}>Add</Button>
 			</NewList>
 		</SubContainer>

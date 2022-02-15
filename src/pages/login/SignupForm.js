@@ -24,9 +24,11 @@ const SignupForm = () => {
 
 	const submit = () => {
 		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
+		if (formState.username.length > 25) return error("Username can't be longer than 25 characters!");
 		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
+		if (formState.password.length > 64) return error("Password can't be longer than 64 characters!");
 		if (formState.password != formState.confirm) return error("Passwords don't match!");
-		if (formState.icon.ext.length === 0) return error("You must have icon!");
+		if (formState.icon.ext.length === 0 || formState.icon.data.length === 0) return error("You must have icon!");
 
 		dispatch(signup({...formState, username: formState.username.toLowerCase()}, error));
 	};
@@ -44,7 +46,7 @@ const SignupForm = () => {
 				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 				<Input placeholder="Confirm password" onChange={e => setFormState({...formState, confirm: e.target.value})} value={formState.confirm}/>
 
-				<ErrorMessage>{msg}</ErrorMessage>
+				<ErrorMessage fixedHeight>{msg}</ErrorMessage>
 
 				<StyledButton primary onClick={submit}>Sign up</StyledButton>
 			</Form>

@@ -165,7 +165,7 @@ const Images = ({boardId, state, commitChanges}) => {
 
 	const delImage = id => commitChanges({images: state.images.filter(cur => cur.id !== id)});
 
-	const addImageLocal = (ext, data) => dispatch(addImage(boardId, state, data, ext));
+	const addImageLocal = (ext, data) => state.images.length < 10 && dispatch(addImage(boardId, state, data, ext));
 
 
 	return (
@@ -177,7 +177,7 @@ const Images = ({boardId, state, commitChanges}) => {
 			<BlockContainer>
 				{state.images.map(cur => <Image openFull={openFull} boardId={boardId} delImg={delImage} key={cur.id} {...cur}/>)}
 
-				<ImageInput addImage={addImageLocal}/>
+				{state.images.length < 10 && <ImageInput addImage={addImageLocal}/>}
 			</BlockContainer>
 		</Container>
 	);

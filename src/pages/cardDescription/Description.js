@@ -24,7 +24,7 @@ const DescriptionInput = styled.textarea`
 const Description = ({description, commitChanges}) => (
 	<Container>
 		<SubTitle>Description</SubTitle>
-		<DescriptionInput onChange={e => commitChanges({description: e.target.value})} value={description} placeholder="Description"/>
+		<DescriptionInput maxLength="500" onChange={e => commitChanges({description: e.target.value})} value={description} placeholder="Description"/>
 	</Container>
 );
 

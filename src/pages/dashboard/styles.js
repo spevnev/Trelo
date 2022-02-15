@@ -5,12 +5,12 @@ export const BoardContainer = styled.div`
   border-radius: 5px;
   cursor: pointer;
 
-  width: 18vw;
-  min-width: 150px;
-  height: 7rem;
+  width: 20vw;
+  min-width: 160px;
+  min-height: 7rem;
   padding: .5rem .8rem;
 
-  margin-right: 1.2vw;
+  margin-right: 2vw;
   margin-bottom: 15px;
 
   display: flex;

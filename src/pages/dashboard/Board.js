@@ -11,6 +11,7 @@ import {changeBoards} from "../../redux/actionCreators/userActionCreator";
 
 const Title = styled.p`
   font-size: 1.8rem;
+  word-wrap: anywhere;
 `;
 
 const Icons = styled.div`

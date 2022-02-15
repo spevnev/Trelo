@@ -15,7 +15,7 @@ const UserContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  max-width: 35rem;
+  max-width: 40rem;
 
   & p {
     font-size: 1.8rem;
@@ -44,12 +44,12 @@ const NewUser = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  max-width: 35rem;
+  max-width: 40rem;
   width: 95vw;
   margin-top: 10px;
 
   & ${Input} {
-    max-width: 25rem;
+    max-width: 30rem;
     width: 70vw;
   }
 `;
@@ -126,6 +126,8 @@ const Users = ({users, boardId, setState, open}) => {
 	};
 
 	const newUser = () => {
+		if (newUsername.length < 4) return error("Username can't be less than 4 characters!");
+		if (newUsername.length > 25) return error("Username can't be longer than 25 characters!");
 		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length !== 0) return error("This user is already in the board!");
 
 		dispatch(addUser(boardId, newUsername.toLowerCase(), () => {
@@ -147,7 +149,7 @@ const Users = ({users, boardId, setState, open}) => {
 			<ErrorMessage>{msg}</ErrorMessage>
 
 			<NewUser>
-				<Input maxLength={20} placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
+				<Input maxLength="25" placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
 				<Button onClick={newUser}>Add</Button>
 			</NewUser>
 		</SubContainer>

@@ -49,7 +49,7 @@ const AddUser = ({addUser}) => {
 
 	return (
 		<AddUserContainer>
-			<Input placeholder="Username" maxLength={20} onChange={e => setName(e.target.value)} value={name}/>
+			<Input placeholder="Username" maxLength={25} onChange={e => setName(e.target.value)} value={name}/>
 			<Button onClick={newUser}>Add</Button>
 		</AddUserContainer>
 	);
@@ -61,6 +61,7 @@ const Assigned = ({assignedNames, users, commitChanges}) => {
 
 
 	const addUser = username => {
+		if (username.length < 4) return setMsg("Username must be at least 4 characters long!");
 		if (users.filter(cur => cur.username === username).length === 1 && assigned.filter(cur => cur.username === username).length === 0)
 			return commitChanges({assigned: [...assignedNames, username]});
 

@@ -21,7 +21,9 @@ const LoginForm = () => {
 
 	const submit = () => {
 		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
+		if (formState.username.length > 25) return error("Username can't be longer than 25 characters!");
 		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
+		if (formState.password.length > 64) return error("Password can't be longer than 64 characters!");
 
 		dispatch(login(formState.username.toLowerCase(), formState.password, error));
 	};
@@ -33,10 +35,10 @@ const LoginForm = () => {
 			<Text secondary>Already signed up?</Text>
 
 			<Form>
-				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
-				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
+				<Input placeholder="Username" maxLength="25" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
+				<Input placeholder="Password" maxLength="64" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 
-				<ErrorMessage>{msg}</ErrorMessage>
+				<ErrorMessage fixedHeight>{msg}</ErrorMessage>
 
 				<StyledButton onClick={submit}>Log in</StyledButton>
 			</Form>
