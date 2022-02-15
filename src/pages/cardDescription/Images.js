@@ -142,8 +142,9 @@ const ImageInput = ({addImage}) => {
 		if (file) {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			if (file.name.split(".").length === 1) return;
-			reader.onload = () => addImage(file.name.split(".")[1], reader.result);
+			const split = file.name.split(".");
+			if (split.length === 1) return;
+			reader.onload = () => addImage(split[split.length - 1], reader.result);
 		}
 	};
 

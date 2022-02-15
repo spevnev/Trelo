@@ -5,8 +5,8 @@ import {changeBoards} from "./userActionCreator";
 const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}});
 
 
-export const fetchBoard = id => async (dispatch, getState, {board, card}) => {
-	dispatch(addBoard({id, status: "LOADING"}));
+export const fetchBoard = (id, silent = false) => async (dispatch, getState, {board, card}) => {
+	if (!silent) dispatch(addBoard({id, status: "LOADING"}));
 
 	const cards = await card.getCards(id);
 	const brd = await board.getBoard(id);

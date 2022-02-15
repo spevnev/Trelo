@@ -66,7 +66,7 @@ const owner = {value: "owner", text: "Owner"};
 const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={icon}/>
+			<UserIcon src={`http://localhost:3000/static/icons/${icon.id}.${icon.ext}`}/>
 			<Username>{username}</Username>
 		</div>
 
@@ -80,7 +80,7 @@ const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 const CurUser = ({username, icon, isOwner, leave}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={icon}/>
+			<UserIcon src={`http://localhost:3000/static/icons/${icon.id}.${icon.ext}`}/>
 			<Username>{username}</Username>
 		</div>
 
@@ -130,8 +130,8 @@ const Users = ({users, boardId, setState, open}) => {
 		if (newUsername.length > 25) return error("Username can't be longer than 25 characters!");
 		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length !== 0) return error("This user is already in the board!");
 
-		dispatch(addUser(boardId, newUsername.toLowerCase(), () => {
-			setState({users: [...users, {username: newUsername.toLowerCase(), isOwner: false}]});
+		dispatch(addUser(boardId, newUsername.toLowerCase(), data => {
+			setState({users: [...users, {...data, isOwner: false}]});
 			setNewUsername("");
 		}, error));
 	};
@@ -143,7 +143,7 @@ const Users = ({users, boardId, setState, open}) => {
 		<SubContainer>
 			<SubTitle>Users</SubTitle>
 
-			<CurUser leave={leave} username={curUser.username} icon={`http://localhost:3000/static/icons/${curUser.icon.id}.${curUser.icon.ext}`}
+			<CurUser leave={leave} username={curUser.username} icon={curUser.icon}
 					 isOwner={board.length === 1 ? board[0].isOwner : false}/>
 			{users.filter(cur => cur.username !== curUser.username).map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeUserRole} {...cur}/>)}
 			<ErrorMessage>{msg}</ErrorMessage>

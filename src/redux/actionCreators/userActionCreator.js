@@ -52,7 +52,7 @@ export const addUser = (id, username, onSuccess, onError) => async (dispatch, ge
 	const [error, data] = await user.addUser(username, id);
 	if (error) return onError(error);
 
-	onSuccess();
+	onSuccess(data);
 	const board = getState().board.filter(cur => cur.id === id)[0];
 	dispatch(changeBoard(id, {...board, users: [...board.users, {...data, isOwner: false}]}));
 };

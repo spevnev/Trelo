@@ -54,9 +54,10 @@ const CardDescription = () => {
 			if (!board) dispatch(fetchBoard(boardId));
 			return null;
 		},
-		state => !board || !state || board.status === "ERROR", "This card doesn't exist!",
-		() => board.status === "LOADING", card,
-		state => dispatch(changeCard(boardId, state)),
+		() => dispatch(fetchBoard(boardId, true)),
+		() => !board || !card || (board.status && board.status === "ERROR"), "This card doesn't exist!",
+		state => board.status === "LOADING" || !state,
+		card, state => dispatch(changeCard(boardId, state)),
 	);
 
 	if (pageState) return pageState;

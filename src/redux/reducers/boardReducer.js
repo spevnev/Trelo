@@ -13,10 +13,8 @@ const boardReducer = (state = [], action) => {
 			const l = state.filter(cur => cur.id === payload.board.id).length;
 			if (l === 0) return [...state, payload.board];
 			return state.map(cur => cur.id === payload.board.id ? payload.board : cur);
-
 		case types.deleteBoard:
 			return state.filter(cur => cur.id !== payload.id);
-
 		case types.changeBoard:
 			return changeBoard(() => payload.board);
 

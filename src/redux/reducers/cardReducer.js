@@ -7,7 +7,9 @@ const cardReducer = (state = [], action) => {
 
 	switch (action.type) {
 		case types.addCardBoard:
-			return [...state, {id: payload.boardId, cards: payload.cards}];
+			const l = state.filter(cur => cur.id === payload.boardId).length;
+			if (l === 0) return [...state, {id: payload.boardId, cards: payload.cards}];
+			return state.map(cur => cur.id === payload.boardId ? {id: payload.boardId, cards: payload.cards} : cur);
 		case types.deleteCardBoard:
 			return state.filter(cur => cur.id !== payload.boardId);
 

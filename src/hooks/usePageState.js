@@ -3,17 +3,17 @@ import PageLoading from "../components/PageLoading";
 import PageError from "../components/PageError";
 
 const saveMs = 500;
-const forceLoadingMs = 200;
+const forceLoadingMs = 100;
 
 let timeout = null;
-const usePageState = (initState, isError, errorMsg, isLoading, deps, debounce) => {
-	const [state, setState] = useState(null);
+const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, debounce) => {
+	const [state, setState] = useState(initState());
 	const [isSaved, setSaved] = useState(true);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(!state || isError());
 
 	// Init & on change through reducer
 	useEffect(() => {
-		setState(initState());
+		onLoad();
 		setTimeout(() => setLoading(false), forceLoadingMs);
 	}, []);
 
@@ -47,7 +47,7 @@ const usePageState = (initState, isError, errorMsg, isLoading, deps, debounce) =
 	// Page state
 	let pageState = null;
 	if (loading || isLoading(state)) pageState = <PageLoading/>;
-	else if (isError(state)) pageState = <PageError>{errorMsg}</PageError>;
+	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 
 	return [pageState, state, changeState, isSaved, clearTimer];
 };
