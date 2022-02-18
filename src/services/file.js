@@ -3,8 +3,8 @@ export const uploadFile = axios => async (boardId, file) => {
 	return res && res.status === 200 ? res.data : null;
 };
 
-export const uploadImage = axios => async (boardId, image, ext) => {
-	const res = await axios.post(`/file/images/`, {boardId, ext, image}).catch(e => console.log(e));
+export const uploadImage = axios => async (boardId, image) => {
+	const res = await axios.post(`/file/images/`, {boardId, image}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
 
@@ -14,8 +14,8 @@ export const getFile = axios => async (boardId, id) => {
 	return res && res.status === 200 ? window.URL.createObjectURL(new Blob([res.data])) : null;
 };
 
-export const getImage = axios => async (boardId, id, ext) => {
-	const res = await axios.get(`/file/images/${boardId}/${id}/${ext}`, {responseType: "blob"}).catch(e => console.log(e));
+export const getImage = axios => async (boardId, id) => {
+	const res = await axios.get(`/file/images/${boardId}/${id}`, {responseType: "blob"}).catch(e => console.log(e));
 	return res && res.status === 200 ? window.URL.createObjectURL(new Blob([res.data])) : null;
 };
 
@@ -37,10 +37,10 @@ export const downloadFile = axios => async (boardId, id, filename) => {
 	return true;
 };
 
-export const downloadImage = axios => async (boardId, id, ext) => {
-	const res = await (getImage(axios)(boardId, id, ext));
+export const downloadImage = axios => async (boardId, id) => {
+	const res = await (getImage(axios)(boardId, id));
 	if (res === null) return null;
 
-	download("Image." + ext, res);
+	download("Image.png", res);
 	return true;
 };

@@ -5,10 +5,11 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
 import {Cancel, SubContainer, SubTitle} from "./styles";
-import {addUser, changeBoards, changeRole, deleteUser} from "../../redux/actionCreators/userActionCreator";
+import {changeBoards} from "../../redux/actionCreators/userActionCreator";
 import {getUser} from "../../redux/selectors";
 import {useNavigate} from "react-router";
 import ErrorMessage from "../../components/ErrorMessage";
+import {addUser, changeRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
 
 const UserContainer = styled.div`
   display: flex;
@@ -66,7 +67,7 @@ const owner = {value: "owner", text: "Owner"};
 const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={`http://localhost:3000/static/icons/${icon.id}.${icon.ext}`}/>
+			<UserIcon src={`http://localhost:3000/static/icons/${icon}.png`}/>
 			<Username>{username}</Username>
 		</div>
 
@@ -80,7 +81,7 @@ const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 const CurUser = ({username, icon, isOwner, leave}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={`http://localhost:3000/static/icons/${icon.id}.${icon.ext}`}/>
+			<UserIcon src={`http://localhost:3000/static/icons/${icon}.png`}/>
 			<Username>{username}</Username>
 		</div>
 

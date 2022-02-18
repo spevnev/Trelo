@@ -5,7 +5,7 @@ import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
 import HiddenInput from "../../components/HiddenInput";
 import {useDispatch} from "react-redux";
-import {addFile} from "../../redux/actionCreators/cardActionCreator";
+import {addFile, deleteFile} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services/";
 
 const ErrorMessage = styled.p`
@@ -118,11 +118,11 @@ const Files = ({state, boardId, commitChanges}) => {
 	const dispatch = useDispatch();
 
 
-	const addFileLocal = (filename, data) => state.files.length < 10 && dispatch(addFile(boardId, state, filename, data));
+	const addFileLoc = (filename, data) => dispatch(addFile(boardId, state, filename, data));
 
-	const delFile = id => commitChanges({files: state.files.filter(cur => cur.id !== id)});
+	const renameFileLoc = (id, newFilename) => commitChanges({...state, files: state.files.map(cur => cur.id === id ? {...cur, filename: newFilename} : cur)});
 
-	const renameFile = (id, newFilename) => commitChanges({files: state.files.map(cur => cur.id === id ? {...cur, filename: newFilename} : cur)});
+	const delFile = id => dispatch(deleteFile(boardId, state, id));
 
 
 	return (
@@ -130,9 +130,8 @@ const Files = ({state, boardId, commitChanges}) => {
 			<SubTitle>Attached files</SubTitle>
 
 			<BlockContainer>
-				{state.files.map(file => <File key={file.id} {...file} renameFile={renameFile} boardId={boardId} delFile={delFile}/>)}
-
-				{state.files.length < 10 && <FileInput addFile={addFileLocal}/>}
+				{state.files.map(file => <File key={file.id} {...file} renameFile={renameFileLoc} boardId={boardId} delFile={delFile}/>)}
+				<FileInput addFile={addFileLoc}/>
 			</BlockContainer>
 		</Container>
 	);

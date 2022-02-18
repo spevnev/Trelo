@@ -1,6 +1,6 @@
-import {changeBoard, createBoard, deleteBoard, getBoard} from "./board";
-import {addCard, changeCard, deleteCard, getCards} from "./card";
-import {addUser, changeBoards, changeRole, deleteUser, fetchData, leave, login, signup} from "./user";
+import {addUser, changeList, changeRole, changeTitle, createBoard, createList, deleteBoard, deleteList, deleteUser, getBoard} from "./board";
+import {addCard, addFile, changeCard, deleteCard, deleteFile, getCards, renameFile} from "./card";
+import {changeBoards, fetchData, leave, login, signup} from "./user";
 import {downloadFile, downloadImage, getImage, uploadFile, uploadImage} from "./file";
 import {getToken} from "./jwt";
 import axios from "axios";
@@ -18,27 +18,33 @@ client.interceptors.request.use(req => {
 export default {
 	board: {
 		getBoard: getBoard(client),
-		deleteBoard: deleteBoard(client),
-		changeBoard: changeBoard(client),
 		createBoard: createBoard(client),
+		createList: createList(client),
+		addUser: addUser(client),
+		changeTitle: changeTitle(client),
+		changeList: changeList(client),
+		changeRole: changeRole(client),
+		deleteBoard: deleteBoard(client),
+		deleteList: deleteList(client),
+		deleteUser: deleteUser(client),
 	}, card: {
 		getCards: getCards(client),
-		changeCard: changeCard(client),
 		addCard: addCard(client),
+		addFile: addFile(client),
+		changeCard: changeCard(client),
+		renameFile: renameFile(client),
 		deleteCard: deleteCard(client),
+		deleteFile: deleteFile(client),
 	}, user: {
+		fetchData: fetchData(client),
 		signup: signup(client),
 		login: login(client),
-		fetchData: fetchData(client),
-		addUser: addUser(client),
-		deleteUser: deleteUser(client),
-		changeRole: changeRole(client),
 		changeBoards: changeBoards(client),
 		leave: leave(client),
 	}, file: {
+		getImage: getImage(client),
 		uploadFile: uploadFile(client),
 		uploadImage: uploadImage(client),
-		getImage: getImage(client),
 		downloadFile: downloadFile(client),
 		downloadImage: downloadImage(client),
 	},

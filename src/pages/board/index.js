@@ -50,7 +50,7 @@ const Board = () => {
 		const cardId = e.draggableId;
 		const listId = e.destination.droppableId;
 
-		dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId}));
+		if (cardId && listId) dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId}));
 	};
 
 

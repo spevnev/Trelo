@@ -96,12 +96,12 @@ const Overlay = ({src, close}) => (
 	</OverlayContainer>
 );
 
-const Image = ({boardId, openFull, delImg, id, ext}) => {
+const Image = ({boardId, openFull, delImg, id}) => {
 	const [src, setSrc] = useState(imagePlaceholder);
 
 
 	useEffect(() => {
-		if (id && ext) bundle.file.getImage(boardId, id, ext).then(data => setSrc(data));
+		if (id) bundle.file.getImage(boardId, id).then(data => setSrc(data));
 	}, []);
 
 
@@ -112,7 +112,7 @@ const Image = ({boardId, openFull, delImg, id, ext}) => {
 
 	const downloadImageLocal = e => {
 		e.stopPropagation();
-		bundle.file.downloadImage(boardId, id, ext);
+		bundle.file.downloadImage(boardId, id);
 	};
 
 
@@ -142,16 +142,14 @@ const ImageInput = ({addImage}) => {
 		if (file) {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			const split = file.name.split(".");
-			if (split.length === 1) return;
-			reader.onload = () => addImage(split[split.length - 1], reader.result);
+			reader.onload = () => addImage(reader.result);
 		}
 	};
 
 
 	return (
 		<>
-			<input ref={input} style={{display: "none"}} accept="image/*" id="uploadImage" type="file" onChange={onImage}/>
+			<input ref={input} style={{display: "none"}} accept="image/png,image/jpeg" id="uploadImage" type="file" onChange={onImage}/>
 			<label htmlFor="uploadImage"><AddImage onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>+</AddImage></label>
 		</>
 	);
@@ -166,7 +164,7 @@ const Images = ({boardId, state, commitChanges}) => {
 
 	const delImage = id => commitChanges({images: state.images.filter(cur => cur.id !== id)});
 
-	const addImageLocal = (ext, data) => state.images.length < 10 && dispatch(addImage(boardId, state, data, ext));
+	const addImageLocal = data => state.images.length < 10 && dispatch(addImage(boardId, state, data));
 
 
 	return (
@@ -176,7 +174,7 @@ const Images = ({boardId, state, commitChanges}) => {
 			<SubTitle>Attached images</SubTitle>
 
 			<BlockContainer>
-				{state.images.map(cur => <Image openFull={openFull} boardId={boardId} delImg={delImage} key={cur.id} {...cur}/>)}
+				{state.images.map(cur => <Image openFull={openFull} boardId={boardId} delImg={delImage} key={cur} id={cur}/>)}
 
 				{state.images.length < 10 && <ImageInput addImage={addImageLocal}/>}
 			</BlockContainer>

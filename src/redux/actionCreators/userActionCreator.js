@@ -1,5 +1,4 @@
 import types from "../actions/userActions";
-import {changeBoard} from "./boardActionCreator";
 
 export const fetchUser = () => async (dispatch, getState, {user}) => {
 	const [error, data] = await user.fetchData();
@@ -39,36 +38,4 @@ export const leave = boardId => async (dispatch, getState, {user}) => {
 	dispatch(changeBoards(getState().user.boards.filter(cur => cur.id !== boardId)));
 };
 
-export const changeBoards = newBoards => async (dispatch, getState, {user}) => {
-	if (newBoards.filter(cur => cur.title.length === 0).length === 0) {
-		const data = await user.changeBoards(newBoards);
-		if (data === null) return;
-	}
-
-	dispatch({type: types.changeBoards, payload: {newBoards}});
-};
-
-export const addUser = (id, username, onSuccess, onError) => async (dispatch, getState, {user}) => {
-	const [error, data] = await user.addUser(username, id);
-	if (error) return onError(error);
-
-	onSuccess(data);
-	const board = getState().board.filter(cur => cur.id === id)[0];
-	dispatch(changeBoard(id, {...board, users: [...board.users, {...data, isOwner: false}]}));
-};
-
-export const deleteUser = (id, username) => async (dispatch, getState, {user}) => {
-	const [error] = await user.deleteUser(username, id);
-	if (error) return;
-
-	const board = getState().board.filter(cur => cur.id === id)[0];
-	dispatch(changeBoard(id, {...board, users: board.users.filter(cur => cur.username !== username)}));
-};
-
-export const changeRole = (id, username, isOwner) => async (dispatch, getState, {user}) => {
-	const data = await user.changeRole(id, username, isOwner);
-	if (data === null) return;
-
-	const board = getState().board.filter(cur => cur.id === id)[0];
-	dispatch(changeBoard(id, {...board, users: board.users.map(cur => cur.username === username ? {...cur, isOwner} : cur)}));
-};
+export const changeBoards = newBoards => ({type: types.changeBoards, payload: {newBoards}});

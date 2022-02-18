@@ -3,6 +3,7 @@ import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {changeCard, deleteCard} from "../../redux/actionCreators/cardActionCreator";
+import bundle from "../../services";
 import Title from "./Title";
 import Assigned from "./Assigned";
 import Description from "./Description";
@@ -57,7 +58,14 @@ const CardDescription = () => {
 		() => dispatch(fetchBoard(boardId, true)),
 		() => !board || !card || (board.status && board.status === "ERROR"), "This card doesn't exist!",
 		state => board.status === "LOADING" || !state,
-		card, state => dispatch(changeCard(boardId, state)),
+		card,
+		state => {
+			[...state.files].filter(cur => card.files.filter(f => cur.id === f.id && cur.filename !== f.filename).length !== 0).forEach(file => {
+				bundle.card.renameFile(boardId, file.filename, file.id);
+			});
+
+			dispatch(changeCard(boardId, state));
+		},
 	);
 
 	if (pageState) return pageState;

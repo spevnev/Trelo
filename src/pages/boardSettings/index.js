@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Navigate, useNavigate, useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {changeBoard, deleteBoard, fetchBoard} from "../../redux/actionCreators/boardActionCreator";
 import Users from "./Users";
@@ -12,6 +12,7 @@ import {deleteCardBoard} from "../../redux/actionCreators/cardActionCreator";
 import {getBoard, getUser} from "../../redux/selectors";
 import usePageState from "../../hooks/usePageState";
 import {changeBoards} from "../../redux/actionCreators/userActionCreator";
+import bundle from "../../services";
 
 const Container = styled.div`
   margin: 0 2vw;
@@ -44,10 +45,14 @@ const BoardSettings = () => {
 
 
 	const saveChanges = state => {
-		dispatch(changeBoard(boardId, state));
+		dispatch(changeBoard(boardId, state, board));
 
 		const curUser = state.users.filter(cur => cur.username === user.username)[0];
 		dispatch(changeBoards(user.boards.map(cur => cur.id === state.id ? {...cur, title: state.title, isOwner: curUser.isOwner} : cur)));
+
+		[...state.lists].filter(cur => board.lists.filter(l => cur.id === l.id && cur.title !== l.title).length !== 0).forEach(list => {
+			bundle.board.changeList(boardId, list.id, list.title);
+		});
 	};
 	const [pageState, state, setState, isSaved, clearTimer] = usePageState(
 		() => {
@@ -55,7 +60,7 @@ const BoardSettings = () => {
 
 			if (user.boards) {
 				const boards = user.boards.filter(cur => cur.id === boardId);
-				if (boards.length === 1 && !boards[0].isOwner) return <Navigate to="../"/>;
+				if (boards.length === 1 && !boards[0].isOwner) navigate("../");
 			}
 
 			if (board === null) dispatch(fetchBoard(boardId));

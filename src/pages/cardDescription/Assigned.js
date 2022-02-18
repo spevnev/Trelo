@@ -42,7 +42,7 @@ const AddUser = ({addUser}) => {
 
 
 	const newUser = () => {
-		addUser(name);
+		addUser(name.toLowerCase());
 		setName("");
 	};
 
@@ -78,9 +78,8 @@ const Assigned = ({assignedNames, users, commitChanges}) => {
 
 			<div>
 				{assigned.map(user =>
-					<User onClick={() => deleteUser(user.username)}
-						  src={(user.icon && user.icon.id && user.icon.ext) && `http://localhost:3000/static/icons/${user.icon.id}.${user.icon.ext}`}
-						  key={user.username} title={user.username}/>,
+					<User onClick={() => deleteUser(user.username)} key={user.username} title={user.username}
+						  src={user.icon && `http://localhost:3000/static/icons/${user.icon}.png`}/>,
 				)}
 			</div>
 

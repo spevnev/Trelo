@@ -32,16 +32,23 @@ export const changeCard = (boardId, newCard) => async (dispatch, getState, {card
 	dispatch({type: types.changeCard, payload: {boardId, id: newCard.id, newCard}});
 };
 
-export const addFile = (boardId, card, filename, data) => async (dispatch, getState, {file}) => {
+export const addFile = (boardId, cardData, filename, data) => async (dispatch, getState, {card, file}) => {
 	const [error, id] = await file.uploadFile(boardId, data);
 	if (error) return;
 
-	dispatch(changeCard(boardId, {...card, files: [...card.files, {filename, id}]}));
+	await card.addFile(boardId, cardData.id, id, filename);
+	dispatch(changeCard(boardId, {...cardData, files: [...cardData.files, {filename, id}]}));
 };
 
-export const addImage = (boardId, card, data, ext) => async (dispatch, getState, {file}) => {
-	const [error, id] = await file.uploadImage(boardId, data, ext);
+export const deleteFile = (boardId, cardData, id) => async (dispatch, getState, {card}) => {
+	await card.deleteFile(boardId, id);
+
+	dispatch(changeCard(boardId, {...cardData, files: cardData.files.filter(cur => cur.id !== id)}));
+};
+
+export const addImage = (boardId, card, data) => async (dispatch, getState, {file}) => {
+	const [error, id] = await file.uploadImage(boardId, data);
 	if (error) return;
 
-	dispatch(changeCard(boardId, {...card, images: [...card.images, {id, ext}]}));
+	dispatch(changeCard(boardId, {...card, images: [...card.images, id]}));
 };

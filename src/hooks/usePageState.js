@@ -13,7 +13,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 	// Init & on change through reducer
 	useEffect(() => {
-		onLoad();
+		if (!loading) onLoad(); // TODO: test
 		setTimeout(() => setLoading(false), forceLoadingMs);
 	}, []);
 
@@ -46,8 +46,9 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 	// Page state
 	let pageState = null;
-	if (loading || isLoading(state)) pageState = <PageLoading/>;
+	if (loading) pageState = <PageLoading/>;
 	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
+	else if (isLoading(state)) pageState = <PageLoading/>;
 
 	return [pageState, state, changeState, isSaved, clearTimer];
 };

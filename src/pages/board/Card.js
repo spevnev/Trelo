@@ -59,8 +59,7 @@ const Card = ({title, id, description, images, assigned, files, i, users}) => {
 
 						<div>
 							{users.filter(cur => assigned.indexOf(cur.username) !== -1).map(cur =>
-								<UserIcon key={cur.username} title={cur.username}
-										  src={(cur.icon && cur.icon.id && cur.icon.ext) && `http://localhost:3000/static/icons/${cur.icon.id}.${cur.icon.ext}`}/>,
+								<UserIcon key={cur.username} title={cur.username} src={cur.icon && `http://localhost:3000/static/icons/${cur.icon}.png`}/>,
 							)}
 						</div>
 					</SubContainer>

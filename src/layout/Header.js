@@ -64,8 +64,7 @@ const Header = () => {
 
 			<Container>
 				<Username>{user.username}</Username>
-				{(user.icon && user.icon.id && user.icon.ext) &&
-					<UserIcon onClick={logout} image={`http://localhost:3000/static/icons/${user.icon.id}.${user.icon.ext}`}/>}
+				{user.icon && <UserIcon onClick={logout} image={`http://localhost:3000/static/icons/${user.icon}.png`}/>}
 			</Container>
 		</HeaderContainer>
 	);
