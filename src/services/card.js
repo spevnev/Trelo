@@ -8,8 +8,8 @@ export const addCard = axios => async (boardId, card) => {
 	return res && res.status === 200 ? res.data : null;
 };
 
-export const addFile = axios => async (boardId, cardId, id, filename) => {
-	const res = await axios.post(`/card/addFile`, {boardId, cardId, id, filename}).catch(e => console.log(e));
+export const addFiles = axios => async (boardId, cardId, files) => {
+	const res = await axios.post(`/card/addFiles`, {boardId, cardId, files}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
 

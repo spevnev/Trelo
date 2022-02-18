@@ -5,7 +5,7 @@ import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
 import HiddenInput from "../../components/HiddenInput";
 import {useDispatch} from "react-redux";
-import {addFile, deleteFile} from "../../redux/actionCreators/cardActionCreator";
+import {addFiles, deleteFile} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services/";
 
 const ErrorMessage = styled.p`
@@ -54,6 +54,11 @@ const AddFile = styled.div`
   }
 `;
 
+const DropOverlay = styled(AddFile)`
+  font-size: 1.8rem;
+  border: 2px dashed #000;
+`;
+
 
 const File = ({filename, delFile, renameFile, id, boardId}) => {
 	const [msg, setMsg] = useState(null);
@@ -82,7 +87,7 @@ const File = ({filename, delFile, renameFile, id, boardId}) => {
 	);
 };
 
-const FileInput = ({addFile}) => {
+const FileInput = ({addFiles, overlay}) => {
 	const input = useRef(null);
 
 
@@ -97,28 +102,34 @@ const FileInput = ({addFile}) => {
 	const onFile = e => {
 		const files = e.target.files;
 
+		const arr = [];
 		for (let i = 0; i < files.length; i++) {
 			const file = files[i];
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
-			reader.onload = () => addFile(file.name, reader.result);
+			reader.onload = () => {
+				arr.push({filename: file.name, data: reader.result});
+				if (arr.length === files.length) addFiles(arr);
+			};
 		}
 	};
 
 
 	return (
 		<>
-			<input ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile}/>
-			<label htmlFor="uploadFile"><AddFile onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>Add file</AddFile></label>
+			<input ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile} multiple/>
+			<label htmlFor="uploadFile" onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>
+				{overlay ? <DropOverlay>Drop here to add file</DropOverlay> : <AddFile>Add file</AddFile>}
+			</label>
 		</>
 	);
 };
 
-const Files = ({state, boardId, commitChanges}) => {
+const Files = ({state, boardId, commitChanges, overlay}) => {
 	const dispatch = useDispatch();
 
 
-	const addFileLoc = (filename, data) => dispatch(addFile(boardId, state, filename, data));
+	const addFilesLoc = files => dispatch(addFiles(boardId, state, files));
 
 	const renameFileLoc = (id, newFilename) => commitChanges({...state, files: state.files.map(cur => cur.id === id ? {...cur, filename: newFilename} : cur)});
 
@@ -131,7 +142,7 @@ const Files = ({state, boardId, commitChanges}) => {
 
 			<BlockContainer>
 				{state.files.map(file => <File key={file.id} {...file} renameFile={renameFileLoc} boardId={boardId} delFile={delFile}/>)}
-				<FileInput addFile={addFileLoc}/>
+				<FileInput addFiles={addFilesLoc} overlay={overlay}/>
 			</BlockContainer>
 		</Container>
 	);

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
@@ -13,6 +13,7 @@ import {getBoard, getUser} from "../../redux/selectors";
 import usePageState from "../../hooks/usePageState";
 import {changeBoards} from "../../redux/actionCreators/userActionCreator";
 import bundle from "../../services";
+import useKeyboard from "../../hooks/useKeyboard";
 
 const Container = styled.div`
   margin: 0 2vw;
@@ -43,6 +44,8 @@ const BoardSettings = () => {
 	const board = useSelector(getBoard(boardId));
 	const user = useSelector(getUser());
 
+	const ref = useRef(document.body);
+	useKeyboard([{ref, key: "escape", cb: () => goBack()}]);
 
 	const saveChanges = state => {
 		dispatch(changeBoard(boardId, state, board));

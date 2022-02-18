@@ -1,15 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Form, StyledButton, SubContainer, Text} from "./styles";
 import Input from "../../components/Input";
 import ErrorMessage from "../../components/ErrorMessage";
 import {useDispatch} from "react-redux";
 import {login} from "../../redux/actionCreators/userActionCreator";
+import useKeyboard from "../../hooks/useKeyboard";
 
 let timeout = null;
 const LoginForm = () => {
 	const dispatch = useDispatch();
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: ""});
+
+	const ref = useRef();
+	useKeyboard([{ref, key: "enter", cb: () => submit()}]);
 
 	useEffect(() => () => clearTimeout(timeout), []);
 
@@ -34,7 +38,7 @@ const LoginForm = () => {
 			<Text>Log in</Text>
 			<Text secondary>Already signed up?</Text>
 
-			<Form>
+			<Form ref={ref}>
 				<Input placeholder="Username" maxLength="25" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
 				<Input placeholder="Password" maxLength="64" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 

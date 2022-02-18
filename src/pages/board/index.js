@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import {useParams} from "react-router";
+import React, {useEffect, useRef} from "react";
+import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import List from "./List";
@@ -10,6 +10,7 @@ import {changeCard} from "../../redux/actionCreators/cardActionCreator";
 import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
 import PageLoading from "../../components/PageLoading";
 import PageError from "../../components/PageError";
+import useKeyboard from "../../hooks/useKeyboard";
 
 const Container = styled.div`
   display: flex;
@@ -32,10 +33,15 @@ const Lists = styled.div`
 
 
 const Board = () => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
 	const {boardId} = useParams();
 	const board = useSelector(getBoard(boardId));
 	const cards = useSelector(getCards(boardId));
+
+	const ref = useRef(document.body);
+	useKeyboard([{ref, key: "escape", cb: () => navigate("/")}]);
 
 
 	useEffect(() => {

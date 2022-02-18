@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
@@ -15,6 +15,7 @@ import {getBoard, getCard} from "../../redux/selectors";
 import usePageState from "../../hooks/usePageState";
 import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
 import deleteIcon from "../../assets/svg/cross.svg";
+import useKeyboard from "../../hooks/useKeyboard";
 
 const Container = styled.div`
   margin: 0 2vw;
@@ -36,6 +37,7 @@ const Delete = styled.img`
 
 const isCardEmpty = card => card.title.length === 0 && card.description.length === 0 && card.assigned.length === 0 && card.images.length === 0 && card.files.length === 0;
 
+let timeout = null;
 const CardDescription = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -44,9 +46,12 @@ const CardDescription = () => {
 	const card = useSelector(getCard(boardId, cardId));
 	const board = useSelector(getBoard(boardId));
 
+	const [overlay, setOverlay] = useState(false);
 	const [modalText, setText] = useState();
 	const [isOpen, setOpen] = useState(false);
 
+	const ref = useRef(document.body);
+	useKeyboard([{ref, key: "escape", cb: () => goBack()}]);
 
 	const [pageState, state, setState, isSaved, clearTimer] = usePageState(
 		() => {
@@ -92,12 +97,18 @@ const CardDescription = () => {
 		navigate("../");
 	};
 
+	const onDragEnter = () => {
+		setOverlay(true);
+		if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(() => setOverlay(false), 1000);
+	};
+
 
 	const users = board.users;
 	const lists = board.lists;
 
 	return (
-		<Container>
+		<Container onDragEnter={onDragEnter} onDrop={() => setOverlay(false)}>
 			<SubContainer>
 				<GoBack onClick={goBack}>Return to the board</GoBack>
 				<Delete onClick={() => openModal("Are you sure you want to delete this card?")} src={deleteIcon}/>
@@ -107,8 +118,8 @@ const CardDescription = () => {
 			<Title lists={lists} listId={state.listId} title={state.title} commitChanges={setState}/>
 			<Assigned assignedNames={state.assigned} users={users} commitChanges={setState}/>
 			<Description description={state.description} commitChanges={setState}/>
-			<Images state={state} boardId={boardId} commitChanges={setState}/>
-			<Files state={state} boardId={boardId} commitChanges={setState}/>
+			<Images state={state} boardId={boardId} overlay={overlay} commitChanges={setState}/>
+			<Files state={state} boardId={boardId} overlay={overlay} commitChanges={setState}/>
 		</Container>
 	);
 };

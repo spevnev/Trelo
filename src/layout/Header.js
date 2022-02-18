@@ -18,11 +18,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0 10px;
+  margin: 0 1.5rem;
 `;
 
 const Title = styled.p`
-  font-size: 24px;
+  font-size: 2.4rem;
 `;
 
 const Username = styled.p`
@@ -32,13 +32,13 @@ const Username = styled.p`
 
 const UserIcon = styled.div`
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 3.2rem;
+  height: 3.2rem;
   border-radius: 50%;
   background: url("${props => props.image}");
   background-position: center;
   background-size: cover;
-  margin: 0 10px;
+  margin: 0 1rem;
 `;
 
 const Header = () => {

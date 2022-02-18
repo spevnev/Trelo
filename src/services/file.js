@@ -1,10 +1,10 @@
-export const uploadFile = axios => async (boardId, file) => {
-	const res = await axios.post(`/file/files/`, {boardId, file}).catch(e => console.log(e));
+export const uploadFiles = axios => async (boardId, files) => {
+	const res = await axios.post(`/file/files/`, {boardId, files}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
 
-export const uploadImage = axios => async (boardId, image) => {
-	const res = await axios.post(`/file/images/`, {boardId, image}).catch(e => console.log(e));
+export const uploadImages = axios => async (boardId, images) => {
+	const res = await axios.post(`/file/images/`, {boardId, images}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
 

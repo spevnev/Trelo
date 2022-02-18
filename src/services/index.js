@@ -1,7 +1,7 @@
 import {addUser, changeList, changeRole, changeTitle, createBoard, createList, deleteBoard, deleteList, deleteUser, getBoard} from "./board";
-import {addCard, addFile, changeCard, deleteCard, deleteFile, getCards, renameFile} from "./card";
+import {addCard, addFiles, changeCard, deleteCard, deleteFile, getCards, renameFile} from "./card";
 import {changeBoards, fetchData, leave, login, signup, toggleFavourite} from "./user";
-import {downloadFile, downloadImage, getImage, uploadFile, uploadImage} from "./file";
+import {downloadFile, downloadImage, getImage, uploadFiles, uploadImages} from "./file";
 import {getToken} from "./jwt";
 import axios from "axios";
 
@@ -30,7 +30,7 @@ export default {
 	}, card: {
 		getCards: getCards(client),
 		addCard: addCard(client),
-		addFile: addFile(client),
+		addFiles: addFiles(client),
 		changeCard: changeCard(client),
 		renameFile: renameFile(client),
 		deleteCard: deleteCard(client),
@@ -44,8 +44,8 @@ export default {
 		toggleFavourite: toggleFavourite(client),
 	}, file: {
 		getImage: getImage(client),
-		uploadFile: uploadFile(client),
-		uploadImage: uploadImage(client),
+		uploadFiles: uploadFiles(client),
+		uploadImages: uploadImages(client),
 		downloadFile: downloadFile(client),
 		downloadImage: downloadImage(client),
 	},
