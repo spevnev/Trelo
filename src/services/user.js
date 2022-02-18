@@ -22,3 +22,8 @@ export const changeBoards = axios => async newBoards => {
 	const res = await axios.put(`/user/`, {boards: newBoards}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
+
+export const toggleFavourite = axios => async (boardId, fav) => {
+	const res = await axios.put(`/user/favourite`, {boardId, fav}).catch(e => console.log(e));
+	return res && res.status === 200 ? res.data : null;
+};

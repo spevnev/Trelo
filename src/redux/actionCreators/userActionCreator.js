@@ -38,4 +38,11 @@ export const leave = boardId => async (dispatch, getState, {user}) => {
 	dispatch(changeBoards(getState().user.boards.filter(cur => cur.id !== boardId)));
 };
 
+export const toggleFavourite = board => async (dispatch, getState, {user}) => {
+	const data = await user.toggleFavourite(board.id, !board.isFavourite);
+	if (data === null) return;
+
+	dispatch(changeBoards(getState().user.boards.map(cur => cur.id === board.id ? {...cur, isFavourite: !board.isFavourite} : cur)));
+};
+
 export const changeBoards = newBoards => ({type: types.changeBoards, payload: {newBoards}});

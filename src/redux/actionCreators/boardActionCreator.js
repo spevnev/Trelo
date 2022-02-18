@@ -81,6 +81,7 @@ export const createList = (boardId, id, title) => async (dispatch, getState, {bo
 	const boardData = getState().board.filter(cur => cur.id === boardId)[0];
 	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id}]}));
 };
+
 export const deleteList = (boardId, id) => async (dispatch, getState, {board}) => {
 	const data = await board.deleteList(boardId, id);
 	if (data === null) return;
