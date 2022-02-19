@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import Input from "../../components/Input";
@@ -10,6 +10,7 @@ import {getUser} from "../../redux/selectors";
 import {useNavigate} from "react-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import {addUser, changeRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
+import useKeyboard from "../../hooks/useKeyboard";
 
 const UserContainer = styled.div`
   display: flex;
@@ -93,11 +94,15 @@ const CurUser = ({username, icon, isOwner, leave}) => (
 );
 
 const Users = ({users, boardId, setState, open}) => {
-	const [msg, setMsg] = useState(null);
-	const [newUsername, setNewUsername] = useState("");
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const curUser = useSelector(getUser());
+
+	const [msg, setMsg] = useState(null);
+	const [newUsername, setNewUsername] = useState("");
+
+	const ref = useRef();
+	useKeyboard([{ref, key: "enter", cb: () => newUser()}]);
 
 
 	const error = errorMsg => {
@@ -130,11 +135,9 @@ const Users = ({users, boardId, setState, open}) => {
 		if (newUsername.length < 4) return error("Username can't be less than 4 characters!");
 		if (newUsername.length > 25) return error("Username can't be longer than 25 characters!");
 		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length !== 0) return error("This user is already in the board!");
+		setNewUsername("");
 
-		dispatch(addUser(boardId, newUsername.toLowerCase(), data => {
-			setState({users: [...users, {...data, isOwner: false}]});
-			setNewUsername("");
-		}, error));
+		dispatch(addUser(boardId, newUsername.toLowerCase(), data => setState({users: [...users, {...data, isOwner: false}]}), error));
 	};
 
 
@@ -150,7 +153,7 @@ const Users = ({users, boardId, setState, open}) => {
 			<ErrorMessage>{msg}</ErrorMessage>
 
 			<NewUser>
-				<Input maxLength="25" placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
+				<Input ref={ref} maxLength="25" placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
 				<Button onClick={newUser}>Add</Button>
 			</NewUser>
 		</SubContainer>

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import HiddenInput from "../../components/HiddenInput";
@@ -8,6 +8,7 @@ import {Cancel, SubContainer, SubTitle} from "./styles";
 import {v4 as uuid} from "uuid";
 import Modal from "../../components/Modal";
 import {createList, deleteList} from "../../redux/actionCreators/boardActionCreator";
+import useKeyboard from "../../hooks/useKeyboard";
 
 const ListElContainer = styled.div`
   display: flex;
@@ -52,6 +53,9 @@ const Lists = ({lists, boardId, setState}) => {
 	const [newList, setNewList] = useState("");
 	const dispatch = useDispatch();
 
+	const ref = useRef();
+	useKeyboard([{ref, key: "enter", cb: () => addEl()}]);
+
 
 	const addEl = () => {
 		setNewList("");
@@ -70,7 +74,7 @@ const Lists = ({lists, boardId, setState}) => {
 			{lists.map(cur => <ListEl key={cur.id} {...cur} deleteEl={deleteEl} changeEl={changeEl}/>)}
 
 			<NewList>
-				<Input placeholder="List title" maxLength="20" onChange={e => setNewList(e.target.value)} value={newList}/>
+				<Input ref={ref} placeholder="List title" maxLength="20" onChange={e => setNewList(e.target.value)} value={newList}/>
 				<Button onClick={addEl}>Add</Button>
 			</NewList>
 		</SubContainer>
