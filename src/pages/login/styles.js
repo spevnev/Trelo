@@ -5,7 +5,8 @@ export const SubContainer = styled.div`
   width: 50%;
   height: 100%;
   padding: 1.5rem 2rem;
-  background: ${props => `#${props.colour}`};
+  background: ${props => `#${props.background}`};
+  color: ${props => `#${props.colour}`};
   display: flex;
   flex-direction: column;
   justify-content: space-between;

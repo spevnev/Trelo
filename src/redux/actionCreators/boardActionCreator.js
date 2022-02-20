@@ -40,7 +40,8 @@ export const deleteBoard = id => (dispatch, getState, {board}) => {
 	});
 };
 
-export const changeBoard = (id, newBoard, prev) => async (dispatch, getState, {board}) => {
+export const changeBoard = (id, newBoard) => async (dispatch, getState, {board}) => {
+	const prev = getState().board.filter(cur => cur.id === id)[0];
 	if (newBoard.title.length > 0 && (!prev || prev.title !== newBoard.title)) await board.changeTitle(id, newBoard.title);
 
 	dispatch({

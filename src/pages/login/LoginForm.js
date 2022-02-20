@@ -5,15 +5,18 @@ import ErrorMessage from "../../components/ErrorMessage";
 import {useDispatch} from "react-redux";
 import {login} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
+import {useNavigate} from "react-router";
 
 let timeout = null;
 const LoginForm = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: ""});
 
 	const ref = useRef();
-	useKeyboard([{ref, key: "enter", cb: () => submit()}]);
+	useKeyboard({ref, key: "enter", cb: () => submit()});
 
 	useEffect(() => () => clearTimeout(timeout), []);
 
@@ -29,18 +32,18 @@ const LoginForm = () => {
 		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
 		if (formState.password.length > 64) return error("Password can't be longer than 64 characters!");
 
-		dispatch(login(formState.username.toLowerCase(), formState.password, error));
+		dispatch(login(formState.username.toLowerCase(), formState.password, error, () => navigate("/")));
 	};
 
 
 	return (
-		<SubContainer colour="f0f0f0">
+		<SubContainer background="fff" colour="000">
 			<Text>Log in</Text>
 			<Text secondary>Already signed up?</Text>
 
 			<Form ref={ref}>
 				<Input placeholder="Username" maxLength="25" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
-				<Input placeholder="Password" maxLength="64" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
+				<Input type="password" placeholder="Password" maxLength="64" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
 
 				<ErrorMessage fixedHeight>{msg}</ErrorMessage>
 

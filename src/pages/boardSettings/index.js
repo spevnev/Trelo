@@ -14,9 +14,12 @@ import usePageState from "../../hooks/usePageState";
 import {changeBoards} from "../../redux/actionCreators/userActionCreator";
 import bundle from "../../services";
 import useKeyboard from "../../hooks/useKeyboard";
+import useTitle from "../../hooks/useTitle";
 
 const Container = styled.div`
-  margin: 0 2vw;
+  padding: 0 2vw;
+  height: 95vh;
+  background: #f8f8f8;
 `;
 
 const DeleteText = styled.p`
@@ -45,7 +48,9 @@ const BoardSettings = () => {
 	const user = useSelector(getUser());
 
 	const ref = useRef(document.body);
-	useKeyboard([{ref, key: "escape", cb: () => goBack()}]);
+
+	useKeyboard({ref, key: "escape", cb: () => goBack()});
+	useTitle(board && board.title ? board.title + " settings" : "Settings");
 
 	const saveChanges = state => {
 		dispatch(changeBoard(boardId, state, board));

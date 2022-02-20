@@ -5,4 +5,5 @@ export default styled.input`
   background: none;
   outline: none;
   font-size: 2.4rem;
+  width: 100%;
 `;

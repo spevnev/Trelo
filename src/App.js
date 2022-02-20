@@ -7,21 +7,25 @@ import Board from "./pages/board";
 import BoardSettings from "./pages/boardSettings";
 import CardDescription from "./pages/cardDescription";
 import Layout from "./layout";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {fetchUser} from "./redux/actionCreators/userActionCreator";
+import {getUser} from "./redux/selectors";
 
 const App = () => {
 	const dispatch = useDispatch();
+	const user = useSelector(getUser());
+
 
 	useEffect(() => {
-		if (getToken() !== null) dispatch(fetchUser());
-	}, []);
+		if (getToken() !== null && (!user.username || user.boards.length === 0)) dispatch(fetchUser());
+	}, [user]);
+
 
 	return (
 		<Routes>
-			<Route path="/login" element={getToken() !== null ? <Navigate to="/"/> : <Login/>}/>
+			<Route path="/login" element={getToken() || user.username ? <Navigate to="/"/> : <Login/>}/>
 
-			<Route path="/" element={<Layout>{getToken() !== null ? <Outlet/> : <Navigate to="/login"/>}</Layout>}>
+			<Route path="/" element={<Layout>{getToken() || user.username ? <Outlet/> : <Navigate to="/login"/>}</Layout>}>
 				<Route index element={<Dashboard/>}/>
 
 				<Route path="board/:boardId">

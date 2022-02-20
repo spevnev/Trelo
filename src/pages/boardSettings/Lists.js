@@ -54,7 +54,7 @@ const Lists = ({lists, boardId, setState}) => {
 	const dispatch = useDispatch();
 
 	const ref = useRef();
-	useKeyboard([{ref, key: "enter", cb: () => addEl()}]);
+	useKeyboard({ref, key: "enter", cb: () => addEl()});
 
 
 	const addEl = () => {

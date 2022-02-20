@@ -10,9 +10,10 @@ import {Draggable} from "react-beautiful-dnd";
 
 const CardContainer = styled.div`
   margin-bottom: 10px;
-  background: #fbfbfb;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .25);
   padding: 2px 4px;
-  border-radius: 2px;
+  border-radius: 4px;
   font-size: 1.6rem;
   cursor: pointer;
 `;

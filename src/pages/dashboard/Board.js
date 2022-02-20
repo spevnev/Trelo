@@ -1,13 +1,12 @@
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router";
 import styled from "styled-components";
-import starFull from "../../assets/svg/star-full.svg";
-import starEmpty from "../../assets/svg/star-empty.svg";
-import cog from "../../assets/svg/cog.svg";
+import {ReactComponent as StarFull} from "../../assets/svg/star-full.svg";
+import {ReactComponent as StarEmpty} from "../../assets/svg/star-empty.svg";
+import {ReactComponent as Cog} from "../../assets/svg/cog.svg";
 import {BoardContainer} from "./styles";
-import {getUser} from "../../redux/selectors";
-import {changeBoards} from "../../redux/actionCreators/userActionCreator";
+import {toggleFavourite} from "../../redux/actionCreators/userActionCreator";
 
 const Title = styled.p`
   font-size: 1.8rem;
@@ -21,26 +20,20 @@ const Icons = styled.div`
   align-items: center;
 `;
 
-const Icon = styled.img`
-  width: 2.4rem;
-  height: 2.4rem;
-  margin-left: 5px;
-`;
-
 
 const Board = ({title, isFavourite, isOwner, id}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const boards = useSelector(getUser()).boards;
+
 
 	const openSettings = e => {
 		e.stopPropagation();
 		navigate(`/board/${id}/settings`);
 	};
 
-	const toggleFavourite = e => {
+	const toggleFavouriteLocal = e => {
 		e.stopPropagation();
-		dispatch(changeBoards(boards.map(cur => cur.id === id ? {...cur, isFavourite: !cur.isFavourite} : cur)));
+		dispatch(toggleFavourite(id));
 	};
 
 
@@ -49,8 +42,8 @@ const Board = ({title, isFavourite, isOwner, id}) => {
 			<Title>{title}</Title>
 
 			<Icons>
-				<Icon onClick={toggleFavourite} src={isFavourite ? starFull : starEmpty}/>
-				{isOwner && <Icon onClick={openSettings} src={cog}/>}
+				{isFavourite ? <StarFull onClick={toggleFavouriteLocal}/> : <StarEmpty onClick={toggleFavouriteLocal}/>}
+				{isOwner && <Cog onClick={openSettings}/>}
 			</Icons>
 		</BoardContainer>
 	);

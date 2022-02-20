@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {addImages} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services";
 import imagePlaceholder from "../../assets/imgs/imagePlaceholder.png";
+import useKeyboard from "../../hooks/useKeyboard";
 
 const Block = styled.div`
   min-width: 20rem;
@@ -94,12 +95,18 @@ const ImageContainer = styled(Block)`
 `;
 
 
-const Overlay = ({src, close}) => (
-	<OverlayContainer>
-		<Close src={cross} onClick={close}/>
-		<OverlayImage src={src}/>
-	</OverlayContainer>
-);
+const Overlay = ({src, close}) => {
+	const ref = useRef(document.body);
+	useKeyboard({ref, key: "escape", cb: close, priority: 1});
+
+
+	return (
+		<OverlayContainer>
+			<Close src={cross} onClick={close}/>
+			<OverlayImage src={src}/>
+		</OverlayContainer>
+	);
+};
 
 const Image = ({boardId, openFull, delImg, id}) => {
 	const [src, setSrc] = useState(imagePlaceholder);

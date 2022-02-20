@@ -102,7 +102,7 @@ const Users = ({users, boardId, setState, open}) => {
 	const [newUsername, setNewUsername] = useState("");
 
 	const ref = useRef();
-	useKeyboard([{ref, key: "enter", cb: () => newUser()}]);
+	useKeyboard({ref, key: "enter", cb: () => newUser()});
 
 
 	const error = errorMsg => {

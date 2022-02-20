@@ -5,18 +5,21 @@ import NewBoard from "./NewBoard";
 import {useSelector} from "react-redux";
 import {getUserBoards} from "../../redux/selectors";
 import PageLoading from "../../components/PageLoading";
+import useTitle from "../../hooks/useTitle";
 
 const Boards = styled.div`
-  margin: 15px 2vw;
-  height: 100%;
+  padding: 15px 2vw;
+  height: 95vh;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  background: #f1f1f1;
 `;
 
 
 const Dashboard = () => {
 	const boards = useSelector(getUserBoards());
+	useTitle("Dashboard");
 
 
 	if (!boards) return <PageLoading/>;

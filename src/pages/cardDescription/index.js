@@ -16,9 +16,12 @@ import usePageState from "../../hooks/usePageState";
 import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
 import deleteIcon from "../../assets/svg/cross.svg";
 import useKeyboard from "../../hooks/useKeyboard";
+import useTitle from "../../hooks/useTitle";
 
 const Container = styled.div`
-  margin: 0 2vw;
+  padding: 0 2vw;
+  height: 95vh;
+  background: #f8f8f8;
 `;
 
 const SubContainer = styled.div`
@@ -51,7 +54,9 @@ const CardDescription = () => {
 	const [isOpen, setOpen] = useState(false);
 
 	const ref = useRef(document.body);
-	useKeyboard([{ref, key: "escape", cb: () => goBack()}]);
+
+	useKeyboard({ref, key: "escape", cb: () => goBack()});
+	useTitle(card && card.title ? card.title : "Card");
 
 	const [pageState, state, setState, isSaved, clearTimer] = usePageState(
 		() => {

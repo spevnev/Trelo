@@ -3,18 +3,28 @@ import {Form, StyledButton, SubContainer, Text} from "./styles";
 import UserIcon from "./UserIcon";
 import Input from "../../components/Input";
 import ErrorMessage from "../../components/ErrorMessage";
+import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {signup} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
+import {useNavigate} from "react-router";
+
+const Button = styled(StyledButton)`
+  background: #4040ff;
+  color: #fff;
+  border: none;
+`;
 
 let timeout = null;
 const SignupForm = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: "", confirm: "", icon: ""});
 
 	const ref = useRef();
-	useKeyboard([{ref, key: "enter", cb: () => submit()}]);
+	useKeyboard({ref, key: "enter", cb: () => submit()});
 
 	useEffect(() => () => clearTimeout(timeout), []);
 
@@ -34,12 +44,12 @@ const SignupForm = () => {
 		if (formState.password != formState.confirm) return error("Passwords don't match!");
 		if (formState.icon.length === 0) return error("You must have icon!");
 
-		dispatch(signup({...formState, username: formState.username.toLowerCase()}, error));
+		dispatch(signup({...formState, username: formState.username.toLowerCase()}, error, () => navigate("/")));
 	};
 
 
 	return (
-		<SubContainer colour="c0c0c0">
+		<SubContainer background="0079bf" colour="fff">
 			<Text>Sign up</Text>
 			<Text secondary>Don't have account yet?</Text>
 
@@ -47,12 +57,12 @@ const SignupForm = () => {
 				<UserIcon setIcon={setIcon} icon={formState.icon} error={error}/>
 
 				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
-				<Input placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
-				<Input placeholder="Confirm password" onChange={e => setFormState({...formState, confirm: e.target.value})} value={formState.confirm}/>
+				<Input type="password" placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
+				<Input type="password" placeholder="Confirm password" onChange={e => setFormState({...formState, confirm: e.target.value})} value={formState.confirm}/>
 
 				<ErrorMessage fixedHeight>{msg}</ErrorMessage>
 
-				<StyledButton primary onClick={submit}>Sign up</StyledButton>
+				<Button onClick={submit}>Sign up</Button>
 			</Form>
 		</SubContainer>
 	);

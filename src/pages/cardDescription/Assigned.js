@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import {Container, SubTitle} from "./styles";
 import trashCursor from "../../assets/cursor.cur";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import ErrorMessage from "../../components/ErrorMessage";
+import useKeyboard from "../../hooks/useKeyboard";
 
 const User = styled.img`
   width: 3rem;
@@ -39,6 +40,8 @@ const AddUserContainer = styled.div`
 
 const AddUser = ({addUser}) => {
 	const [name, setName] = useState("");
+	const ref = useRef();
+	useKeyboard({ref, key: "enter", cb: () => newUser()});
 
 
 	const newUser = () => {
@@ -49,7 +52,7 @@ const AddUser = ({addUser}) => {
 
 	return (
 		<AddUserContainer>
-			<Input placeholder="Username" maxLength={25} onChange={e => setName(e.target.value)} value={name}/>
+			<Input ref={ref} placeholder="Username" maxLength={25} onChange={e => setName(e.target.value)} value={name}/>
 			<Button onClick={newUser}>Add</Button>
 		</AddUserContainer>
 	);
@@ -70,7 +73,6 @@ const Assigned = ({assignedNames, users, commitChanges}) => {
 	};
 
 	const deleteUser = username => commitChanges({assigned: assignedNames.filter(cur => cur !== username)});
-
 
 	return (
 		<Container>

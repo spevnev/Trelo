@@ -4,6 +4,7 @@ import logo from "../../assets/imgs/logo.png";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import ErrorMessage from "../../components/ErrorMessage";
+import useTitle from "../../hooks/useTitle";
 
 const TitleContainer = styled.div`
   margin-top: 3vh;
@@ -11,6 +12,7 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  //color: #fff;
 `;
 
 const Title = styled.h1`
@@ -23,6 +25,23 @@ const Container = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: #ebecf0;
+  //background: url("https://cdn.pixabay.com/photo/2020/02/19/22/57/blue-background-4863452_1280.jpg");
+  //position: relative;
+  //
+  //&::before {
+  //  content: '';
+  //  position: absolute;
+  //  z-index: 0;
+  //  display: block;
+  //  width: 100vw;
+  //  height: 100vh;
+  //  //backdrop-filter: blur(20px);
+  //}
+  //
+  //& div {
+  //  z-index: 999;
+  //}
 `;
 
 const Wrapper = styled.div`
@@ -102,22 +121,28 @@ const Compact = () => {
 	);
 };
 
-const Login = () => (
-	<Container>
-		<TitleContainer>
-			<img src={logo} width="64px" height="64px" alt=""/>
-			<Title>Trelo</Title>
-		</TitleContainer>
+const Login = () => {
+	useTitle("Login");
 
-		{window.innerWidth < 800 ?
-			<Compact/>
-			:
-			<Wrapper>
-				<LoginForm/>
-				<SignupForm/>
-			</Wrapper>
-		}
-	</Container>
-);
+
+	return (
+		<Container>
+			<TitleContainer>
+				<img src={logo} width="64px" height="64px" alt=""/>
+				<Title>Trelo</Title>
+			</TitleContainer>
+
+			{window.innerWidth < 800 ?
+				<Compact/>
+				:
+				<Wrapper>
+					<LoginForm/>
+					<SignupForm/>
+				</Wrapper>
+			}
+		</Container>
+	);
+};
+
 
 export default Login;

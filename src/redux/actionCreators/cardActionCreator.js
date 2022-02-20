@@ -4,8 +4,8 @@ const emptyCard = (id, listId) => ({title: "New card", id: id, listId: listId, d
 
 
 export const addCardBoard = (boardId, cards) => ({type: types.addCardBoard, payload: {boardId, cards}});
-export const deleteCardBoard = boardId => ({type: types.deleteCardBoard, payload: {boardId}});
 
+export const deleteCardBoard = boardId => ({type: types.deleteCardBoard, payload: {boardId}});
 
 export const addCard = (boardId, listId, id) => async (dispatch, getState, {card}) => {
 	const newCard = emptyCard(id, listId);
@@ -27,7 +27,7 @@ export const deleteCardsInList = (boardId, listId) => (dispatch, getState, {}) =
 };
 
 export const changeCard = (boardId, newCard) => async (dispatch, getState, {card}) => {
-	await card.changeCard(boardId, newCard);
+	card.changeCard(boardId, newCard);
 
 	dispatch({type: types.changeCard, payload: {boardId, id: newCard.id, newCard}});
 };
@@ -38,7 +38,7 @@ export const addFiles = (boardId, cardData, files) => async (dispatch, getState,
 	const cardFiles = files.map((file, i) => ({id: ids[i], filename: file.filename}));
 
 	await card.addFiles(boardId, cardData.id, cardFiles);
-	dispatch(changeCard(boardId, {...cardData, files: [...cardData.files, ...cardFiles]}));
+	dispatch({type: types.changeCard, payload: {boardId, id: cardData.id, newCard: {...cardData, files: [...cardData.files, ...cardFiles]}}});
 };
 
 export const deleteFile = (boardId, cardData, id) => async (dispatch, getState, {card}) => {

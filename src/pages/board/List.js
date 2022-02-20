@@ -15,11 +15,26 @@ const Title = styled.p`
 
 const ListContainer = styled.div`
   width: 25rem;
-  background: #aaa;
-  margin: 0 1.5rem;
+  background: #ebecf0;
+  margin: 0 1rem;
   padding: 8px 12px;
   border-radius: 5px;
+  overflow: hidden;
+  font-weight: 300;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+    opacity: 0;
+  }
+`;
+
+const InnerContainer = styled.div`
   overflow-y: scroll;
+  height: 100%;
+  margin: 5px 0;
+  max-height: 70vh;
 
   &::-webkit-scrollbar {
     display: none;
@@ -55,8 +70,10 @@ const List = ({title, cards, boardId, id}) => {
 				<div ref={provided.innerRef} {...provided.droppableProps}>
 					<ListContainer>
 						<Title>{title}</Title>
-						{cards && cards.map((card, i) => <Card key={card.id} users={users} boardId={boardId} i={i} {...card}/>)}
-						{provided.placeholder}
+						<InnerContainer>
+							{cards && cards.map((card, i) => <Card key={card.id} users={users} boardId={boardId} i={i} {...card}/>)}
+							{provided.placeholder}
+						</InnerContainer>
 						<AddCard onClick={newCard}>+ Add card</AddCard>
 					</ListContainer>
 				</div>
