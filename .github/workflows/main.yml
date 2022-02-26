@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '17.5.x'
       - run: npm install
-      - run: npm build
+      - run: npm run build
   deploy:
     runs-on: ubuntu-latest
     needs: [build]
