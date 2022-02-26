@@ -5,7 +5,7 @@ import {downloadFile, downloadImage, getImage, uploadFiles, uploadImages} from "
 import {getToken} from "./jwt";
 import axios from "axios";
 
-const client = axios.create({baseURL: "http://localhost:3000/api/"});
+const client = axios.create({baseURL: `https://${process.env.URL}/api/`});
 
 client.interceptors.request.use(req => {
 	const token = getToken();
