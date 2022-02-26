@@ -10,7 +10,6 @@ const client = axios.create({baseURL: `https://${process.env.URL}/api/`});
 client.interceptors.request.use(req => {
 	const token = getToken();
 	if (token !== null) req.headers.authorization = token;
-
 	return req;
 });
 
