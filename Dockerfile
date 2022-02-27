@@ -7,4 +7,4 @@ COPY build /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/nginx.conf.template
 CMD envsubst '$PORT' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf \
-    && nginx -g deamon off;
+    && nginx -g daemon off;
