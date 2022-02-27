@@ -5,7 +5,7 @@ import {downloadFile, downloadImage, getImage, uploadFiles, uploadImages} from "
 import {getToken} from "./jwt";
 import axios from "axios";
 
-const client = axios.create({baseURL: `https://${process.env.URL}/api/`});
+const client = axios.create({baseURL: `https://trelo-back.herokuapp.com/api/`});
 
 client.interceptors.request.use(req => {
 	const token = getToken();
