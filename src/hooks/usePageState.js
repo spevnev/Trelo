@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import PageLoading from "../components/PageLoading";
 import PageError from "../components/PageError";
-
-const saveMs = 500;
-const forceLoadingMs = 100;
+import config from "../config";
 
 let timeout = null;
 const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, debounce) => {
@@ -13,8 +11,8 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 	// Init & on change through reducer
 	useEffect(() => {
-		if (!loading) onLoad(); // TODO: test
-		setTimeout(() => setLoading(false), forceLoadingMs);
+		if (!loading) onLoad();
+		setTimeout(() => setLoading(false), config.FORCE_LOADING_MS);
 	}, []);
 
 	useEffect(() => {
@@ -29,7 +27,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 		timeout = setTimeout(() => {
 			debounce(state);
 			setSaved(true);
-		}, saveMs);
+		}, config.DEBOUNCE_SAVE_MS);
 	};
 
 	const clearTimer = () => clearTimeout(timeout);
