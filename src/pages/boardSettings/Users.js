@@ -11,6 +11,7 @@ import {useNavigate} from "react-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import {addUser, changeRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
+import {iconToUrl} from "../../services/image";
 
 const UserContainer = styled.div`
   display: flex;
@@ -68,7 +69,7 @@ const owner = {value: "owner", text: "Owner"};
 const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={`http://localhost:3000/static/icons/${icon}.png`}/>
+			<UserIcon src={iconToUrl(icon)}/>
 			<Username>{username}</Username>
 		</div>
 
@@ -82,7 +83,7 @@ const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 const CurUser = ({username, icon, isOwner, leave}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
-			<UserIcon src={`http://localhost:3000/static/icons/${icon}.png`}/>
+			<UserIcon src={iconToUrl(icon)}/>
 			<Username>{username}</Username>
 		</div>
 

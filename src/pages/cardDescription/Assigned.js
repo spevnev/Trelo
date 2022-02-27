@@ -6,6 +6,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import ErrorMessage from "../../components/ErrorMessage";
 import useKeyboard from "../../hooks/useKeyboard";
+import {iconToUrl} from "../../services/image";
 
 const User = styled.img`
   width: 3rem;
@@ -81,7 +82,7 @@ const Assigned = ({assignedNames, users, commitChanges}) => {
 			<div>
 				{assigned.map(user =>
 					<User onClick={() => deleteUser(user.username)} key={user.username} title={user.username}
-						  src={user.icon && `http://localhost:3000/static/icons/${user.icon}.png`}/>,
+						  src={user.icon && iconToUrl(user.icon)}/>,
 				)}
 			</div>
 

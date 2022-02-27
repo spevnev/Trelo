@@ -3,9 +3,10 @@ import {addCard, addFiles, changeCard, deleteCard, deleteFile, getCards, renameF
 import {changeBoards, fetchData, leave, login, signup, toggleFavourite} from "./user";
 import {downloadFile, downloadImage, getImage, uploadFiles, uploadImages} from "./file";
 import {getToken} from "./jwt";
+import config from "../config";
 import axios from "axios";
 
-const client = axios.create({baseURL: `https://trelo-back.herokuapp.com/api/`});
+const client = axios.create({baseURL: `${config.API}/api/`});
 
 client.interceptors.request.use(req => {
 	const token = getToken();
