@@ -5,7 +5,7 @@ const userReducer = (state = {}, action) => {
 
 	switch (action.type) {
 		case types.setUser:
-			return {boards: [], ...payload.user};
+			return {...payload.user};
 
 		case types.changeBoards:
 			return {...state, boards: payload.newBoards};

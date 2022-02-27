@@ -7,7 +7,7 @@ export const fetchUser = () => async (dispatch, getState, {user}) => {
 		window.location.reload();
 	}
 
-	dispatch({type: types.setUser, payload: {user: data}});
+	dispatch({type: types.setUser, payload: {user: {boards: [], ...data}}});
 };
 
 export const login = (username, password, setError, success) => async (dispatch, getState, {user}) => {
