@@ -1,4 +1,4 @@
 export default {
-	API: "http://localhost:3333",
-	IMG_HOSTING: "http://localhost:3333/static/icons",
+	API: "https://trelo-back.herokuapp.com",
+	IMG_HOSTING: "https://trelo-back.herokuapp.com/static/icons",
 };
