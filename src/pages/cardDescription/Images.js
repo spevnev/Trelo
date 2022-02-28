@@ -108,28 +108,29 @@ const Overlay = ({src, close}) => {
 	);
 };
 
-const Image = ({boardId, openFull, delImg, id}) => {
+const Image = ({boardId, openFull, delImg, url}) => {
 	const [src, setSrc] = useState(imagePlaceholder);
 
 
 	useEffect(() => {
-		if (id) bundle.file.getImage(boardId, id).then(data => setSrc(data));
-	}, []);
+		console.log(url);
+		if (url) bundle.file.getImage(boardId, url).then(data => setSrc(data));
+	}, [url]);
 
 
 	const deleteImage = e => {
 		e.stopPropagation();
-		delImg(id);
+		delImg(url);
 	};
 
 	const downloadImageLocal = e => {
 		e.stopPropagation();
-		bundle.file.downloadImage(boardId, id);
+		bundle.file.downloadImage(boardId, url);
 	};
 
 
 	return (
-		<ImageContainer onClick={openFull} src={src}>
+		<ImageContainer onClick={openFull} src={url}>
 			<Icon src={download} onClick={downloadImageLocal}/>
 			<Icon src={cross} onClick={deleteImage}/>
 		</ImageContainer>
@@ -180,7 +181,7 @@ const Images = ({boardId, state, commitChanges, overlay}) => {
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
-	const delImage = id => commitChanges({images: state.images.filter(cur => cur !== id)});
+	const delImage = url => commitChanges({images: state.images.filter(cur => cur !== url)});
 
 	const addImagesLocal = data => state.images.length < 10 && dispatch(addImages(boardId, state, data));
 
@@ -192,7 +193,7 @@ const Images = ({boardId, state, commitChanges, overlay}) => {
 			<SubTitle>Attached images</SubTitle>
 
 			<BlockContainer>
-				{state.images.map(cur => <Image openFull={openFull} boardId={boardId} delImg={delImage} key={cur} id={cur}/>)}
+				{state.images.map(cur => <Image openFull={openFull} boardId={boardId} delImg={delImage} key={cur} url={cur}/>)}
 
 				{state.images.length < 10 && <ImageInput overlay={overlay} addImages={addImagesLocal}/>}
 			</BlockContainer>

@@ -1,3 +1,3 @@
 import config from "../config";
 
-export const iconToUrl = id => `${config.IMG_HOSTING}/${id}.png`;
+export const iconToUrl = id => `${config.BACKEND}/static/icons/${id}.png`;

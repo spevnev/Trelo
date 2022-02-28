@@ -6,7 +6,7 @@ import {getToken} from "./jwt";
 import config from "../config";
 import axios from "axios";
 
-const client = axios.create({baseURL: `${config.API}/api/`});
+const client = axios.create({baseURL: `${config.BACKEND}/api/`});
 
 client.interceptors.request.use(req => {
 	const token = getToken();
