@@ -1,5 +1,6 @@
-import React, {useRef} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
+import bundle from "../../services";
 
 const Icon = styled.label`
   display: block;
@@ -19,7 +20,8 @@ const Icon = styled.label`
 `;
 
 
-const UserIcon = ({icon, setIcon, error}) => {
+const UserIcon = ({setIcon, error}) => {
+	const [preview, setPreview] = useState(null);
 	const input = useRef(null);
 
 
@@ -40,14 +42,18 @@ const UserIcon = ({icon, setIcon, error}) => {
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
 			if (file.name.split(".").length === 1) return;
-			reader.onload = () => setIcon(reader.result);
+			reader.onload = () => {
+				setPreview(reader.result);
+				setIcon(null);
+				bundle.user.uploadIcon(reader.result).then(res => setIcon(res));
+			};
 		}
 	};
 
 
 	return (
 		<>
-			<Icon htmlFor="userIcon" image={icon} onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}/>
+			<Icon htmlFor="userIcon" image={preview} onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}/>
 			<input ref={input} accept="image/jpeg,image/png" onChange={onFile} id="userIcon" type="file" style={{display: "none"}}/>
 		</>
 	);

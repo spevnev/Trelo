@@ -7,6 +7,7 @@ import HiddenInput from "../../components/HiddenInput";
 import {useDispatch} from "react-redux";
 import {addFiles, deleteFile} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services/";
+import PopUp from "../../components/PopUp";
 
 const ErrorMessage = styled.p`
   font-size: 12px;
@@ -18,6 +19,8 @@ const FileContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  max-width: 40rem;
+  width: 95vw;
 
   & ${HiddenInput} {
     font-size: 2rem;
@@ -42,7 +45,7 @@ const AddFile = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  width: 20rem;
+  width: 25rem;
   height: 3rem;
   background: #eee;
   border-radius: 5px;
@@ -60,17 +63,17 @@ const DropOverlay = styled(AddFile)`
 `;
 
 
-const File = ({filename, delFile, renameFile, id, boardId}) => {
+const File = ({filename, delFile, renameFile, url}) => {
 	const [msg, setMsg] = useState(null);
 
 
-	const downloadFile = () => bundle.file.downloadFile(boardId, id, filename);
+	const downloadFile = () => bundle.file.downloadFile(url, filename);
 
 	const rename = e => {
 		if (e.target.value.length === 0) setMsg("File name can't be empty!");
 		else setMsg(null);
 
-		renameFile(id, e.target.value);
+		renameFile(url, e.target.value);
 	};
 
 
@@ -79,7 +82,7 @@ const File = ({filename, delFile, renameFile, id, boardId}) => {
 			<FileContainer>
 				<HiddenInput placeholder="File name" onChange={rename} value={filename}/>
 				<Icon src={download} onClick={downloadFile}/>
-				<Icon src={cross} onClick={() => delFile(id)}/>
+				<Icon src={cross} onClick={() => delFile(url)}/>
 			</FileContainer>
 
 			<ErrorMessage>{msg}</ErrorMessage>
@@ -87,7 +90,7 @@ const File = ({filename, delFile, renameFile, id, boardId}) => {
 	);
 };
 
-const FileInput = ({addFiles, overlay}) => {
+const FileInput = ({addFiles, overlay, setUploading}) => {
 	const input = useRef(null);
 
 
@@ -107,6 +110,7 @@ const FileInput = ({addFiles, overlay}) => {
 			const file = files[i];
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
+			setUploading(true);
 			reader.onload = () => {
 				arr.push({filename: file.name, data: reader.result});
 				if (arr.length === files.length) addFiles(arr);
@@ -117,7 +121,7 @@ const FileInput = ({addFiles, overlay}) => {
 
 	return (
 		<>
-			<input ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile} multiple/>
+			<input maxLength={32} ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile} multiple/>
 			<label htmlFor="uploadFile" onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>
 				{overlay ? <DropOverlay>Drop here to add file</DropOverlay> : <AddFile>Add file</AddFile>}
 			</label>
@@ -125,15 +129,21 @@ const FileInput = ({addFiles, overlay}) => {
 	);
 };
 
-const Files = ({state, boardId, commitChanges, overlay}) => {
+const Files = ({state, boardId, commitChanges, overlay, setSaved}) => {
 	const dispatch = useDispatch();
+	const [isShown, setShown] = useState(false);
 
 
-	const addFilesLoc = files => dispatch(addFiles(boardId, state, files));
+	const setUploading = bool => {
+		setShown(bool);
+		setSaved(!bool);
+	};
 
-	const renameFileLoc = (id, newFilename) => commitChanges({...state, files: state.files.map(cur => cur.id === id ? {...cur, filename: newFilename} : cur)});
+	const delFile = url => dispatch(deleteFile(boardId, state.id, url));
 
-	const delFile = id => dispatch(deleteFile(boardId, state, id));
+	const addFilesLoc = files => dispatch(addFiles(boardId, state.id, files, setUploading));
+
+	const renameFileLoc = (url, newFilename) => commitChanges({...state, files: state.files.map(cur => cur.url === url ? {...cur, filename: newFilename} : cur)});
 
 
 	return (
@@ -141,9 +151,12 @@ const Files = ({state, boardId, commitChanges, overlay}) => {
 			<SubTitle>Attached files</SubTitle>
 
 			<BlockContainer>
-				{state.files.map(file => <File key={file.id} {...file} renameFile={renameFileLoc} boardId={boardId} delFile={delFile}/>)}
-				<FileInput addFiles={addFilesLoc} overlay={overlay}/>
+				{state.files.map(file => <File key={file.url} {...file} renameFile={renameFileLoc} delFile={delFile}/>)}
+
+				{state.files.length < 10 && <FileInput setUploading={setUploading} addFiles={addFilesLoc} overlay={overlay}/>}
 			</BlockContainer>
+
+			<PopUp isShown={isShown}>Uploading file... It might take a few seconds.</PopUp>
 		</Container>
 	);
 };

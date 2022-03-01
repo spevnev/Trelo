@@ -1,4 +1,5 @@
 import types from "../actions/userActions";
+import {getUserBoards} from "../selectors";
 
 export const fetchUser = () => async (dispatch, getState, {user}) => {
 	const [error, data] = await user.fetchData();
@@ -34,11 +35,11 @@ export const leave = boardId => async (dispatch, getState, {user}) => {
 	const data = await user.leave(boardId);
 	if (data === null) return;
 
-	dispatch(changeBoards(getState().user.boards.filter(cur => cur.id !== boardId)));
+	dispatch(changeBoards(getUserBoards()(getState()).filter(cur => cur.id !== boardId)));
 };
 
 export const toggleFavourite = id => async (dispatch, getState, {user}) => {
-	const boards = getState().user.boards;
+	const boards = getUserBoards()(getState());
 	const board = boards.filter(cur => cur.id === id)[0];
 
 	const data = await user.toggleFavourite(id, !board.isFavourite);

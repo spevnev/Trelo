@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
@@ -6,8 +6,8 @@ import {Container, SubTitle} from "./styles";
 import {useDispatch} from "react-redux";
 import {addImages} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services";
-import imagePlaceholder from "../../assets/imgs/imagePlaceholder.png";
 import useKeyboard from "../../hooks/useKeyboard";
+import PopUp from "../../components/PopUp";
 
 const Block = styled.div`
   min-width: 20rem;
@@ -96,28 +96,20 @@ const ImageContainer = styled(Block)`
 
 
 const Overlay = ({src, close}) => {
-	const ref = useRef(document.body);
-	useKeyboard({ref, key: "escape", cb: close, priority: 1});
+	const body = useRef(document.body);
+	const ref = useRef(null);
+	useKeyboard({ref: body, key: "escape", cb: close, priority: 1});
 
 
 	return (
-		<OverlayContainer>
+		<OverlayContainer onClick={e => e.target !== ref.current && close()}>
 			<Close src={cross} onClick={close}/>
-			<OverlayImage src={src}/>
+			<OverlayImage ref={ref} src={src}/>
 		</OverlayContainer>
 	);
 };
 
-const Image = ({boardId, openFull, delImg, url}) => {
-	const [src, setSrc] = useState(imagePlaceholder);
-
-
-	useEffect(() => {
-		console.log(url);
-		if (url) bundle.file.getImage(boardId, url).then(data => setSrc(data));
-	}, [url]);
-
-
+const Image = ({openFull, delImg, url}) => {
 	const deleteImage = e => {
 		e.stopPropagation();
 		delImg(url);
@@ -125,7 +117,7 @@ const Image = ({boardId, openFull, delImg, url}) => {
 
 	const downloadImageLocal = e => {
 		e.stopPropagation();
-		bundle.file.downloadImage(boardId, url);
+		bundle.file.downloadFile(url);
 	};
 
 
@@ -137,7 +129,7 @@ const Image = ({boardId, openFull, delImg, url}) => {
 	);
 };
 
-const ImageInput = ({addImages, overlay}) => {
+const ImageInput = ({addImages, overlay, setUploading}) => {
 	const input = useRef(null);
 
 
@@ -156,6 +148,7 @@ const ImageInput = ({addImages, overlay}) => {
 		for (let i = 0; i < files.length; i++) {
 			const reader = new FileReader();
 			reader.readAsDataURL(files[i]);
+			setUploading(true);
 			reader.onload = () => {
 				arr.push(reader.result);
 				if (arr.length === files.length) addImages(arr);
@@ -174,16 +167,22 @@ const ImageInput = ({addImages, overlay}) => {
 	);
 };
 
-const Images = ({boardId, state, commitChanges, overlay}) => {
+const Images = ({boardId, state, commitChanges, overlay, setSaved}) => {
 	const [fullImg, setFullImg] = useState(null);
+	const [isShown, setShown] = useState(false);
 	const dispatch = useDispatch();
 
+
+	const setUploading = bool => {
+		setShown(bool);
+		setSaved(!bool);
+	};
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
 	const delImage = url => commitChanges({images: state.images.filter(cur => cur !== url)});
 
-	const addImagesLocal = data => state.images.length < 10 && dispatch(addImages(boardId, state, data));
+	const addImagesLocal = data => state.images.length < 10 && dispatch(addImages(boardId, state.id, data, setUploading));
 
 
 	return (
@@ -193,10 +192,12 @@ const Images = ({boardId, state, commitChanges, overlay}) => {
 			<SubTitle>Attached images</SubTitle>
 
 			<BlockContainer>
-				{state.images.map(cur => <Image openFull={openFull} boardId={boardId} delImg={delImage} key={cur} url={cur}/>)}
+				{state.images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur} url={cur}/>)}
 
-				{state.images.length < 10 && <ImageInput overlay={overlay} addImages={addImagesLocal}/>}
+				{state.images.length < 10 && <ImageInput overlay={overlay} setUploading={setUploading} addImages={addImagesLocal}/>}
 			</BlockContainer>
+
+			<PopUp isShown={isShown}>Uploading image... It might take a few seconds.</PopUp>
 		</Container>
 	);
 };

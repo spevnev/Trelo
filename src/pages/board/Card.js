@@ -7,7 +7,6 @@ import imagesIcon from "../../assets/svg/images.svg";
 import fileIcon from "../../assets/svg/file-empty.svg";
 import filesIcon from "../../assets/svg/files-empty.svg";
 import {Draggable} from "react-beautiful-dnd";
-import {iconToUrl} from "../../services/image";
 
 const CardContainer = styled.div`
   margin-bottom: 10px;
@@ -61,7 +60,7 @@ const Card = ({title, id, description, images, assigned, files, i, users}) => {
 
 						<div>
 							{users.filter(cur => assigned.indexOf(cur.username) !== -1).map(cur =>
-								<UserIcon key={cur.username} title={cur.username} src={cur.icon && iconToUrl(cur.icon)}/>,
+								<UserIcon key={cur.username} title={cur.username} src={cur.icon}/>,
 							)}
 						</div>
 					</SubContainer>

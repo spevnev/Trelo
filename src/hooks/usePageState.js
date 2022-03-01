@@ -3,10 +3,12 @@ import PageLoading from "../components/PageLoading";
 import PageError from "../components/PageError";
 import config from "../config";
 
+
 let timeout = null;
 const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, debounce) => {
 	const [state, setState] = useState(initState());
 	const [isSaved, setSaved] = useState(true);
+	const [forceSaved, setForceSaved] = useState(true);
 	const [loading, setLoading] = useState(!state || isError());
 
 	// Init & on change through reducer
@@ -18,6 +20,12 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	useEffect(() => {
 		setState(deps);
 	}, !deps ? [{}] : deps[Symbol.iterator] ? deps : [deps]);
+
+
+	// Show message about unsaved changes
+	window.onbeforeunload = () => {
+		if (!(isSaved && forceSaved)) return "";
+	};
 
 
 	// Debounce
@@ -48,7 +56,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 	else if (isLoading(state)) pageState = <PageLoading/>;
 
-	return [pageState, state, changeState, isSaved, clearTimer];
+	return [pageState, state, changeState, isSaved && forceSaved, setForceSaved, clearTimer];
 };
 
 export default usePageState;

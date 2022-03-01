@@ -6,7 +6,6 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import ErrorMessage from "../../components/ErrorMessage";
 import useKeyboard from "../../hooks/useKeyboard";
-import {iconToUrl} from "../../services/image";
 
 const User = styled.img`
   width: 3rem;
@@ -25,11 +24,13 @@ const AddUserContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 35rem;
+  max-width: 40rem;
+  width: 95vw;
   margin: 2px 0;
 
   & ${Input} {
-    width: 25rem;
+    max-width: 30rem;
+    width: 70vw;
     font-size: 1.6rem;
   }
 
@@ -81,8 +82,7 @@ const Assigned = ({assignedNames, users, commitChanges}) => {
 
 			<div>
 				{assigned.map(user =>
-					<User onClick={() => deleteUser(user.username)} key={user.username} title={user.username}
-						  src={user.icon && iconToUrl(user.icon)}/>,
+					<User onClick={() => deleteUser(user.username)} key={user.username} title={user.username} src={user.icon}/>,
 				)}
 			</div>
 

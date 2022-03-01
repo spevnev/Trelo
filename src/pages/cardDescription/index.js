@@ -58,7 +58,7 @@ const CardDescription = () => {
 	useKeyboard({ref, key: "escape", cb: () => goBack()});
 	useTitle(card && card.title ? card.title : "Card");
 
-	const [pageState, state, setState, isSaved, clearTimer] = usePageState(
+	const [pageState, state, setState, isSaved, setSaved, clearTimer] = usePageState(
 		() => {
 			if (board && card && board.status === "READY") return card;
 
@@ -70,8 +70,8 @@ const CardDescription = () => {
 		state => board.status === "LOADING" || !state,
 		card,
 		state => {
-			[...state.files].filter(cur => card.files.filter(f => cur.id === f.id && cur.filename !== f.filename).length !== 0).forEach(file => {
-				bundle.card.renameFile(boardId, file.filename, file.id);
+			[...state.files].filter(cur => card.files.filter(f => cur.url === f.url && cur.filename !== f.filename).length !== 0).forEach(file => {
+				bundle.card.renameFile(boardId, file.filename, file.url);
 			});
 
 			dispatch(changeCard(boardId, state));
@@ -123,8 +123,8 @@ const CardDescription = () => {
 			<Title lists={lists} listId={state.listId} title={state.title} commitChanges={setState}/>
 			<Assigned assignedNames={state.assigned} users={users} commitChanges={setState}/>
 			<Description description={state.description} commitChanges={setState}/>
-			<Images state={state} boardId={boardId} overlay={overlay} commitChanges={setState}/>
-			<Files state={state} boardId={boardId} overlay={overlay} commitChanges={setState}/>
+			<Images state={state} boardId={boardId} overlay={overlay} setSaved={setSaved} commitChanges={setState}/>
+			<Files state={state} boardId={boardId} overlay={overlay} setSaved={setSaved} commitChanges={setState}/>
 		</Container>
 	);
 };

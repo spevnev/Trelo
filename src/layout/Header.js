@@ -4,7 +4,6 @@ import styled from "styled-components";
 import logo from "../assets/imgs/white_logo.png";
 import {useSelector} from "react-redux";
 import {getUser} from "../redux/selectors";
-import {iconToUrl} from "../services/image";
 
 const HeaderContainer = styled.div`
   width: 100vw;
@@ -58,7 +57,7 @@ const Header = () => {
 
 			<Container>
 				<Username>{user.username}</Username>
-				{user.icon && <UserIcon image={iconToUrl(user.icon)}/>}
+				{user.icon && <UserIcon image={user.icon}/>}
 			</Container>
 		</HeaderContainer>
 	);

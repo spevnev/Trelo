@@ -13,13 +13,13 @@ export const addFiles = axios => async (boardId, cardId, files) => {
 	return res && res.status === 200 ? res.data : null;
 };
 
-export const deleteFile = axios => async (boardId, id) => {
-	const res = await axios.post(`/card/deleteFile`, {boardId, id}).catch(e => console.log(e));
+export const deleteFile = axios => async (boardId, url) => {
+	const res = await axios.post(`/card/deleteFile`, {boardId, url}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
 
-export const renameFile = axios => async (boardId, filename, id) => {
-	const res = await axios.put(`/card/renameFile`, {boardId, id, filename}).catch(e => console.log(e));
+export const renameFile = axios => async (boardId, filename, url) => {
+	const res = await axios.put(`/card/renameFile`, {boardId, url, filename}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;
 };
 

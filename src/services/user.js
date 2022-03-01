@@ -13,6 +13,11 @@ export const signup = axios => async (username, password, icon) => {
 	return res && res.status === 200 ? res.data : null;
 };
 
+export const uploadIcon = axios => async icon => {
+	const res = await axios.post(`/auth/icon/`, {icon}).catch(e => console.log(e));
+	return res && res.status === 200 ? res.data : null;
+};
+
 export const leave = axios => async boardId => {
 	const res = await axios.post("/user/leave", {boardId}).catch(e => console.log(e));
 	return res && res.status === 200 ? res.data : null;

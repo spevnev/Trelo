@@ -1,6 +1,7 @@
 import types from "../actions/boardActions";
 import {addCardBoard} from "./cardActionCreator";
 import {changeBoards} from "./userActionCreator";
+import {getBoard, getUser, getUserBoards} from "../selectors";
 
 const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}});
 
@@ -16,7 +17,7 @@ export const fetchBoard = (id, silent = false) => async (dispatch, getState, {bo
 };
 
 export const newBoard = (id, navigate) => async (dispatch, getState, {board}) => {
-	const user = getState().user;
+	const user = getUser()(getState());
 	const boardObject = {title: "New Board", id, lists: [], users: [{...user, boards: undefined, isOwner: true}]};
 
 	if (await board.createBoard(boardObject) === null) return;
@@ -33,7 +34,7 @@ export const addBoard = board => ({type: types.addBoard, payload: {board}});
 export const deleteBoard = id => (dispatch, getState, {board}) => {
 	board.deleteBoard(id);
 
-	dispatch(changeBoards(getState().user.boards.filter(cur => cur.id !== id)));
+	dispatch(changeBoards(getUserBoards()(getState()).filter(cur => cur.id !== id)));
 	dispatch({
 		type: types.deleteBoard,
 		payload: {id},
@@ -41,8 +42,7 @@ export const deleteBoard = id => (dispatch, getState, {board}) => {
 };
 
 export const changeBoard = (id, newBoard) => async (dispatch, getState, {board}) => {
-	const prev = getState().board.filter(cur => cur.id === id)[0];
-	if (newBoard.title.length > 0 && (!prev || prev.title !== newBoard.title)) await board.changeTitle(id, newBoard.title);
+	if (newBoard.title.length > 0 && getBoard(id)(getState()).title !== newBoard.title) await board.changeTitle(id, newBoard.title);
 
 	dispatch({
 		type: types.changeBoard,
@@ -55,7 +55,7 @@ export const addUser = (id, username, onSuccess, onError) => async (dispatch, ge
 	if (error) return onError(error);
 
 	onSuccess(data);
-	const boardData = getState().board.filter(cur => cur.id === id)[0];
+	const boardData = getBoard(id)(getState());
 	dispatch(changeBoard(id, {...boardData, users: [...boardData.users, {...data, isOwner: false}]}));
 };
 
@@ -63,7 +63,7 @@ export const deleteUser = (id, username) => async (dispatch, getState, {board}) 
 	const data = await board.deleteUser(username, id);
 	if (data === null) return;
 
-	const boardData = getState().board.filter(cur => cur.id === id)[0];
+	const boardData = getBoard(id)(getState());
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.filter(cur => cur.username !== username)}));
 };
 
@@ -71,7 +71,7 @@ export const changeRole = (id, username, isOwner) => async (dispatch, getState, 
 	const data = await board.changeRole(id, username, isOwner);
 	if (data === null) return;
 
-	const boardData = getState().board.filter(cur => cur.id === id)[0];
+	const boardData = getBoard(id)(getState());
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.map(cur => cur.username === username ? {...cur, isOwner} : cur)}));
 };
 
@@ -79,7 +79,7 @@ export const createList = (boardId, id, title) => async (dispatch, getState, {bo
 	const data = await board.createList(boardId, id, title);
 	if (data === null) return;
 
-	const boardData = getState().board.filter(cur => cur.id === boardId)[0];
+	const boardData = getBoard(id)(getState());
 	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id}]}));
 };
 
@@ -87,6 +87,6 @@ export const deleteList = (boardId, id) => async (dispatch, getState, {board}) =
 	const data = await board.deleteList(boardId, id);
 	if (data === null) return;
 
-	const boardData = getState().board.filter(cur => cur.id === boardId)[0];
+	const boardData = getBoard(id)(getState());
 	dispatch(changeBoard(boardId, {...boardData, lists: boardData.lists.filter(cur => cur.id !== id)}));
 };

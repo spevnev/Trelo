@@ -54,7 +54,7 @@ const SignupForm = () => {
 			<Text secondary>Don't have account yet?</Text>
 
 			<Form ref={ref}>
-				<UserIcon setIcon={setIcon} icon={formState.icon} error={error}/>
+				<UserIcon setIcon={setIcon} error={error}/>
 
 				<Input placeholder="Username" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
 				<Input type="password" placeholder="Password" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
