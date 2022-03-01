@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
 import {Container, SubTitle} from "./styles";
+import {CardContext} from "./index";
 
 const DescriptionInput = styled.textarea`
   background: #f4f4f4;
@@ -21,11 +22,16 @@ const DescriptionInput = styled.textarea`
 `;
 
 
-const Description = ({description, commitChanges}) => (
-	<Container>
-		<SubTitle>Description</SubTitle>
-		<DescriptionInput maxLength="500" onChange={e => commitChanges({description: e.target.value})} value={description} placeholder="Description"/>
-	</Container>
-);
+const Description = () => {
+	const {setState, state} = useContext(CardContext);
+
+
+	return (
+		<Container>
+			<SubTitle>Description</SubTitle>
+			<DescriptionInput maxLength="500" onChange={e => setState({description: e.target.value})} value={state.description} placeholder="Description"/>
+		</Container>
+	);
+}
 
 export default Description;

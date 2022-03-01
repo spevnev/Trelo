@@ -12,7 +12,6 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  //color: #fff;
 `;
 
 const Title = styled.h1`
@@ -26,22 +25,6 @@ const Container = styled.main`
   flex-direction: column;
   align-items: center;
   background: #ebecf0;
-  //background: url("https://cdn.pixabay.com/photo/2020/02/19/22/57/blue-background-4863452_1280.jpg");
-  //position: relative;
-  //
-  //&::before {
-  //  content: '';
-  //  position: absolute;
-  //  z-index: 0;
-  //  display: block;
-  //  width: 100vw;
-  //  height: 100vh;
-  //  //backdrop-filter: blur(20px);
-  //}
-  //
-  //& div {
-  //  z-index: 999;
-  //}
 `;
 
 const Wrapper = styled.div`

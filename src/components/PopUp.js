@@ -47,6 +47,7 @@ const Text = styled.p`
   font-size: 1.8rem;
   font-weight: 300;
   text-align: center;
+  color: #000;
 `;
 
 

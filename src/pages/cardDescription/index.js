@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {createContext, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
@@ -39,6 +39,8 @@ const Delete = styled.img`
 
 
 const isCardEmpty = card => card.title.length === 0 && card.description.length === 0 && card.assigned.length === 0 && card.images.length === 0 && card.files.length === 0;
+
+export const CardContext = createContext(null);
 
 let timeout = null;
 const CardDescription = () => {
@@ -109,22 +111,22 @@ const CardDescription = () => {
 	};
 
 
-	const users = board.users;
-	const lists = board.lists;
-
 	return (
 		<Container onDragEnter={onDragEnter} onDrop={() => setOverlay(false)}>
 			<SubContainer>
 				<GoBack onClick={goBack}>Return to the board</GoBack>
 				<Delete onClick={() => openModal("Are you sure you want to delete this card?")} src={deleteIcon}/>
 			</SubContainer>
-			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenProp={isOpen} prompt={modalText}/>
 
-			<Title lists={lists} listId={state.listId} title={state.title} commitChanges={setState}/>
-			<Assigned assignedNames={state.assigned} users={users} commitChanges={setState}/>
-			<Description description={state.description} commitChanges={setState}/>
-			<Images state={state} boardId={boardId} overlay={overlay} setSaved={setSaved} commitChanges={setState}/>
-			<Files state={state} boardId={boardId} overlay={overlay} setSaved={setSaved} commitChanges={setState}/>
+			<CardContext.Provider value={{state, board, setState, overlay, setSaved}}>
+				<Title/>
+				<Assigned/>
+				<Description/>
+				<Images/>
+				<Files/>
+			</CardContext.Provider>
+
+			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenProp={isOpen} prompt={modalText}/>
 		</Container>
 	);
 };

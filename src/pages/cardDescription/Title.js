@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useContext} from "react";
 import HiddenInput from "../../components/HiddenInput";
 import {Container, SubTitle} from "./styles";
 import SelectInput from "../../components/SelectInput";
 import styled from "styled-components";
+import {CardContext} from "./index";
 
 const Select = styled(SelectInput)`
   border: none;
@@ -13,16 +14,17 @@ const Select = styled(SelectInput)`
 `;
 
 
-const Title = ({lists, listId, title, commitChanges}) => {
-	const curList = lists.filter(cur => cur.id === listId)[0];
-	const otherLists = lists.filter(cur => cur.id !== listId);
+const Title = () => {
+	const {board, state, setState} = useContext(CardContext);
+
 
 	return (
 		<Container>
 			<SubTitle>Title</SubTitle>
-			<HiddenInput maxLength="64" placeholder="Card title" onChange={e => commitChanges({title: e.target.value})} value={title}/>
-			<Select onSelect={listId => commitChanges({listId})} initial={{text: curList.title, value: listId}}
-					options={otherLists.map(cur => ({text: cur.title, value: cur.id}))}/>
+			<HiddenInput maxLength="64" placeholder="Card title" onChange={e => setState({title: e.target.value})} value={state.title}/>
+			<Select onSelect={listId => setState({listId})}
+					initial={{text: board.lists.filter(cur => cur.id === state.listId)[0].title, value: state.listId}}
+					options={board.lists.filter(cur => cur.id !== state.listId).map(cur => ({text: cur.title, value: cur.id}))}/>
 		</Container>
 	);
 };

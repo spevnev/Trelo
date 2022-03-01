@@ -79,7 +79,7 @@ export const createList = (boardId, id, title) => async (dispatch, getState, {bo
 	const data = await board.createList(boardId, id, title);
 	if (data === null) return;
 
-	const boardData = getBoard(id)(getState());
+	const boardData = getBoard(boardId)(getState());
 	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id}]}));
 };
 
@@ -87,6 +87,6 @@ export const deleteList = (boardId, id) => async (dispatch, getState, {board}) =
 	const data = await board.deleteList(boardId, id);
 	if (data === null) return;
 
-	const boardData = getBoard(id)(getState());
+	const boardData = getBoard(boardId)(getState());
 	dispatch(changeBoard(boardId, {...boardData, lists: boardData.lists.filter(cur => cur.id !== id)}));
 };

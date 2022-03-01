@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
@@ -8,6 +8,7 @@ import {useDispatch} from "react-redux";
 import {addFiles, deleteFile} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services/";
 import PopUp from "../../components/PopUp";
+import {CardContext} from "./index";
 
 const ErrorMessage = styled.p`
   font-size: 12px;
@@ -90,7 +91,8 @@ const File = ({filename, delFile, renameFile, url}) => {
 	);
 };
 
-const FileInput = ({addFiles, overlay, setUploading}) => {
+const FileInput = ({addFiles, setUploading}) => {
+	const {overlay} = useContext(CardContext);
 	const input = useRef(null);
 
 
@@ -129,7 +131,8 @@ const FileInput = ({addFiles, overlay, setUploading}) => {
 	);
 };
 
-const Files = ({state, boardId, commitChanges, overlay, setSaved}) => {
+const Files = () => {
+	const {board, state, setState, setSaved} = useContext(CardContext);
 	const dispatch = useDispatch();
 	const [isShown, setShown] = useState(false);
 
@@ -139,11 +142,11 @@ const Files = ({state, boardId, commitChanges, overlay, setSaved}) => {
 		setSaved(!bool);
 	};
 
-	const delFile = url => dispatch(deleteFile(boardId, state.id, url));
+	const delFile = url => dispatch(deleteFile(board.id, state.id, url));
 
-	const addFilesLoc = files => dispatch(addFiles(boardId, state.id, files, setUploading));
+	const addFilesLoc = files => dispatch(addFiles(board.id, state.id, files, setUploading));
 
-	const renameFileLoc = (url, newFilename) => commitChanges({...state, files: state.files.map(cur => cur.url === url ? {...cur, filename: newFilename} : cur)});
+	const renameFileLoc = (url, newFilename) => setState({...state, files: state.files.map(cur => cur.url === url ? {...cur, filename: newFilename} : cur)});
 
 
 	return (
@@ -153,7 +156,7 @@ const Files = ({state, boardId, commitChanges, overlay, setSaved}) => {
 			<BlockContainer>
 				{state.files.map(file => <File key={file.url} {...file} renameFile={renameFileLoc} delFile={delFile}/>)}
 
-				{state.files.length < 10 && <FileInput setUploading={setUploading} addFiles={addFilesLoc} overlay={overlay}/>}
+				{state.files.length < 10 && <FileInput setUploading={setUploading} addFiles={addFilesLoc}/>}
 			</BlockContainer>
 
 			<PopUp isShown={isShown}>Uploading file... It might take a few seconds.</PopUp>

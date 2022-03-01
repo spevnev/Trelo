@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
@@ -8,6 +8,7 @@ import {addImages} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services";
 import useKeyboard from "../../hooks/useKeyboard";
 import PopUp from "../../components/PopUp";
+import {CardContext} from "./index";
 
 const Block = styled.div`
   min-width: 20rem;
@@ -129,7 +130,8 @@ const Image = ({openFull, delImg, url}) => {
 	);
 };
 
-const ImageInput = ({addImages, overlay, setUploading}) => {
+const ImageInput = ({addImages, setUploading}) => {
+	const {overlay} = useContext(CardContext);
 	const input = useRef(null);
 
 
@@ -167,7 +169,8 @@ const ImageInput = ({addImages, overlay, setUploading}) => {
 	);
 };
 
-const Images = ({boardId, state, commitChanges, overlay, setSaved}) => {
+const Images = () => {
+	const {board, state, setState, setSaved} = useContext(CardContext);
 	const [fullImg, setFullImg] = useState(null);
 	const [isShown, setShown] = useState(false);
 	const dispatch = useDispatch();
@@ -180,9 +183,9 @@ const Images = ({boardId, state, commitChanges, overlay, setSaved}) => {
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
-	const delImage = url => commitChanges({images: state.images.filter(cur => cur !== url)});
+	const delImage = url => setState({images: state.images.filter(cur => cur !== url)});
 
-	const addImagesLocal = data => state.images.length < 10 && dispatch(addImages(boardId, state.id, data, setUploading));
+	const addImagesLocal = data => state.images.length < 10 && dispatch(addImages(board.id, state.id, data, setUploading));
 
 
 	return (
@@ -194,7 +197,7 @@ const Images = ({boardId, state, commitChanges, overlay, setSaved}) => {
 			<BlockContainer>
 				{state.images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur} url={cur}/>)}
 
-				{state.images.length < 10 && <ImageInput overlay={overlay} setUploading={setUploading} addImages={addImagesLocal}/>}
+				{state.images.length < 10 && <ImageInput setUploading={setUploading} addImages={addImagesLocal}/>}
 			</BlockContainer>
 
 			<PopUp isShown={isShown}>Uploading image... It might take a few seconds.</PopUp>
