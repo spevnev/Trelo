@@ -11,22 +11,21 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	const [forceSaved, setForceSaved] = useState(true);
 	const [loading, setLoading] = useState(!state || isError());
 
-	// Init & on change through reducer
+	// Init & on change, save changes on exit
 	useEffect(() => {
 		if (!loading) onLoad();
 		setTimeout(() => setLoading(false), config.FORCE_LOADING_MS);
+
+		return () => window.onbeforeunload = null;
 	}, []);
 
 	useEffect(() => {
 		setState(deps);
 	}, !deps ? [{}] : [deps]);
 
-
-	// Show message about unsaved changes
 	window.onbeforeunload = () => {
 		if (!(isSaved && forceSaved)) return "";
 	};
-
 
 	// Debounce
 	const startTimer = state => {
