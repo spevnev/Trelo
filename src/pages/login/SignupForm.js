@@ -8,6 +8,7 @@ import {signup} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import {useNavigate} from "react-router";
 import bundle from "../../services";
+import CropOverlay from "./CropOverlay";
 import PopUp from "../../components/PopUp";
 
 const Button = styled(StyledButton)`
@@ -35,9 +36,11 @@ const Icon = styled.label`
 
 
 const UserIcon = ({setIcon, error}) => {
-	const [preview, setPreview] = useState(null);
 	const input = useRef(null);
 	const [isShown, setShown] = useState(false);
+	const [isCropping, setCropping] = useState(false);
+	const [image, setImage] = useState(null);
+	const [preview, setPreview] = useState(null);
 
 
 	const preventDefault = e => e.preventDefault();
@@ -50,23 +53,30 @@ const UserIcon = ({setIcon, error}) => {
 
 	const onFile = e => {
 		const file = e.target.files[0];
+		e.target.value = null;
 
 		if (file) {
 			if (file.size > 1024 * 1024) return error("Image is too big! Max size - 1 MB.");
 
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
+
 			if (file.name.split(".").length === 1) return;
 			reader.onload = () => {
-				setPreview(reader.result);
-				setIcon(null);
-				setShown(true);
-				bundle.user.uploadIcon(reader.result).then(res => {
-					setIcon(res);
-					setShown(false);
-				});
+				setImage(reader.result);
+				setCropping(true);
 			};
 		}
+	};
+
+	const onSubmit = data => {
+		setPreview(data);
+		setShown(true);
+
+		bundle.user.uploadIcon(data).then(res => {
+			setIcon(res);
+			setShown(false);
+		});
 	};
 
 
@@ -74,6 +84,8 @@ const UserIcon = ({setIcon, error}) => {
 		<>
 			<Icon htmlFor="userIcon" image={preview} onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}/>
 			<input ref={input} accept="image/jpeg,image/png" onChange={onFile} id="userIcon" type="file" style={{display: "none"}}/>
+
+			<CropOverlay isShown={isCropping} setCropping={setCropping} image={image} onSubmit={onSubmit}/>
 			<PopUp isShown={isShown}>Uploading icon... It might take a few seconds.</PopUp>
 		</>
 	);
