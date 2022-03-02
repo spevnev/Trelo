@@ -31,21 +31,19 @@ export const signup = (userData, setError, success) => async (dispatch, getState
 	success();
 };
 
-export const leave = boardId => async (dispatch, getState, {user}) => {
-	const data = await user.leave(boardId);
-	if (data === null) return;
+export const leave = boardId => (dispatch, getState, {user}) => {
+	user.leave(boardId);
 
 	dispatch(changeBoards(getUserBoards()(getState()).filter(cur => cur.id !== boardId)));
 };
 
-export const toggleFavourite = id => async (dispatch, getState, {user}) => {
+export const toggleFavourite = id => (dispatch, getState, {user}) => {
 	const boards = getUserBoards()(getState());
-	const board = boards.filter(cur => cur.id === id)[0];
+	const isFavourite = boards.filter(cur => cur.id === id)[0].isFavourite;
 
-	const data = await user.toggleFavourite(id, !board.isFavourite);
-	if (data === null) return;
+	user.toggleFavourite(id, !isFavourite);
 
-	dispatch(changeBoards(boards.map(cur => cur.id === id ? {...cur, isFavourite: !board.isFavourite} : cur)));
+	dispatch(changeBoards(boards.map(cur => cur.id === id ? {...cur, isFavourite: !isFavourite} : cur)));
 };
 
 export const changeBoards = newBoards => ({type: types.changeBoards, payload: {newBoards}});

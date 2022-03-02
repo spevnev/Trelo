@@ -19,7 +19,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 	useEffect(() => {
 		setState(deps);
-	}, !deps ? [{}] : deps[Symbol.iterator] ? deps : [deps]);
+	}, !deps ? [{}] : [deps]);
 
 
 	// Show message about unsaved changes

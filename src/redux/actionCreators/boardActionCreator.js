@@ -16,17 +16,15 @@ export const fetchBoard = (id, silent = false) => async (dispatch, getState, {bo
 	dispatch(addBoard({...brd, status: "READY"}));
 };
 
-export const newBoard = (id, navigate) => async (dispatch, getState, {board}) => {
+export const newBoard = id => (dispatch, getState, {board}) => {
 	const user = getUser()(getState());
 	const boardObject = {title: "New Board", id, lists: [], users: [{...user, boards: undefined, isOwner: true}]};
 
-	if (await board.createBoard(boardObject) === null) return;
+	board.createBoard(boardObject);
 
 	dispatch(addCardBoard(id, []));
 	dispatch(addBoard({...boardObject, status: "READY"}));
 	dispatch(changeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
-
-	navigate(`/board/${id}/settings`);
 };
 
 export const addBoard = board => ({type: types.addBoard, payload: {board}});
@@ -41,8 +39,8 @@ export const deleteBoard = id => (dispatch, getState, {board}) => {
 	});
 };
 
-export const changeBoard = (id, newBoard) => async (dispatch, getState, {board}) => {
-	if (newBoard.title.length > 0 && getBoard(id)(getState()).title !== newBoard.title) await board.changeTitle(id, newBoard.title);
+export const changeBoard = (id, newBoard) => (dispatch, getState, {board}) => {
+	if (newBoard.title.length > 0 && getBoard(id)(getState()).title !== newBoard.title) board.changeTitle(id, newBoard.title);
 
 	dispatch({
 		type: types.changeBoard,
@@ -59,33 +57,29 @@ export const addUser = (id, username, onSuccess, onError) => async (dispatch, ge
 	dispatch(changeBoard(id, {...boardData, users: [...boardData.users, {...data, isOwner: false}]}));
 };
 
-export const deleteUser = (id, username) => async (dispatch, getState, {board}) => {
-	const data = await board.deleteUser(username, id);
-	if (data === null) return;
+export const deleteUser = (id, username) => (dispatch, getState, {board}) => {
+	board.deleteUser(username, id);
 
 	const boardData = getBoard(id)(getState());
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.filter(cur => cur.username !== username)}));
 };
 
-export const changeRole = (id, username, isOwner) => async (dispatch, getState, {board}) => {
-	const data = await board.changeRole(id, username, isOwner);
-	if (data === null) return;
+export const changeRole = (id, username, isOwner) => (dispatch, getState, {board}) => {
+	board.changeRole(id, username, isOwner);
 
 	const boardData = getBoard(id)(getState());
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.map(cur => cur.username === username ? {...cur, isOwner} : cur)}));
 };
 
-export const createList = (boardId, id, title) => async (dispatch, getState, {board}) => {
-	const data = await board.createList(boardId, id, title);
-	if (data === null) return;
+export const createList = (boardId, id, title) => (dispatch, getState, {board}) => {
+	board.createList(boardId, id, title);
 
 	const boardData = getBoard(boardId)(getState());
 	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id}]}));
 };
 
-export const deleteList = (boardId, id) => async (dispatch, getState, {board}) => {
-	const data = await board.deleteList(boardId, id);
-	if (data === null) return;
+export const deleteList = (boardId, id) => (dispatch, getState, {board}) => {
+	board.deleteList(boardId, id);
 
 	const boardData = getBoard(boardId)(getState());
 	dispatch(changeBoard(boardId, {...boardData, lists: boardData.lists.filter(cur => cur.id !== id)}));
