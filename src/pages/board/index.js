@@ -23,7 +23,7 @@ const Container = styled.div`
 const Lists = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 1rem;
+  padding: 1rem;
   height: 100%;
   overflow-x: scroll;
   overflow-y: hidden;

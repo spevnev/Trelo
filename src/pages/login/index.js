@@ -40,7 +40,7 @@ const Wrapper = styled.div`
 
 const SmallWrapper = styled(Wrapper)`
   min-width: 250px;
-  width: 60vw;
+  width: 80vw;
   max-width: 400px;
   height: 80vh;
   flex-direction: column;
