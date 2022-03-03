@@ -41,15 +41,9 @@ const PrimaryButton = styled(Button)`
   border: none;
 `;
 
-
-const canvas = document.createElement("canvas");
-canvas.width = 100;
-canvas.height = 100;
-canvas.style.display = "none";
-document.body.append(canvas);
-const context = canvas.getContext("2d");
+let canvas = null,
+	context = null;
 const imageObj = new Image();
-
 const CropOverlay = ({isShown, setCropping, image, onSubmit}) => {
 	const [crop, setCrop] = useState({x: 0, y: 0});
 	const [zoom, setZoom] = useState(1);
@@ -57,6 +51,17 @@ const CropOverlay = ({isShown, setCropping, image, onSubmit}) => {
 	const ref = useRef();
 	useKeyboard({ref, key: "enter", priority: 1, cb: () => confirm()}, {ref, key: "escape", cb: () => close()});
 
+
+	useEffect(() => {
+		canvas = document.createElement("canvas");
+		canvas.width = 100;
+		canvas.height = 100;
+		canvas.style.display = "none";
+		document.body.append(canvas);
+		context = canvas.getContext("2d");
+
+		return () => canvas.remove();
+	});
 
 	useEffect(() => {
 		imageObj.src = image;
