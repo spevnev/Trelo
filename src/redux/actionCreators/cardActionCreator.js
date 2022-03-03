@@ -21,12 +21,6 @@ export const deleteCard = (boardId, id) => (dispatch, getState, {card}) => {
 	dispatch({type: types.deleteCard, payload: {boardId, id}});
 };
 
-export const deleteCardsInList = (boardId, listId) => (dispatch, getState, {}) => {
-	getState().card.filter(cur => cur.id === boardId)[0].cards.forEach(cur => {
-		if (cur.listId === listId) dispatch(deleteCard(boardId, cur.id));
-	});
-};
-
 export const changeCard = (boardId, newCard) => (dispatch, getState, {card}) => {
 	card.changeCard(boardId, newCard);
 

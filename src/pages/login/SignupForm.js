@@ -118,7 +118,7 @@ const SignupForm = () => {
 		if (formState.username.length > 25) return error("Username can't be longer than 25 characters!");
 		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
 		if (formState.password.length > 64) return error("Password can't be longer than 64 characters!");
-		if (formState.password != formState.confirm) return error("Passwords don't match!");
+		if (formState.password !== formState.confirm) return error("Passwords don't match!");
 		if (icon.length === 0) return error("You must have icon!");
 
 		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, error, () => navigate("/")));

@@ -62,7 +62,7 @@ const BoardSettings = () => {
 			bundle.board.changeList(boardId, list.id, list.title);
 		});
 	};
-	const [pageState, state, setState, isSaved, setSaved, clearTimer] = usePageState(
+	const [pageState, state, setState, isSaved, , clearTimer] = usePageState(
 		() => {
 			if (board && board.status === "READY") return board;
 

@@ -15,7 +15,7 @@ client.interceptors.request.use(req => {
 });
 
 
-export default {
+const bundle = {
 	board: {
 		getBoard: getBoard(client),
 		createBoard: createBoard(client),
@@ -48,3 +48,5 @@ export default {
 		downloadFile: downloadFile(client),
 	},
 };
+
+export default bundle;
