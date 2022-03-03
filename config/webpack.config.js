@@ -747,7 +747,7 @@ module.exports = function (webpackEnv) {
 					},
 				},
 			}),
-			new CompressionPlugin({
+			isEnvProduction && new CompressionPlugin({
 				filename: "[path][base].br",
 				algorithm: "brotliCompress",
 				test: /\.js/,
