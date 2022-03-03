@@ -2,7 +2,7 @@ import React from "react";
 import {useNavigate} from "react-router";
 import styled from "styled-components";
 
-export const Centre = styled.div`
+const Centre = styled.div`
   width: 100vw;
   height: 80vh;
   display: flex;
