@@ -9,12 +9,12 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	const [state, setState] = useState(initState());
 	const [isSaved, setSaved] = useState(true);
 	const [forceSaved, setForceSaved] = useState(true);
-	const [loading, setLoading] = useState(!state || isError());
+	const [forceLoading, setForceLoading] = useState(!state || isError());
 
 	// Init & on change, save changes on exit
 	useEffect(() => {
-		if (!loading) onLoad();
-		setTimeout(() => setLoading(false), config.FORCE_LOADING_MS);
+		if (!forceLoading) onLoad();
+		setTimeout(() => setForceLoading(false), config.FORCE_LOADING_MS);
 
 		return () => window.onbeforeunload = null;
 	}, []);
@@ -51,7 +51,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 	// Page state
 	let pageState = null;
-	if (loading) pageState = <PageLoading/>;
+	if (forceLoading) pageState = <PageLoading/>;
 	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 	else if (isLoading(state)) pageState = <PageLoading/>;
 

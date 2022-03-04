@@ -10,7 +10,7 @@ import {toggleFavourite} from "../../redux/actionCreators/userActionCreator";
 
 const Title = styled.p`
   font-size: 1.8rem;
-  word-wrap: anywhere;
+  width: 100%;
 `;
 
 const Icons = styled.div`

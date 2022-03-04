@@ -18,8 +18,7 @@ const NewBoard = () => {
 
 	const openSettings = () => {
 		const boardId = uuid();
-		dispatch(newBoard(boardId));
-		navigate(`/board/${boardId}/settings`);
+		dispatch(newBoard(boardId, () => navigate(`/board/${boardId}/settings?new`)));
 	};
 
 

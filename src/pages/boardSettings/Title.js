@@ -5,7 +5,7 @@ import {SubContainer, SubTitle} from "./styles";
 const Title = ({title, titleChange}) => (
 	<SubContainer>
 		<SubTitle>Title</SubTitle>
-		<HiddenInput maxLength="20" placeholder="Board title" onChange={e => titleChange(e.target.value)} value={title}/>
+		<HiddenInput maxLength="30" placeholder="Board title" onChange={e => titleChange(e.target.value)} value={title}/>
 	</SubContainer>
 );
 

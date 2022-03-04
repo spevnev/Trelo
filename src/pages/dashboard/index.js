@@ -13,7 +13,9 @@ const Boards = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-content: flex-start;
   background: #f1f1f1;
+  overflow-y: scroll;
 `;
 
 

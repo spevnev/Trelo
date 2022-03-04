@@ -6,13 +6,13 @@ export const BoardContainer = styled.div`
   border-radius: 5px;
   cursor: pointer;
 
-  width: 20vw;
+  width: 30vw;
   min-width: 160px;
-  min-height: 7rem;
-  height: fit-content;
-  padding: .5rem .8rem;
+  max-width: 250px;
+  height: 8rem;
+  padding: 5px 8px;
 
-  margin-right: 2vw;
+  margin-right: 1.5vw;
   margin-bottom: 15px;
 
   display: flex;

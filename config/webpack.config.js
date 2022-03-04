@@ -156,15 +156,15 @@ module.exports = function (webpackEnv) {
 			],
 			splitChunks: isEnvProduction && {
 				chunks: "all",
-				minSize: 20480,
-				maxSize: 81920,
-				maxInitialRequests: 15,
-				maxAsyncRequests: 15,
+				minSize: 30720,
 				enforceSizeThreshold: 61440,
+				maxSize: 92160,
+				maxInitialRequests: 20,
+				maxAsyncRequests: 20,
 				cacheGroups: {
 					vendors: {
 						test: /[\\/]node_modules[\\/]/,
-						priority: 0,
+						chunks: "all",
 						reuseExistingChunk: true,
 					},
 				},
@@ -325,31 +325,22 @@ module.exports = function (webpackEnv) {
 			].filter(Boolean),
 		},
 		plugins: [
-			new HtmlWebpackPlugin(
-				Object.assign(
-					{},
-					{
-						inject: true,
-						template: paths.appHtml,
+			new HtmlWebpackPlugin(Object.assign({}, {inject: true, template: paths.appHtml},
+				isEnvProduction ? {
+					minify: {
+						removeComments: true,
+						collapseWhitespace: true,
+						removeRedundantAttributes: true,
+						useShortDoctype: true,
+						removeEmptyAttributes: true,
+						removeStyleLinkTypeAttributes: true,
+						keepClosingSlash: true,
+						minifyJS: true,
+						minifyCSS: true,
+						minifyURLs: true,
 					},
-					isEnvProduction
-						? {
-							minify: {
-								removeComments: true,
-								collapseWhitespace: true,
-								removeRedundantAttributes: true,
-								useShortDoctype: true,
-								removeEmptyAttributes: true,
-								removeStyleLinkTypeAttributes: true,
-								keepClosingSlash: true,
-								minifyJS: true,
-								minifyCSS: true,
-								minifyURLs: true,
-							},
-						}
-						: undefined,
-				),
-			),
+				} : undefined,
+			)),
 			isEnvProduction && shouldInlineRuntimeChunk && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
 			new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
 			new ModuleNotFoundPlugin(paths.appPath),
@@ -386,8 +377,7 @@ module.exports = function (webpackEnv) {
 				exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
 				maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 			}),
-			!disableESLintPlugin &&
-			new ESLintPlugin({
+			!disableESLintPlugin && new ESLintPlugin({
 				extensions: ["js", "mjs", "jsx", "ts", "tsx"],
 				formatter: require.resolve("react-dev-utils/eslintFormatter"),
 				eslintPath: require.resolve("eslint"),
@@ -413,7 +403,7 @@ module.exports = function (webpackEnv) {
 				filename: "[path][base].br",
 				algorithm: "brotliCompress",
 				test: /\.js/,
-				threshold: 10240,
+				threshold: 5120,
 				minRatio: 0.8,
 				deleteOriginalAssets: true,
 				compressionOptions: {level: 11},

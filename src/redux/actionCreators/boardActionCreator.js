@@ -3,10 +3,10 @@ import {addCardBoard} from "./cardActionCreator";
 import {changeBoards} from "./userActionCreator";
 import {getBoard, getUser, getUserBoards} from "../selectors";
 
-const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}});
+const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}}); // TODO: useful?
 
-export const fetchBoard = (id, silent = false) => async (dispatch, getState, {board, card}) => {
-	if (!silent) dispatch(addBoard({id, status: "LOADING"}));
+export const fetchBoard = (id, updateState = true) => async (dispatch, getState, {board, card}) => {
+	if (updateState) dispatch(addBoard({id, status: "LOADING"}));
 
 	const cards = await card.getCards(id);
 	const brd = await board.getBoard(id);
@@ -16,15 +16,19 @@ export const fetchBoard = (id, silent = false) => async (dispatch, getState, {bo
 	dispatch(addBoard({...brd, status: "READY"}));
 };
 
-export const newBoard = id => (dispatch, getState, {board}) => {
+export const newBoard = (id, onSuccess) => async (dispatch, getState, {board}) => {
 	const user = getUser()(getState());
 	const boardObject = {title: "New Board", id, lists: [], users: [{...user, boards: undefined, isOwner: true}]};
 
-	board.createBoard(boardObject);
+	try {
+		await board.createBoard(boardObject);
+		onSuccess();
 
-	dispatch(addCardBoard(id, []));
-	dispatch(addBoard({...boardObject, status: "READY"}));
-	dispatch(changeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
+		dispatch(addCardBoard(id, []));
+		dispatch(addBoard({...boardObject, status: "READY"}));
+		dispatch(changeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
+	} catch (e) {
+	}
 };
 
 export const addBoard = board => ({type: types.addBoard, payload: {board}});

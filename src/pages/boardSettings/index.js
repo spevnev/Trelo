@@ -74,7 +74,7 @@ const BoardSettings = () => {
 			if (board === null) dispatch(fetchBoard(boardId));
 			return null;
 		},
-		() => dispatch(fetchBoard(boardId, true)),
+		() => dispatch(fetchBoard(boardId, false)),
 		() => !board || (board.status && board.status === "ERROR"), "This board doesn't exist!",
 		state => !state || state.status === "LOADING",
 		board, saveChanges,

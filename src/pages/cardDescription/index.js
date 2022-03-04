@@ -64,10 +64,10 @@ const CardDescription = () => {
 		() => {
 			if (board && card && board.status === "READY") return card;
 
-			if (!board) dispatch(fetchBoard(boardId));
+			if (board === null) dispatch(fetchBoard(boardId));
 			return null;
 		},
-		() => dispatch(fetchBoard(boardId, true)),
+		() => dispatch(fetchBoard(boardId, false)),
 		() => !board || !card || (board.status && board.status === "ERROR"), "This card doesn't exist!",
 		state => board.status === "LOADING" || !state,
 		card,
