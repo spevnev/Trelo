@@ -59,8 +59,7 @@ const List = ({title, cards, boardId, id}) => {
 	const newCard = () => {
 		const cardId = uuid();
 
-		dispatch(addCard(boardId, id, cardId));
-		navigate(cardId);
+		dispatch(addCard(boardId, id, cardId, () => navigate(cardId)));
 	};
 
 

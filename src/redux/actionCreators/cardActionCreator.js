@@ -4,9 +4,11 @@ import {getCard} from "../selectors";
 const emptyCard = (id, listId) => ({title: "New card", id: id, listId: listId, description: "", images: [], files: [], assigned: []});
 
 
-export const addCard = (boardId, listId, id) => (dispatch, getState, {card}) => {
+export const addCard = (boardId, listId, id, onSuccess) => async (dispatch, getState, {card}) => {
 	const newCard = emptyCard(id, listId);
-	card.addCard(boardId, newCard);
+
+	await card.addCard(boardId, newCard);
+	onSuccess();
 
 	dispatch({type: types.addCard, payload: {boardId, card: newCard}});
 };
