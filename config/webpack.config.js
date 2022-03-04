@@ -155,11 +155,17 @@ module.exports = function (webpackEnv) {
 				new CssMinimizerPlugin(),
 			],
 			splitChunks: isEnvProduction && {
+				chunks: "all",
+				minSize: 20480,
+				maxSize: 81920,
+				maxInitialRequests: 15,
+				maxAsyncRequests: 15,
+				enforceSizeThreshold: 61440,
 				cacheGroups: {
 					vendors: {
 						test: /[\\/]node_modules[\\/]/,
-						name: "vendor",
-						chunks: "all",
+						priority: 0,
+						reuseExistingChunk: true,
 					},
 				},
 			},
