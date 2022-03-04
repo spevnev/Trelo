@@ -22,7 +22,10 @@ const StyledSelect = styled.select`
 const Icon = styled.img`
   position: absolute;
   pointer-events: none;
-  right: -4px;
+  right: -2px;
+  width: 1.5rem;
+  top: 6px;
+  height: 1.5rem;
 `;
 
 const SelectInput = ({initial, options, onSelect, className}) => (
