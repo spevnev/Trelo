@@ -9,7 +9,7 @@ import {BoardContainer} from "./styles";
 import {toggleFavourite} from "../../redux/actionCreators/userActionCreator";
 
 const Title = styled.p`
-  font-size: 1.8rem;
+  font-size: 18px;
   word-break: break-all;
   width: 100%;
 `;

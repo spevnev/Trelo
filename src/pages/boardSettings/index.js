@@ -23,7 +23,7 @@ const Container = styled.div`
 
 const DeleteText = styled.p`
   color: #f66666;
-  font-size: 1.8rem;
+  font-size: 18px;
   cursor: pointer;
   transition: all .3s;
 
@@ -74,8 +74,8 @@ const BoardSettings = () => {
 			return null;
 		},
 		() => dispatch(fetchBoard(boardId, false)),
-		() => !board || (board.status && board.status === "ERROR"), "This board doesn't exist!",
-		state => !state || state.status === "LOADING",
+		() => !board || board.status === "ERROR", "This board doesn't exist or you aren't a member of it!",
+		() => board.status === "LOADING",
 		board, saveChanges,
 	);
 

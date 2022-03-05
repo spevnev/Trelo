@@ -9,14 +9,14 @@ import {Droppable} from "react-beautiful-dnd";
 import {getBoard} from "../../redux/selectors";
 
 const Title = styled.p`
-  font-size: 2rem;
+  font-size: 20px;
   margin-bottom: 5px;
 `;
 
 const ListContainer = styled.div`
-  width: 25rem;
+  width: 250px;
   background: #ebecf0;
-  margin: 0 1rem;
+  margin-right: 20px;
   padding: 8px 12px;
   border-radius: 5px;
   overflow: hidden;
@@ -46,7 +46,7 @@ const InnerContainer = styled.div`
 
 const AddCard = styled.p`
   cursor: pointer;
-  font-size: 1.4rem;
+  font-size: 14px;
 `;
 
 
@@ -59,7 +59,7 @@ const List = ({title, cards, boardId, id}) => {
 	const newCard = () => {
 		const cardId = uuid();
 
-		dispatch(addCard(boardId, id, cardId, () => navigate(cardId)));
+		dispatch(addCard(boardId, id, cardId, () => navigate(cardId + "?new")));
 	};
 
 

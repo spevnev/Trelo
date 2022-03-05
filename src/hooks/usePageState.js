@@ -53,7 +53,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	let pageState = null;
 	if (forceLoading) pageState = <PageLoading/>;
 	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
-	else if (isLoading(state)) pageState = <PageLoading/>;
+	else if (isLoading()) pageState = <PageLoading/>;
 
 	return [pageState, state, changeState, isSaved && forceSaved, setForceSaved, clearTimer];
 };

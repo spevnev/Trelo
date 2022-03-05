@@ -12,7 +12,7 @@ import {getUser} from "../../redux/selectors";
 const NavBarContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 1rem;
+  margin: 10px 2vw;
   color: #fff;
 `;
 
@@ -20,18 +20,18 @@ const NavEl = styled.div`
   background: #5499cf;
   padding: 3px 6px;
   border-radius: 3px;
-  margin: 0 10px;
+  margin-right: 20px;
 
   & svg {
     cursor: pointer;
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 18px;
+    height: 18px;
     fill: #fff;
   }
 `;
 
 const Title = styled.p`
-  font-size: 1.6rem;
+  font-size: 16px;
 `;
 
 
@@ -47,9 +47,10 @@ const NavBar = ({board}) => {
 	};
 
 
+	if (!boards) return null;
+
 	const userBoard = boards.filter(cur => cur.id === board.id);
-	if (userBoard.length !== 1)
-		return null;
+	if (userBoard.length !== 1) return null;
 
 
 	return (
@@ -59,7 +60,7 @@ const NavBar = ({board}) => {
 			{userBoard[0].isOwner ?
 				<NavEl><Cog onClick={() => navigate("settings")}/></NavEl>
 				:
-				<NavEl><Exit style={{marginLeft: 2, width: "1.8rem"}} onClick={leaveBoard}/></NavEl>
+				<NavEl><Exit style={{marginLeft: 2, width: "18px"}} onClick={leaveBoard}/></NavEl>
 			}
 		</NavBarContainer>
 	);

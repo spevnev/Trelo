@@ -15,12 +15,12 @@ const ListElContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  max-width: 40rem;
+  max-width: 400px;
   width: 95vw;
 
   & ${HiddenInput} {
-    width: 30rem;
-    font-size: 2rem;
+    width: 300px;
+    font-size: 20px;
   }
 `;
 
@@ -30,11 +30,11 @@ const NewList = styled.div`
   align-items: center;
   margin-top: 10px;
   justify-content: space-between;
-  max-width: 40rem;
+  max-width: 400px;
   width: 95vw;
 
   & ${Input} {
-    max-width: 30rem;
+    max-width: 300px;
     width: 70vw;
   }
 `;
@@ -42,7 +42,7 @@ const NewList = styled.div`
 
 const ListEl = ({title, id, deleteEl, changeEl}) => (
 	<ListElContainer>
-		<HiddenInput fontSize="2rem" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength="20"/>
+		<HiddenInput fontSize="20px" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength="20"/>
 		<Modal onContinue={() => deleteEl(id)} prompt="If you delete this list, all cards in it will be deleted too!">
 			<Cancel>&#x2716;</Cancel>
 		</Modal>

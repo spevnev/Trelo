@@ -19,7 +19,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0 2rem;
+  margin: 0 20px;
 `;
 
 const Logo = styled.img`
@@ -33,13 +33,13 @@ const Username = styled.p`
 
 const UserIcon = styled.div`
   display: block;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: url("${props => props.image}");
   background-position: center;
   background-size: cover;
-  margin: 0 1rem;
+  margin: 0 10px;
 `;
 
 const Header = () => {

@@ -16,16 +16,16 @@ const StyledSelect = styled.select`
   background: none;
   cursor: pointer;
   padding: 2px 16px 2px 4px;
-  font-size: 1.6rem;
+  font-size: 16px;
 `;
 
 const Icon = styled.img`
   position: absolute;
   pointer-events: none;
   right: -2px;
-  width: 1.5rem;
   top: 6px;
-  height: 1.5rem;
+  width: 15px;
+  height: 15px;
 `;
 
 const SelectInput = ({initial, options, onSelect, className}) => (

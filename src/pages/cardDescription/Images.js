@@ -11,9 +11,9 @@ import PopUp from "../../components/PopUp";
 import {CardContext} from "./index";
 
 const Block = styled.div`
-  min-width: 20rem;
-  height: 10rem;
-  margin-right: 2rem;
+  min-width: 200px;
+  height: 100px;
+  margin-right: 20px;
   cursor: pointer;
   margin-bottom: 5px;
   transition: all .3s;
@@ -45,10 +45,10 @@ const OverlayImage = styled.img`
 
 const Close = styled.img`
   position: absolute;
-  top: 2rem;
-  right: 2rem;
-  width: 4rem;
-  height: 4rem;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
 `;
 
@@ -57,11 +57,11 @@ const AddImage = styled(Block)`
   background: #eee;
   justify-content: center;
   align-items: center;
-  font-size: 5rem;
+  font-size: 50px;
 `;
 
 const DropOverlay = styled(AddImage)`
-  font-size: 1.8rem;
+  font-size: 18px;
   border: 2px dashed #000;
 `;
 
@@ -73,8 +73,8 @@ const BlockContainer = styled.div`
 `;
 
 const Icon = styled.img`
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 15px;
+  height: 15px;
   margin: 2px;
   opacity: 0;
   transition: all .3s;
@@ -92,6 +92,18 @@ const ImageContainer = styled(Block)`
 
   &:hover ${Icon} {
     opacity: 1;
+  }
+
+  @media (pointer: coarse) {
+    & ${Icon} {
+      opacity: 1;
+    }
+  }
+
+  @media (pointer: none) {
+    & ${Icon} {
+      opacity: 1;
+    }
   }
 `;
 

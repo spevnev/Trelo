@@ -14,7 +14,7 @@ const CardContainer = styled.div`
   box-shadow: 0 1px 0 rgba(0, 0, 0, .25);
   padding: 2px 4px;
   border-radius: 4px;
-  font-size: 1.6rem;
+  font-size: 16px;
   cursor: pointer;
 `;
 
@@ -28,14 +28,14 @@ const SubContainer = styled.div`
 `;
 
 const Icon = styled.img`
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 18px;
+  height: 18px;
   margin-right: 5px;
 `;
 
 const UserIcon = styled.img`
-  width: 2rem;
-  height: 2rem;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   margin-left: 2px;
 `;

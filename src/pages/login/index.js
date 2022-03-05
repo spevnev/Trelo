@@ -14,8 +14,8 @@ const TitleContainer = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h1`
-  font-size: 3.2rem;
+const Title = styled.p`
+  font-size: 32px;
 `;
 
 const Container = styled.main`
@@ -54,7 +54,7 @@ const SmallWrapper = styled(Wrapper)`
   }
 
   & ${ErrorMessage} {
-    height: 2.4rem;
+    height: 24px;
   }
 `;
 
@@ -66,12 +66,12 @@ const LinkContainer = styled.div`
   padding: 20px 0;
 
   & p {
-    font-size: 1.2rem;
+    font-size: 12px;
   }
 `;
 
 const Link = styled.p`
-  font-size: 1.6rem !important;
+  font-size: 16px !important;
   margin-left: 5px;
   text-decoration: underline;
   cursor: pointer;

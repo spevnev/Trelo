@@ -5,10 +5,10 @@ export const SubContainer = styled.div`
 `;
 
 export const SubTitle = styled.p`
-  font-size: 1.4rem;
+  font-size: 14px;
 `;
 
 export const Cancel = styled.div`
-  font-size: 2rem;
+  font-size: 20px;
   cursor: pointer;
 `;

@@ -9,8 +9,8 @@ import useKeyboard from "../../hooks/useKeyboard";
 import {CardContext} from "./index";
 
 const User = styled.img`
-  width: 3rem;
-  height: 3rem;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   margin-right: 5px;
   cursor: url(${trashCursor}), pointer;
@@ -25,18 +25,18 @@ const AddUserContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  max-width: 40rem;
+  max-width: 400px;
   width: 95vw;
   margin: 2px 0;
 
   & ${Input} {
-    max-width: 30rem;
+    max-width: 300px;
     width: 70vw;
-    font-size: 1.6rem;
+    font-size: 16px;
   }
 
   & ${Button} {
-    font-size: 1.6rem;
+    font-size: 16px;
   }
 `;
 
@@ -84,7 +84,7 @@ const Assigned = () => {
 			<SubTitle>Assigned</SubTitle>
 
 			<div>{assigned.map(user =>
-				<User onClick={() => deleteUser(user.username)} key={user.username} title={user.username} src={user.icon}/>
+				<User onClick={() => deleteUser(user.username)} key={user.username} title={user.username} src={user.icon}/>,
 			)}</div>
 
 			<ErrorMessage>{msg}</ErrorMessage>

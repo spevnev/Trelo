@@ -6,7 +6,7 @@ import {newBoard} from "../../redux/actionCreators/boardActionCreator";
 import {BoardContainer} from "./styles";
 
 const CenteredText = styled.p`
-  font-size: 2.4rem;
+  font-size: 24px;
   margin: auto;
 `;
 
@@ -18,7 +18,7 @@ const NewBoard = () => {
 
 	const openSettings = () => {
 		const boardId = uuid();
-		dispatch(newBoard(boardId, () => navigate(`/board/${boardId}/settings?new`)));
+		dispatch(newBoard(boardId, () => navigate(`/board/${boardId}/settings`)));
 	};
 
 

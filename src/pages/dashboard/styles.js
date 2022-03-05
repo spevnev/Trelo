@@ -10,7 +10,7 @@ export const BoardContainer = styled.div`
   flex-basis: 20%;
   flex-grow: 1;
 
-  height: 8rem;
+  height: 80px;
   padding: 5px 8px;
 
   margin-right: 1.5vw;
@@ -21,8 +21,8 @@ export const BoardContainer = styled.div`
   justify-content: space-between;
 
   & svg {
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 24px;
+    height: 24px;
     margin-left: 5px;
     fill: #f0f0f0;
   }

@@ -20,19 +20,19 @@ const FileContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  max-width: 40rem;
+  max-width: 400px;
   width: 95vw;
 
   & ${HiddenInput} {
-    font-size: 2rem;
+    font-size: 20px;
     margin-right: 20px;
   }
 `;
 
 const Icon = styled.img`
   cursor: pointer;
-  width: 2rem;
-  height: 2rem;
+  width: 20px;
+  height: 20px;
   margin-right: 5px;
 `;
 
@@ -45,9 +45,9 @@ const AddFile = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2rem;
-  width: 25rem;
-  height: 3rem;
+  font-size: 20px;
+  width: 250px;
+  height: 30px;
   background: #eee;
   border-radius: 5px;
   cursor: pointer;
@@ -59,7 +59,7 @@ const AddFile = styled.div`
 `;
 
 const DropOverlay = styled(AddFile)`
-  font-size: 1.8rem;
+  font-size: 18px;
   border: 2px dashed #000;
 `;
 

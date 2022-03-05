@@ -7,12 +7,12 @@ const GoBackContainer = styled.div`
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  font-size: 1.8rem;
+  font-size: 18px;
   margin: 2vh 0;
 
   & img {
-    width: 2rem;
-    height: 2rem;
+    width: 20px;
+    height: 20px;
     margin-right: 10px;
   }
 `;

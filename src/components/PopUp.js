@@ -27,11 +27,12 @@ const Container = styled.div`
   left: 50%;
   transform: translate(-50%, -150%);
 
-  width: 60vw;
-  padding: 1rem 2rem;
+  width: 80vw;
+  max-width: 600px;
+  padding: 10px 20px;
 
   background: #fff;
-  border-radius: 10rem;
+  border-radius: 100px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 
   &.in {
@@ -44,7 +45,7 @@ const Container = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 1.8rem;
+  font-size: 18px;
   font-weight: 300;
   text-align: center;
   color: #000;

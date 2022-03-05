@@ -3,7 +3,15 @@ import {addCardBoard, deleteCardBoard} from "./cardActionCreator";
 import {changeBoards} from "./userActionCreator";
 import {getBoard, getUser, getUserBoards} from "../selectors";
 
-const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}}); // TODO: useful?
+const emptyBoard = (id, user) => ({
+	title: "New Board",
+	id,
+	lists: [{title: "Backlog", id: "id1"}, {title: "Progress", id: "id2"}, {title: "Done", id: "id3"}],
+	users: [{...user, boards: undefined, isOwner: true}],
+});
+
+
+const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}});
 
 export const fetchBoard = (id, updateState = true) => async (dispatch, getState, {board, card}) => {
 	if (updateState) dispatch(addBoard({id, status: "LOADING"}));
@@ -18,7 +26,7 @@ export const fetchBoard = (id, updateState = true) => async (dispatch, getState,
 
 export const newBoard = (id, onSuccess) => async (dispatch, getState, {board}) => {
 	const user = getUser()(getState());
-	const boardObject = {title: "New Board", id, lists: [], users: [{...user, boards: undefined, isOwner: true}]};
+	const boardObject = emptyBoard(id, user);
 
 	try {
 		await board.createBoard(boardObject);

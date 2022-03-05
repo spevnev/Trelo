@@ -11,9 +11,9 @@ const DescriptionInput = styled(Textarea)`
   box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.3);
   outline: none;
   width: 100%;
-  min-height: 10rem;
-  padding: .6rem 1.2rem;
-  font-size: 1.8rem;
+  min-height: 100px;
+  padding: 6px 12px;
+  font-size: 18px;
   resize: none;
   transition: background-color .3s;
 

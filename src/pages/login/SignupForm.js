@@ -19,11 +19,11 @@ const Button = styled(StyledButton)`
 
 const Icon = styled.label`
   display: block;
-  width: 10rem;
-  height: 10rem;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   cursor: pointer;
-  margin: 2.5rem auto;
+  margin: 25px auto;
   transition: all 0.3s;
   background: ${props => props.image ? `url(${props.image})` : `#e0e0e0`};
   background-position: center;

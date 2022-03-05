@@ -32,9 +32,9 @@ const SubContainer = styled.div`
 const Delete = styled.img`
   display: inline-block;
   cursor: pointer;
-  width: 2rem;
-  height: 2rem;
-  margin: auto 1rem;
+  width: 20px;
+  height: 20px;
+  margin: auto 10px;
 `;
 
 
@@ -67,9 +67,9 @@ const CardDescription = () => {
 			if (board === null) dispatch(fetchBoard(boardId));
 			return null;
 		},
-		() => dispatch(fetchBoard(boardId, false)),
-		() => !board || !card || (board.status && board.status === "ERROR"), "This card doesn't exist!",
-		state => board.status === "LOADING" || !state,
+		() => !window.location.href.includes("new") && dispatch(fetchBoard(boardId, false)),
+		() => !board || !card || board.status === "ERROR", "This card doesn't exist!",
+		() => board.status === "LOADING",
 		card,
 		state => {
 			[...state.files].filter(cur => card.files.filter(f => cur.url === f.url && cur.filename !== f.filename).length !== 0).forEach(file => {
@@ -99,9 +99,10 @@ const CardDescription = () => {
 	};
 
 	const delCard = () => {
-		dispatch(deleteCard(boardId, cardId));
-		clearTimer();
-		navigate("../");
+		dispatch(deleteCard(boardId, cardId, () => {
+			clearTimer();
+			navigate("../");
+		}));
 	};
 
 	const onDragEnter = () => {

@@ -8,8 +8,8 @@ const StyledInput = styled.input`
   transition: all 0.3s;
   outline: none;
   width: 100%;
-  padding: .6rem 1.2rem;
-  font-size: 1.8rem;
+  padding: 6px 12px;
+  font-size: 18px;
 
   &:hover {
     background: #fbfbfb;

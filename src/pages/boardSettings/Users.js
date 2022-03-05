@@ -17,10 +17,10 @@ const UserContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  max-width: 40rem;
+  max-width: 400px;
 
   & p {
-    font-size: 1.8rem;
+    font-size: 18px;
     margin-left: 5px;
   }
 
@@ -31,33 +31,33 @@ const UserContainer = styled.div`
   }
 
   & ${Cancel} {
-    margin-left: 5rem;
+    margin-left: 50px;
   }
 `;
 
 const UserIcon = styled.img`
-  width: 3rem;
-  height: 3rem;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  margin: .5rem 0;
+  margin: 5px 0;
 `;
 
 const NewUser = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  max-width: 40rem;
+  max-width: 400px;
   width: 95vw;
   margin-top: 10px;
 
   & ${Input} {
-    max-width: 30rem;
+    max-width: 300px;
     width: 70vw;
   }
 `;
 
 const Username = styled.p`
-  font-size: 1.8rem;
+  font-size: 18px;
   text-transform: capitalize;
 `;
 
@@ -87,7 +87,7 @@ const CurUser = ({username, icon, isOwner, leave}) => (
 		</div>
 
 		<div>
-			<h2>{isOwner ? owner.text : user.text}</h2>
+			<p>{isOwner ? owner.text : user.text}</p>
 			<Cancel onClick={leave}>&#x2716;</Cancel>
 		</div>
 	</UserContainer>

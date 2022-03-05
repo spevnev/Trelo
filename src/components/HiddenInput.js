@@ -4,6 +4,6 @@ export default styled.input`
   border: none;
   background: none;
   outline: none;
-  font-size: 2.4rem;
+  font-size: 24px;
   width: 100%;
 `;

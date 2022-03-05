@@ -14,8 +14,8 @@ const Overlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  width: 40rem;
-  min-height: 10rem;
+  width: 400px;
+  min-height: 100px;
   background: #dfdfdf;
   border-radius: 10px;
   position: absolute;
@@ -29,14 +29,14 @@ const ModalContainer = styled.div`
   z-index: 999;
 
   & p {
-    font-size: 2rem;
+    font-size: 20px;
     width: 90%;
     text-align: center;
-    margin: 1rem 0;
+    margin: 10px 0;
   }
 
   & ${Button} {
-    margin: 1rem 20px;
+    margin: 10px 20px;
   }
 `;
 

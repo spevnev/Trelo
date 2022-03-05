@@ -9,11 +9,11 @@ const Centre = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 15px;
 `;
 
 const Link = styled.p`
-  font-size: 2rem;
+  font-size: 20px;
   cursor: pointer;
   color: #5555dd;
   transition: all .3s;
@@ -24,13 +24,19 @@ const Link = styled.p`
   }
 `;
 
+const Text = styled.p`
+  font-size: 36px;
+  font-weight: 300;
+`;
+
+
 const PageError = ({children}) => {
 	const navigate = useNavigate();
 
 
 	return (
 		<Centre>
-			<h1>{children}</h1>
+			<Text>{children}</Text>
 			<Link onClick={() => navigate("/")}>Go back</Link>
 		</Centre>
 	);

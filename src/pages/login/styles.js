@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 export const SubContainer = styled.div`
   width: 50%;
   height: 100%;
-  padding: 1.5rem 2rem;
+  padding: 15px 20px;
   background: ${props => `#${props.background}`};
   color: ${props => `#${props.colour}`};
   display: flex;

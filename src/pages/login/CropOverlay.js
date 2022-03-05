@@ -17,7 +17,7 @@ const UI = styled.div`
   top: 100%;
   left: 50%;
   transform: translate(-50%, -125%);
-  max-width: 30rem;
+  max-width: 300px;
   width: 75vw;
   display: flex;
   flex-direction: row;
@@ -30,7 +30,7 @@ const UI = styled.div`
   padding: 8px 16px;
 
   & ${Button} {
-    font-size: 2rem;
+    font-size: 20px;
     padding: 6px 12px;
   }
 `;

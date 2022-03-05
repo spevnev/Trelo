@@ -4,23 +4,24 @@ import {getCard} from "../selectors";
 const emptyCard = (id, listId) => ({title: "New card", id: id, listId: listId, description: "", images: [], files: [], assigned: []});
 
 
-export const addCard = (boardId, listId, id, onSuccess) => async (dispatch, getState, {card}) => {
+export const addCard = (boardId, listId, id, onSuccess) => (dispatch, getState, {card}) => {
 	const newCard = emptyCard(id, listId);
 
-	await card.addCard(boardId, newCard);
+	dispatch({type: types.addCard, payload: {boardId, card: newCard}});
 	onSuccess();
 
-	dispatch({type: types.addCard, payload: {boardId, card: newCard}});
+	card.addCard(boardId, newCard);
 };
 
 export const addCardBoard = (boardId, cards) => ({type: types.addCardBoard, payload: {boardId, cards}});
 
 export const deleteCardBoard = boardId => ({type: types.deleteCardBoard, payload: {boardId}});
 
-export const deleteCard = (boardId, id) => (dispatch, getState, {card}) => {
-	card.deleteCard(boardId, id);
-
+export const deleteCard = (boardId, id, onSuccess) => (dispatch, getState, {card}) => {
 	dispatch({type: types.deleteCard, payload: {boardId, id}});
+	onSuccess();
+
+	card.deleteCard(boardId, id);
 };
 
 export const changeCard = (boardId, newCard) => (dispatch, getState, {card}) => {
