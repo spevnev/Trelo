@@ -15,14 +15,14 @@ const StyledSelect = styled.select`
   border: none;
   background: none;
   cursor: pointer;
-  padding: 2px 16px 2px 4px;
+  padding: 2px 20px 2px 4px;
   font-size: 16px;
 `;
 
 const Icon = styled.img`
   position: absolute;
   pointer-events: none;
-  right: -2px;
+  right: 2px;
   top: 6px;
   width: 15px;
   height: 15px;

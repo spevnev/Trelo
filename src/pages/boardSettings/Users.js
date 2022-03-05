@@ -141,14 +141,15 @@ const Users = ({users, boardId, setState, open}) => {
 	};
 
 
+	if (!users) return null;
+
 	const board = curUser.boards.filter(cur => cur.id === boardId);
 
 	return (
 		<SubContainer>
 			<SubTitle>Users</SubTitle>
 
-			<CurUser leave={leave} username={curUser.username} icon={curUser.icon}
-					 isOwner={board.length === 1 ? board[0].isOwner : false}/>
+			<CurUser leave={leave} username={curUser.username} icon={curUser.icon} isOwner={board.length === 1 ? board[0].isOwner : false}/>
 			{users.filter(cur => cur.username !== curUser.username).map(cur => <User key={cur.username} deleteUser={delUser} changeRole={changeUserRole} {...cur}/>)}
 			<ErrorMessage>{msg}</ErrorMessage>
 

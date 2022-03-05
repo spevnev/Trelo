@@ -1,11 +1,13 @@
 import types from "../actions/cardActions";
-import {getCard} from "../selectors";
+import {getCard, getCards} from "../selectors";
 
-const emptyCard = (id, listId) => ({title: "New card", id: id, listId: listId, description: "", images: [], files: [], assigned: []});
+const emptyCard = (id, listId, order) => ({title: "New card", id, listId, description: "", order, images: [], files: [], assigned: []});
 
 
 export const addCard = (boardId, listId, id, onSuccess) => (dispatch, getState, {card}) => {
-	const newCard = emptyCard(id, listId);
+	let order = 0;
+	getCards(boardId)(getState()).filter(cur => cur.listId === listId).forEach(cur => order = Math.max(cur.order, order) + 1);
+	const newCard = emptyCard(id, listId, order);
 
 	dispatch({type: types.addCard, payload: {boardId, card: newCard}});
 	onSuccess();

@@ -6,12 +6,12 @@ import List from "./List";
 import NavBar from "./NavBar";
 import {getBoard, getCards} from "../../redux/selectors";
 import {DragDropContext} from "react-beautiful-dnd";
-import {changeCard} from "../../redux/actionCreators/cardActionCreator";
 import {fetchBoard} from "../../redux/actionCreators/boardActionCreator";
 import PageLoading from "../../components/PageLoading";
 import PageError from "../../components/PageError";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
+import {changeCard} from "../../redux/actionCreators/cardActionCreator";
 
 const Container = styled.div`
   display: flex;
@@ -60,10 +60,28 @@ const Board = () => {
 
 
 	const onDragEnd = e => {
+		const srcListId = e.source.droppableId;
+		const srcInd = e.source.index;
+		const dstListId = e.destination.droppableId;
+		const dstInd = e.destination.index;
 		const cardId = e.draggableId;
-		const listId = e.destination.droppableId;
 
-		if (cardId && listId) dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId}));
+		if (srcListId === dstListId) {
+			if (srcInd === dstInd) return;
+			cards.forEach(card => {
+				if (card.listId === srcListId) {
+					if (srcInd > dstInd && card.order < srcInd && card.order >= dstInd) dispatch(changeCard(boardId, {...card, order: card.order + 1}));
+					else if (card.order > srcInd && card.order <= dstInd) dispatch(changeCard(boardId, {...card, order: card.order - 1}));
+				}
+			});
+			dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], order: dstInd}));
+		} else {
+			cards.forEach(card => {
+				if (card.listId === srcListId && card.order > srcInd) dispatch(changeCard(boardId, {...card, order: card.order - 1}));
+				else if (card.listId === dstListId && card.order >= dstInd) dispatch(changeCard(boardId, {...card, order: card.order + 1}));
+			});
+			dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId: dstListId, order: dstInd}));
+		}
 	};
 
 

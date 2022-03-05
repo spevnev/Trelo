@@ -5,8 +5,8 @@ export const createBoard = axios => board => request(axios.post("/board", {title
 export const changeBoard = axios => (boardId, title) => request(axios.put("/board", {boardId, title}));
 export const deleteBoard = axios => id => request(axios.delete(`/board/${id}`));
 
-export const createList = axios => (boardId, id, title) => request(axios.post("/board/list", {boardId, id, title}));
-export const changeList = axios => (boardId, id, title) => request(axios.put("/board/list", {boardId, id, title}));
+export const createList = axios => (boardId, id, title, order) => request(axios.post("/board/list", {boardId, id, title, order}));
+export const changeList = axios => (boardId, {id, title, order}) => request(axios.put("/board/list", {boardId, id, title, order}));
 export const deleteList = axios => (boardId, id) => request(axios.delete(`/board/list/${boardId}/${id}`));
 
 export const addUser = axios => (username, boardId) => request(axios.post(`/board/user`, {username: username.toLowerCase(), boardId}));

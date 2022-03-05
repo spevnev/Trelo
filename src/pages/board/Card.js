@@ -47,25 +47,27 @@ const Card = ({title, id, description, images, assigned, files, i, users}) => {
 
 	return (
 		<Draggable draggableId={id} index={i}>
-			{provided => (<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-				<CardContainer onClick={() => navigate(`${id}`)}>
-					<p>{title}</p>
+			{provided => (
+				<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+					<CardContainer onClick={() => navigate(`${id}`)}>
+						<p>{title}</p>
 
-					<SubContainer>
-						<div>
-							{description.length > 0 && <Icon src={textIcon}/>}
-							{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
-							{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
-						</div>
+						<SubContainer>
+							<div>
+								{description.length > 0 && <Icon src={textIcon}/>}
+								{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
+								{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
+							</div>
 
-						<div>
-							{users.filter(cur => assigned.indexOf(cur.username) !== -1).map(cur =>
-								<UserIcon key={cur.username} title={cur.username} src={cur.icon}/>,
-							)}
-						</div>
-					</SubContainer>
-				</CardContainer>
-			</div>)}
+							<div>
+								{users.filter(cur => assigned.indexOf(cur.username) !== -1).map(cur =>
+									<UserIcon key={cur.username} title={cur.username} src={cur.icon}/>,
+								)}
+							</div>
+						</SubContainer>
+					</CardContainer>
+				</div>
+			)}
 		</Draggable>
 	);
 };

@@ -52,13 +52,13 @@ const BoardSettings = () => {
 	useTitle(board && board.title ? board.title + " settings" : "Settings");
 
 	const saveChanges = state => {
-		dispatch(changeBoard(boardId, state, board));
+		dispatch(changeBoard(boardId, state));
 
 		const curUser = state.users.filter(cur => cur.username === user.username)[0];
 		dispatch(changeBoards(user.boards.map(cur => cur.id === state.id ? {...cur, title: state.title, isOwner: curUser.isOwner} : cur)));
 
-		[...state.lists].filter(cur => board.lists.filter(l => cur.id === l.id && cur.title !== l.title).length !== 0).forEach(list => {
-			bundle.board.changeList(boardId, list.id, list.title);
+		[...state.lists].filter(cur => board.lists.filter(l => cur.id === l.id && (cur.title !== l.title || cur.order !== l.order)).length !== 0).forEach(list => {
+			bundle.board.changeList(boardId, list);
 		});
 	};
 	const [pageState, state, setState, isSaved, , clearTimer] = usePageState(

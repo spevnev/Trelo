@@ -73,29 +73,30 @@ export const addUser = (id, username, onSuccess, onError) => async (dispatch, ge
 };
 
 export const deleteUser = (id, username) => (dispatch, getState, {board}) => {
-	board.deleteUser(username, id);
-
 	const boardData = getBoard(id)(getState());
+
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.filter(cur => cur.username !== username)}));
+	board.deleteUser(username, id);
 };
 
 export const changeRole = (id, username, isOwner) => (dispatch, getState, {board}) => {
-	board.changeRole(id, username, isOwner);
-
 	const boardData = getBoard(id)(getState());
+
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.map(cur => cur.username === username ? {...cur, isOwner} : cur)}));
+	board.changeRole(id, username, isOwner);
 };
 
 export const createList = (boardId, id, title) => (dispatch, getState, {board}) => {
-	board.createList(boardId, id, title);
-
 	const boardData = getBoard(boardId)(getState());
-	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id}]}));
+	const order = Math.max(...boardData.lists.map(cur => cur.order)) + 1;
+
+	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order: order > 0 ? order : 0}]}));
+	board.createList(boardId, id, title, order);
 };
 
 export const deleteList = (boardId, id) => (dispatch, getState, {board}) => {
-	board.deleteList(boardId, id);
-
 	const boardData = getBoard(boardId)(getState());
+
 	dispatch(changeBoard(boardId, {...boardData, lists: boardData.lists.filter(cur => cur.id !== id)}));
+	board.deleteList(boardId, id);
 };
