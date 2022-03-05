@@ -126,7 +126,7 @@ const CardDescription = () => {
 				<Files/>
 			</CardContext.Provider>
 
-			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenProp={isOpen} prompt={modalText}/>
+			<Modal onCancel={() => setOpen(false)} onContinue={delCard} isOpenedProp={isOpen} prompt={modalText}/>
 		</Container>
 	);
 };

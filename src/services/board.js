@@ -1,49 +1,14 @@
-export const getBoard = axios => async id => {
-	const res = await axios.get(`/board/${id}`).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
+import request from "./request";
 
-export const createBoard = axios => async board => {
-	const res = await axios.post("/board", {title: board.title, boardId: board.id}).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
+export const getBoard = axios => id => request(axios.get(`/board/${id}`));
+export const createBoard = axios => board => request(axios.post("/board", {title: board.title, boardId: board.id}));
+export const changeBoard = axios => (boardId, title) => request(axios.put("/board", {boardId, title}));
+export const deleteBoard = axios => id => request(axios.delete(`/board/${id}`));
 
-export const createList = axios => async (boardId, id, title) => {
-	const res = await axios.post("/board/list", {boardId, id, title}).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
+export const createList = axios => (boardId, id, title) => request(axios.post("/board/list", {boardId, id, title}));
+export const changeList = axios => (boardId, id, title) => request(axios.put("/board/list", {boardId, id, title}));
+export const deleteList = axios => (boardId, id) => request(axios.delete(`/board/list/${boardId}/${id}`));
 
-export const changeTitle = axios => async (boardId, title) => {
-	const res = await axios.put("/board", {boardId, title}).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
-
-export const changeList = axios => async (boardId, id, title) => {
-	const res = await axios.put("/board/list", {boardId, id, title}).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
-
-export const deleteBoard = axios => async id => {
-	const res = await axios.delete(`/board/${id}`).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
-
-export const deleteList = axios => async (boardId, id) => {
-	const res = await axios.delete(`/board/list/${boardId}/${id}`).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
-
-export const addUser = axios => async (username, boardId) => {
-	const res = await axios.post(`/board/user`, {username: username.toLowerCase(), boardId}).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
-
-export const deleteUser = axios => async (username, boardId) => {
-	const res = await axios.delete(`/board/user/${boardId}/${username.toLowerCase()}`).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
-
-export const changeRole = axios => async (boardId, username, isOwner) => {
-	const res = await axios.put(`/board/user`, {boardId, username, isOwner}).catch(e => console.log(e));
-	return res && res.status === 200 ? res.data : null;
-};
+export const addUser = axios => (username, boardId) => request(axios.post(`/board/user`, {username: username.toLowerCase(), boardId}));
+export const deleteUser = axios => (username, boardId) => request(axios.delete(`/board/user/${boardId}/${username.toLowerCase()}`));
+export const changeUser = axios => (boardId, username, isOwner) => request(axios.put(`/board/user`, {boardId, username, isOwner}));

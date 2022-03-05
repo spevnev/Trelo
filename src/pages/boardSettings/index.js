@@ -8,7 +8,6 @@ import Title from "./Title";
 import Lists from "./Lists";
 import Modal from "../../components/Modal";
 import GoBack from "../../components/GoBack";
-import {deleteCardBoard} from "../../redux/actionCreators/cardActionCreator";
 import {getBoard, getUser} from "../../redux/selectors";
 import usePageState from "../../hooks/usePageState";
 import {changeBoards} from "../../redux/actionCreators/userActionCreator";
@@ -93,11 +92,10 @@ const BoardSettings = () => {
 	};
 
 	const delBoard = () => {
-		dispatch(deleteBoard(boardId));
-		dispatch(deleteCardBoard(boardId));
-
-		clearTimer();
-		navigate("/");
+		dispatch(deleteBoard(boardId, () => {
+			clearTimer();
+			navigate("/");
+		}));
 	};
 
 	const open = text => {
@@ -117,7 +115,7 @@ const BoardSettings = () => {
 			<Title titleChange={title => setState({title})} title={state.title}/>
 			<Lists lists={state.lists} boardId={boardId} setState={setState}/>
 			<Users users={state.users} boardId={boardId} open={open} setState={setState}/>
-			<Modal isOpenProp={isOpen} prompt={prompt} onCancel={() => setOpen(false)} onContinue={delBoard}>
+			<Modal isOpenedProp={isOpen} prompt={prompt} onCancel={() => setOpen(false)} onContinue={delBoard}>
 				<DeleteText>Delete board</DeleteText>
 			</Modal>
 		</Container>

@@ -1,5 +1,5 @@
 import types from "../actions/boardActions";
-import {addCardBoard} from "./cardActionCreator";
+import {addCardBoard, deleteCardBoard} from "./cardActionCreator";
 import {changeBoards} from "./userActionCreator";
 import {getBoard, getUser, getUserBoards} from "../selectors";
 
@@ -33,10 +33,13 @@ export const newBoard = (id, onSuccess) => async (dispatch, getState, {board}) =
 
 export const addBoard = board => ({type: types.addBoard, payload: {board}});
 
-export const deleteBoard = id => (dispatch, getState, {board}) => {
-	board.deleteBoard(id);
+export const deleteBoard = (id, onSuccess) => async (dispatch, getState, {board}) => {
+	await board.deleteBoard(id);
+	onSuccess();
 
 	dispatch(changeBoards(getUserBoards()(getState()).filter(cur => cur.id !== id)));
+	dispatch(deleteCardBoard(id));
+
 	dispatch({
 		type: types.deleteBoard,
 		payload: {id},

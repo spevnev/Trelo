@@ -24,6 +24,7 @@ const useKeyboard = (...objs) => {
 	useEffect(() => {
 		objs.forEach(obj => {
 			if (!keys[obj.key]) keys[obj.key] = [];
+			keys[obj.key] = keys[obj.key].filter(cur => cur.ref.current);
 			keys[obj.key].push({priority: 0, id, ...obj});
 		});
 	}, [objs]);

@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import Button from "./Button";
+import useKeyboard from "../hooks/useKeyboard";
 
 const Overlay = styled.div`
   position: fixed;
@@ -39,22 +40,25 @@ const ModalContainer = styled.div`
   }
 `;
 
-const Modal = ({onContinue, onCancel, children, prompt, isOpenProp}) => {
-	const [isOpen, setIsOpen] = useState(false);
+const Modal = ({onContinue, onCancel, children, prompt, isOpenedProp}) => {
+	const [isOpened, setIsOpened] = useState(false);
+	const ref = useRef();
 
-	useEffect(() => setIsOpen(isOpenProp), [isOpenProp]);
+	useKeyboard({ref, key: "enter", priority: 1, cb: () => onContinue()}, {ref, key: "escape", priority: 1, cb: () => cancel()});
+
+	useEffect(() => setIsOpened(isOpenedProp), [isOpenedProp]);
 
 
 	const cancel = () => {
-		setIsOpen(false);
+		setIsOpened(false);
 		if (onCancel) onCancel();
 	};
 
 
 	return (
 		<>
-			{isOpen &&
-				<Overlay>
+			{isOpened &&
+				<Overlay ref={ref}>
 					<ModalContainer>
 						<p>{prompt}</p>
 						<div>
@@ -64,7 +68,7 @@ const Modal = ({onContinue, onCancel, children, prompt, isOpenProp}) => {
 					</ModalContainer>
 				</Overlay>
 			}
-			<div onClick={() => setIsOpen(true)}>{children}</div>
+			<div onClick={() => setIsOpened(true)}>{children}</div>
 		</>
 	);
 };

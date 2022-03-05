@@ -1,4 +1,4 @@
-import {addUser, changeList, changeRole, changeTitle, createBoard, createList, deleteBoard, deleteList, deleteUser, getBoard} from "./board";
+import {addUser, changeBoard, changeList, changeUser, createBoard, createList, deleteBoard, deleteList, deleteUser, getBoard} from "./board";
 import {addCard, addFiles, changeCard, deleteCard, deleteFile, getCards, renameFile} from "./card";
 import {changeBoards, fetchData, leave, login, signup, toggleFavourite, uploadIcon} from "./user";
 import {downloadFile, uploadFiles} from "./file";
@@ -21,9 +21,9 @@ const bundle = {
 		createBoard: createBoard(client),
 		createList: createList(client),
 		addUser: addUser(client),
-		changeTitle: changeTitle(client),
+		changeTitle: changeBoard(client),
 		changeList: changeList(client),
-		changeRole: changeRole(client),
+		changeRole: changeUser(client),
 		deleteBoard: deleteBoard(client),
 		deleteList: deleteList(client),
 		deleteUser: deleteUser(client),

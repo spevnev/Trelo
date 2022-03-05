@@ -6,9 +6,10 @@ export const BoardContainer = styled.div`
   border-radius: 5px;
   cursor: pointer;
 
-  width: 30vw;
-  min-width: 160px;
-  max-width: 250px;
+  min-width: 200px;
+  flex-basis: 20%;
+  flex-grow: 1;
+
   height: 8rem;
   padding: 5px 8px;
 
