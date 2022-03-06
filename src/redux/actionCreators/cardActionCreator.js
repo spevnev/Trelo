@@ -5,8 +5,9 @@ const emptyCard = (id, listId, order) => ({title: "New card", id, listId, descri
 
 
 export const addCard = (boardId, listId, id, onSuccess) => (dispatch, getState, {card}) => {
-	let order = 0;
-	getCards(boardId)(getState()).filter(cur => cur.listId === listId).forEach(cur => order = Math.max(cur.order, order) + 1);
+	let order = -1;
+	getCards(boardId)(getState()).filter(cur => cur.listId === listId).forEach(cur => order = Math.max(cur.order, order));
+	order++;
 	const newCard = emptyCard(id, listId, order);
 
 	dispatch({type: types.addCard, payload: {boardId, card: newCard}});
@@ -20,16 +21,26 @@ export const addCardBoard = (boardId, cards) => ({type: types.addCardBoard, payl
 export const deleteCardBoard = boardId => ({type: types.deleteCardBoard, payload: {boardId}});
 
 export const deleteCard = (boardId, id, onSuccess) => (dispatch, getState, {card}) => {
+	const curCard = getCard(boardId, id)(getState());
+	const order = getCards(boardId)(getState()).filter(cur => cur.listId === curCard.listId && cur.order > curCard.order).map(cur => ({id: cur.id, order: cur.order - 1}));
+	dispatch(reorderCards(boardId, order));
 	dispatch({type: types.deleteCard, payload: {boardId, id}});
-	onSuccess();
 
 	card.deleteCard(boardId, id);
+
+	onSuccess();
 };
 
 export const changeCard = (boardId, newCard) => (dispatch, getState, {card}) => {
 	card.changeCard(boardId, newCard);
 
 	dispatch({type: types.changeCard, payload: {boardId, id: newCard.id, newCard}});
+};
+
+export const reorderCards = (boardId, order) => (dispatch, getState, {card}) => {
+	card.reorderCards(boardId, order);
+
+	dispatch({type: types.reorderCards, payload: {boardId, order}});
 };
 
 export const deleteFile = (boardId, id, url) => (dispatch, getState, {card}) => {
@@ -39,23 +50,12 @@ export const deleteFile = (boardId, id, url) => (dispatch, getState, {card}) => 
 	dispatch(changeCard(boardId, {...cardData, files: cardData.files.filter(cur => cur.url !== url)}));
 };
 
-export const addFiles = (boardId, id, files, setUploading) => async (dispatch, getState, {card, file}) => {
+export const addFiles = (boardId, id, files, onSuccess) => async (dispatch, getState, {card, file}) => {
 	const [error, urls] = await file.uploadFiles(boardId, files.map(file => file.data));
 	if (error) return;
 
 	const cardFiles = files.map((file, i) => ({url: urls[i], filename: file.filename}));
 	card.addFiles(boardId, id, cardFiles);
-	setUploading(false);
 
-	const cardData = getCard(boardId, id)(getState());
-	dispatch(changeCard(boardId, {...cardData, files: [...cardData.files, ...cardFiles]}));
-};
-
-export const addImages = (boardId, id, images, setUploading) => async (dispatch, getState, {file}) => {
-	const [error, ids] = await file.uploadFiles(boardId, images);
-	if (error) return;
-	setUploading(false);
-
-	const cardData = getCard(boardId, id)(getState());
-	dispatch(changeCard(boardId, {...cardData, images: [...cardData.images, ...ids]}));
+	onSuccess(cardFiles);
 };

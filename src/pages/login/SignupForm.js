@@ -121,7 +121,8 @@ const SignupForm = () => {
 		if (formState.password !== formState.confirm) return error("Passwords don't match!");
 		if (icon.length === 0) return error("You must have icon!");
 
-		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, error, () => navigate("/")));
+		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, error, () => {
+		}));
 	};
 
 

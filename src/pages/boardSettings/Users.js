@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import Input from "../../components/Input";
@@ -93,6 +93,7 @@ const CurUser = ({username, icon, isOwner, leave}) => (
 	</UserContainer>
 );
 
+let timeout = null;
 const Users = ({users, boardId, setState, open}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -105,9 +106,12 @@ const Users = ({users, boardId, setState, open}) => {
 	useKeyboard({ref, key: "enter", cb: () => newUser()});
 
 
+	useEffect(() => () => clearTimeout(timeout));
+
+
 	const error = errorMsg => {
 		setMsg(errorMsg);
-		setTimeout(() => setMsg(null), 3000);
+		timeout = setTimeout(() => setMsg(null), 3000);
 	};
 
 	const changeUserRole = (username, role) => {

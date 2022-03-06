@@ -52,19 +52,22 @@ const Text = styled.p`
 `;
 
 
+let timeout = null;
 const PopUp = ({children, isShown}) => {
 	const [isVisible, setVisible] = useState(false);
 	const [classes, setClasses] = useState("");
 
 
+	useEffect(() => () => clearTimeout(timeout));
+
 	useEffect(() => {
 		if (isShown) {
 			setVisible(true);
 			setClasses("in");
-			setTimeout(() => setClasses(""), 600);
+			timeout = setTimeout(() => setClasses(""), 600);
 		} else {
 			setClasses("out");
-			setTimeout(() => {
+			timeout = setTimeout(() => {
 				setClasses("");
 				setVisible(false);
 			}, 500);

@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
@@ -35,6 +35,7 @@ const DeleteText = styled.p`
 
 const isEmpty = state => state.title.length === 0 && state.lists.length === 0 && state.users.length === 1;
 
+let timeout = null;
 const BoardSettings = () => {
 	const [prompt, setPrompt] = useState("Are you sure you want to delete this board?");
 	const [isOpen, setOpen] = useState(false);
@@ -50,6 +51,8 @@ const BoardSettings = () => {
 
 	useKeyboard({ref, key: "escape", cb: () => goBack()});
 	useTitle(board && board.title ? board.title + " settings" : "Settings");
+
+	useEffect(() => () => clearTimeout(timeout));
 
 	const saveChanges = state => {
 		dispatch(changeBoard(boardId, state));
@@ -102,9 +105,7 @@ const BoardSettings = () => {
 		setOpen(true);
 		setPrompt(text);
 
-		setTimeout(() => {
-			setPrompt("Are you sure you want to delete this board?");
-		}, 3000);
+		timeout = setTimeout(() => setPrompt("Are you sure you want to delete this board?"), 3000);
 	};
 
 

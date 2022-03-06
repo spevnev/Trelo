@@ -1,10 +1,8 @@
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
-import {useDispatch} from "react-redux";
-import {addImages} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services";
 import useKeyboard from "../../hooks/useKeyboard";
 import PopUp from "../../components/PopUp";
@@ -122,10 +120,13 @@ const Overlay = ({src, close}) => {
 	);
 };
 
-const Image = ({openFull, delImg, url}) => {
+const Image = ({openFull, url}) => {
+	const {state, setState} = useContext(CardContext);
+
+
 	const deleteImage = e => {
 		e.stopPropagation();
-		delImg(url);
+		setState({images: state.images.filter(cur => cur !== url)});
 	};
 
 	const downloadImageLocal = e => {
@@ -142,9 +143,13 @@ const Image = ({openFull, delImg, url}) => {
 	);
 };
 
-const ImageInput = ({addImages, setUploading}) => {
-	const {overlay} = useContext(CardContext);
+let stateVar = null;
+const ImageInput = ({setUploading}) => {
+	const {overlay, state, board, setState} = useContext(CardContext);
 	const input = useRef(null);
+
+
+	useEffect(() => stateVar = state, [state]);
 
 
 	const preventDefault = e => e.preventDefault();
@@ -156,7 +161,7 @@ const ImageInput = ({addImages, setUploading}) => {
 	};
 
 	const onImage = e => {
-		const files = e.target.files;
+		const files = e.target.files.slice(0, 10 - state.images.length);
 
 		const arr = [];
 		for (let i = 0; i < files.length; i++) {
@@ -165,7 +170,12 @@ const ImageInput = ({addImages, setUploading}) => {
 			setUploading(true);
 			reader.onload = () => {
 				arr.push(reader.result);
-				if (arr.length === files.length) addImages(arr);
+				if (arr.length === files.length) {
+					bundle.file.uploadFiles(board.id, arr).then(([error, images]) => {
+						setUploading(false);
+						if (!error) setState({...stateVar, images: [...stateVar.images, ...images]});
+					});
+				}
 			};
 		}
 	};
@@ -182,10 +192,9 @@ const ImageInput = ({addImages, setUploading}) => {
 };
 
 const Images = () => {
-	const {board, state, setState, setSaved} = useContext(CardContext);
+	const {state, setSaved} = useContext(CardContext);
 	const [fullImg, setFullImg] = useState(null);
 	const [isShown, setShown] = useState(false);
-	const dispatch = useDispatch();
 
 
 	const setUploading = bool => {
@@ -195,10 +204,6 @@ const Images = () => {
 
 	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
-	const delImage = url => setState({images: state.images.filter(cur => cur !== url)});
-
-	const addImagesLocal = data => state.images.length < 10 && dispatch(addImages(board.id, state.id, data, setUploading));
-
 
 	return (
 		<Container>
@@ -207,9 +212,9 @@ const Images = () => {
 			<SubTitle>Attached images</SubTitle>
 
 			<BlockContainer>
-				{state.images.map(cur => <Image openFull={openFull} delImg={delImage} key={cur} url={cur}/>)}
+				{state.images.map(cur => <Image openFull={openFull} key={cur} url={cur}/>)}
 
-				{state.images.length < 10 && <ImageInput setUploading={setUploading} addImages={addImagesLocal}/>}
+				{state.images.length < 10 && <ImageInput setUploading={setUploading}/>}
 			</BlockContainer>
 
 			<PopUp isShown={isShown}>Uploading image... It might take a few seconds.</PopUp>

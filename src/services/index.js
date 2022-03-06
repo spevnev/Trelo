@@ -1,5 +1,5 @@
 import {addUser, changeBoard, changeList, changeUser, createBoard, createList, deleteBoard, deleteList, deleteUser, getBoard} from "./board";
-import {addCard, addFiles, changeCard, deleteCard, deleteFile, getCards, renameFile} from "./card";
+import {addCard, addFiles, changeCard, deleteCard, deleteFile, getCards, renameFile, reorderCards} from "./card";
 import {changeBoards, fetchData, leave, login, signup, toggleFavourite, uploadIcon} from "./user";
 import {downloadFile, uploadFiles} from "./file";
 import {getToken} from "./jwt";
@@ -32,6 +32,7 @@ const bundle = {
 		addCard: addCard(client),
 		addFiles: addFiles(client),
 		changeCard: changeCard(client),
+		reorderCards: reorderCards(client),
 		renameFile: renameFile(client),
 		deleteCard: deleteCard(client),
 		deleteFile: deleteFile(client),

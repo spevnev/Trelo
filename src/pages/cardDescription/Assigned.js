@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import {Container, SubTitle} from "./styles";
 import trashCursor from "../../assets/cursor.cur";
@@ -61,10 +61,14 @@ const AddUser = ({addUser}) => {
 	);
 };
 
+let timeout = null;
 const Assigned = () => {
 	const {state, board, setState} = useContext(CardContext);
 	const [msg, setMsg] = useState(null);
 	const assigned = board.users.filter(cur => state.assigned.indexOf(cur.username) !== -1);
+
+
+	useEffect(() => () => clearTimeout(timeout));
 
 
 	const addUser = username => {
@@ -73,7 +77,7 @@ const Assigned = () => {
 			return setState({assigned: [...state.assigned, username]});
 
 		setMsg("There is no user with that name in this project!");
-		setTimeout(() => setMsg(null), 2000);
+		timeout = setTimeout(() => setMsg(null), 2000);
 	};
 
 	const deleteUser = username => setState({assigned: state.assigned.filter(cur => cur !== username)});

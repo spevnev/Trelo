@@ -88,9 +88,11 @@ export const changeRole = (id, username, isOwner) => (dispatch, getState, {board
 
 export const createList = (boardId, id, title) => (dispatch, getState, {board}) => {
 	const boardData = getBoard(boardId)(getState());
-	const order = Math.max(...boardData.lists.map(cur => cur.order)) + 1;
+	let order = -1;
+	boardData.lists.forEach(cur => order = Math.max(cur.order, order));
+	order++;
 
-	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order: order > 0 ? order : 0}]}));
+	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order}]}));
 	board.createList(boardId, id, title, order);
 };
 

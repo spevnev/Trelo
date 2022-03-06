@@ -11,7 +11,7 @@ import PageLoading from "../../components/PageLoading";
 import PageError from "../../components/PageError";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
-import {changeCard} from "../../redux/actionCreators/cardActionCreator";
+import {changeCard, reorderCards} from "../../redux/actionCreators/cardActionCreator";
 
 const Container = styled.div`
   display: flex;
@@ -66,22 +66,25 @@ const Board = () => {
 		const dstInd = e.destination.index;
 		const cardId = e.draggableId;
 
+		const order = [];
 		if (srcListId === dstListId) {
 			if (srcInd === dstInd) return;
 			cards.forEach(card => {
 				if (card.listId === srcListId) {
-					if (srcInd > dstInd && card.order < srcInd && card.order >= dstInd) dispatch(changeCard(boardId, {...card, order: card.order + 1}));
-					else if (card.order > srcInd && card.order <= dstInd) dispatch(changeCard(boardId, {...card, order: card.order - 1}));
+					if (srcInd > dstInd && card.order >= dstInd && card.order < srcInd) order.push({id: card.id, order: card.order + 1});
+					else if (card.order > srcInd && card.order <= dstInd) order.push({id: card.id, order: card.order - 1});
 				}
 			});
-			dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], order: dstInd}));
 		} else {
 			cards.forEach(card => {
-				if (card.listId === srcListId && card.order > srcInd) dispatch(changeCard(boardId, {...card, order: card.order - 1}));
-				else if (card.listId === dstListId && card.order >= dstInd) dispatch(changeCard(boardId, {...card, order: card.order + 1}));
+				if (card.listId === srcListId && card.order > srcInd) order.push({id: card.id, order: card.order - 1});
+				else if (card.listId === dstListId && card.order >= dstInd) order.push({id: card.id, order: card.order + 1});
 			});
-			dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId: dstListId, order: dstInd}));
 		}
+
+		if (order.length === 0) return;
+		dispatch(reorderCards(boardId, order));
+		dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId: dstListId, order: dstInd}));
 	};
 
 

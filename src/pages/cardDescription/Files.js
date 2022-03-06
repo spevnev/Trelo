@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
@@ -64,8 +64,10 @@ const DropOverlay = styled(AddFile)`
 `;
 
 
-const File = ({filename, delFile, renameFile, url}) => {
+const File = ({filename, url}) => {
+	const {board, state, setState} = useContext(CardContext);
 	const [msg, setMsg] = useState(null);
+	const dispatch = useDispatch();
 
 
 	const downloadFile = () => bundle.file.downloadFile(url, filename);
@@ -74,7 +76,7 @@ const File = ({filename, delFile, renameFile, url}) => {
 		if (e.target.value.length === 0) setMsg("File name can't be empty!");
 		else setMsg(null);
 
-		renameFile(url, e.target.value);
+		setState({...state, files: state.files.map(cur => cur.url === url ? {...cur, filename: e.target.value} : cur)});
 	};
 
 
@@ -83,7 +85,7 @@ const File = ({filename, delFile, renameFile, url}) => {
 			<FileContainer>
 				<HiddenInput placeholder="File name" onChange={rename} value={filename}/>
 				<Icon src={download} onClick={downloadFile}/>
-				<Icon src={cross} onClick={() => delFile(url)}/>
+				<Icon src={cross} onClick={() => dispatch(deleteFile(board.id, state.id, url))}/>
 			</FileContainer>
 
 			<ErrorMessage>{msg}</ErrorMessage>
@@ -91,9 +93,14 @@ const File = ({filename, delFile, renameFile, url}) => {
 	);
 };
 
-const FileInput = ({addFiles, setUploading}) => {
-	const {overlay} = useContext(CardContext);
+let stateVar = null;
+const FileInput = ({setUploading}) => {
+	const {board, state, setState, overlay} = useContext(CardContext);
 	const input = useRef(null);
+	const dispatch = useDispatch();
+
+
+	useEffect(() => stateVar = state, [state]);
 
 
 	const preventDefault = e => e.preventDefault();
@@ -115,7 +122,12 @@ const FileInput = ({addFiles, setUploading}) => {
 			setUploading(true);
 			reader.onload = () => {
 				arr.push({filename: file.name, data: reader.result});
-				if (arr.length === files.length) addFiles(arr);
+				if (arr.length === files.length) {
+					dispatch(addFiles(board.id, state.id, arr, files => {
+						setUploading(false);
+						setState({...stateVar, files: [...stateVar.files, ...files]});
+					}));
+				}
 			};
 		}
 	};
@@ -132,8 +144,7 @@ const FileInput = ({addFiles, setUploading}) => {
 };
 
 const Files = () => {
-	const {board, state, setState, setSaved} = useContext(CardContext);
-	const dispatch = useDispatch();
+	const {state, setSaved} = useContext(CardContext);
 	const [isShown, setShown] = useState(false);
 
 
@@ -142,21 +153,15 @@ const Files = () => {
 		setSaved(!bool);
 	};
 
-	const delFile = url => dispatch(deleteFile(board.id, state.id, url));
-
-	const addFilesLoc = files => dispatch(addFiles(board.id, state.id, files, setUploading));
-
-	const renameFileLoc = (url, newFilename) => setState({...state, files: state.files.map(cur => cur.url === url ? {...cur, filename: newFilename} : cur)});
-
 
 	return (
 		<Container>
 			<SubTitle>Attached files</SubTitle>
 
 			<BlockContainer>
-				{state.files.map(file => <File key={file.url} {...file} renameFile={renameFileLoc} delFile={delFile}/>)}
+				{state.files.map(file => <File key={file.url} {...file}/>)}
 
-				{state.files.length < 10 && <FileInput setUploading={setUploading} addFiles={addFilesLoc}/>}
+				{state.files.length < 10 && <FileInput setUploading={setUploading}/>}
 			</BlockContainer>
 
 			<PopUp isShown={isShown}>Uploading file... It might take a few seconds.</PopUp>
