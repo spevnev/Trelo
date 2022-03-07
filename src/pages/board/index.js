@@ -66,7 +66,6 @@ const Board = () => {
 		const dstInd = e.destination.index;
 		const cardId = e.draggableId;
 
-		console.log(e);
 		const order = [];
 		if (srcListId === dstListId) {
 			if (srcInd === dstInd) return;
