@@ -52,19 +52,9 @@ const BoardSettings = () => {
 	useKeyboard({ref, key: "escape", cb: () => goBack()});
 	useTitle(board && board.title ? board.title + " settings" : "Settings");
 
-	useEffect(() => () => clearTimeout(timeout));
+	useEffect(() => () => clearTimeout(timeout), []);
 
-	const saveChanges = state => {
-		dispatch(changeBoard(boardId, state));
-
-		const curUser = state.users.filter(cur => cur.username === user.username)[0];
-		dispatch(changeBoards(user.boards.map(cur => cur.id === state.id ? {...cur, title: state.title, isOwner: curUser.isOwner} : cur)));
-
-		[...state.lists].filter(cur => board.lists.filter(l => cur.id === l.id && (cur.title !== l.title || cur.order !== l.order)).length !== 0).forEach(list => {
-			bundle.board.changeList(boardId, list);
-		});
-	};
-	const [pageState, state, setState, isSaved, , clearTimer] = usePageState(
+	const [pageState, state, setState, isSaved, , clearTimer, saveChanges] = usePageState(
 		() => {
 			if (board && board.status === "READY") return board;
 
@@ -79,14 +69,25 @@ const BoardSettings = () => {
 		() => dispatch(fetchBoard(boardId, false)),
 		() => !board || board.status === "ERROR", "This board doesn't exist or you aren't a member of it!",
 		() => board.status === "LOADING",
-		board, saveChanges,
+		board,
+		state => {
+			dispatch(changeBoard(boardId, state));
+
+			const curUser = state.users.filter(cur => cur.username === user.username)[0];
+			dispatch(changeBoards(user.boards.map(cur => cur.id === state.id ? {...cur, title: state.title, isOwner: curUser.isOwner} : cur)));
+
+			if (board === null) return;
+			[...state.lists].filter(cur => board.lists.filter(l => cur.id === l.id && (cur.title !== l.title || cur.order !== l.order)).length !== 0).forEach(list => {
+				bundle.board.changeList(boardId, list);
+			});
+		},
 	);
 
 	if (pageState) return pageState;
 
 
 	const goBack = () => {
-		if (!isSaved) saveChanges(state);
+		if (!isSaved) saveChanges();
 
 		if (isEmpty(state)) return delBoard();
 

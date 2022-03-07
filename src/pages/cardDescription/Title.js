@@ -1,20 +1,11 @@
 import React, {useContext} from "react";
 import HiddenInput from "../../components/HiddenInput";
-import {Container, SubTitle} from "./styles";
-import SelectInput from "../../components/SelectInput";
+import {Container, Select, SubTitle} from "./styles";
 import styled from "styled-components";
 import {CardContext} from "./index";
 import {getCards} from "../../redux/selectors";
 import {useDispatch, useSelector} from "react-redux";
 import {changeCard} from "../../redux/actionCreators/cardActionCreator";
-
-const Select = styled(SelectInput)`
-  border: none;
-  background: none;
-  border-bottom: 1px solid #000;
-  border-radius: 0;
-  width: fit-content;
-`;
 
 const Row = styled.div`
   display: flex;

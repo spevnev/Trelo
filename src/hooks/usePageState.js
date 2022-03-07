@@ -5,6 +5,7 @@ import config from "../config";
 
 
 let timeout = null;
+let stateVar = null;
 const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, debounce) => {
 	const [state, setState] = useState(initState());
 	const [isSaved, setSaved] = useState(true);
@@ -20,12 +21,20 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	}, []);
 
 	useEffect(() => {
+		stateVar = deps;
 		setState(deps);
 	}, !deps ? [{}] : [deps]);
 
+	const saveChanges = () => debounce(stateVar);
+
 	window.onbeforeunload = () => {
-		if (!(isSaved && forceSaved)) return "";
+		if (!(isSaved && forceSaved)) {
+			saveChanges();
+			return "";
+		}
 	};
+
+	useEffect(() => () => saveChanges(), []);
 
 	// Debounce
 	const startTimer = state => {
@@ -44,10 +53,10 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 		if (timer) startTimer(newState);
 
+		stateVar = newState;
 		setState(newState);
 		setSaved(false);
 	};
-
 
 	// Page state
 	let pageState = null;
@@ -55,7 +64,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 	else if (isLoading()) pageState = <PageLoading/>;
 
-	return [pageState, state, changeState, isSaved && forceSaved, setForceSaved, clearTimer];
+	return [pageState, state, changeState, isSaved && forceSaved, setForceSaved, clearTimer, saveChanges];
 };
 
 export default usePageState;

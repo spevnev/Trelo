@@ -58,19 +58,19 @@ const PopUp = ({children, isShown}) => {
 	const [classes, setClasses] = useState("");
 
 
-	useEffect(() => () => clearTimeout(timeout));
+	useEffect(() => () => clearTimeout(timeout), []);
 
 	useEffect(() => {
 		if (isShown) {
 			setVisible(true);
 			setClasses("in");
-			timeout = setTimeout(() => setClasses(""), 600);
+			timeout = setTimeout(() => setClasses(""), 550);
 		} else {
 			setClasses("out");
 			timeout = setTimeout(() => {
 				setClasses("");
 				setVisible(false);
-			}, 500);
+			}, 480);
 		}
 	}, [isShown]);
 

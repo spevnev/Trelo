@@ -6,7 +6,6 @@ import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {signup} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
-import {useNavigate} from "react-router";
 import bundle from "../../services";
 import CropOverlay from "./CropOverlay";
 import PopUp from "../../components/PopUp";
@@ -35,7 +34,7 @@ const Icon = styled.label`
 `;
 
 
-const UserIcon = ({setIcon, error}) => {
+const UserIcon = ({setIcon}) => {
 	const input = useRef(null);
 	const [isShown, setShown] = useState(false);
 	const [isCropping, setCropping] = useState(false);
@@ -56,8 +55,6 @@ const UserIcon = ({setIcon, error}) => {
 		e.target.value = null;
 
 		if (file) {
-			if (file.size > 1024 * 1024) return error("Image is too big! Max size - 1 MB.");
-
 			const reader = new FileReader();
 			reader.readAsDataURL(file);
 
@@ -94,7 +91,6 @@ const UserIcon = ({setIcon, error}) => {
 let timeout = null;
 const SignupForm = () => {
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
 	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: "", confirm: ""});
@@ -132,7 +128,7 @@ const SignupForm = () => {
 			<Text secondary>Don't have account yet?</Text>
 
 			<Form ref={ref}>
-				<UserIcon setIcon={setIcon} error={error}/>
+				<UserIcon setIcon={setIcon}/>
 
 				<Input placeholder="Username" onChange={e => changeForm({username: e.target.value})} value={formState.username}/>
 				<Input type="password" placeholder="Password" onChange={e => changeForm({password: e.target.value})} value={formState.password}/>

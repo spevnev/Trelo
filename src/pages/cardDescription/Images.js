@@ -161,13 +161,15 @@ const ImageInput = ({setUploading}) => {
 	};
 
 	const onImage = e => {
-		const files = e.target.files.slice(0, 10 - state.images.length);
+		const files = [...e.target.files].slice(0, 10 - state.images.length);
 
 		const arr = [];
 		for (let i = 0; i < files.length; i++) {
 			const reader = new FileReader();
 			reader.readAsDataURL(files[i]);
+
 			setUploading(true);
+
 			reader.onload = () => {
 				arr.push(reader.result);
 				if (arr.length === files.length) {

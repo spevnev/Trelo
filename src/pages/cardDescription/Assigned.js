@@ -1,11 +1,6 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useRef} from "react";
 import styled from "styled-components";
-import {Container, SubTitle} from "./styles";
-import trashCursor from "../../assets/cursor.cur";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import ErrorMessage from "../../components/ErrorMessage";
-import useKeyboard from "../../hooks/useKeyboard";
+import {Container, Select, SubTitle} from "./styles";
 import {CardContext} from "./index";
 
 const User = styled.img`
@@ -13,7 +8,6 @@ const User = styled.img`
   height: 30px;
   border-radius: 50%;
   margin-right: 5px;
-  cursor: url(${trashCursor}), pointer;
   transition: all .3s;
 
   &:hover {
@@ -21,78 +15,38 @@ const User = styled.img`
   }
 `;
 
-const AddUserContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  max-width: 400px;
-  width: 95vw;
-  margin: 2px 0;
 
-  & ${Input} {
-    max-width: 300px;
-    width: 70vw;
-    font-size: 16px;
-  }
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+const composeUsername = (user, assigned) => `${capitalize(user.username)}${assigned.filter(cur => cur.username === user.username).length === 0 ? " - ✓" : " - ✘"}`;
 
-  & ${Button} {
-    font-size: 16px;
-  }
-`;
-
-
-const AddUser = ({addUser}) => {
-	const [name, setName] = useState("");
-	const ref = useRef();
-	useKeyboard({ref, key: "enter", cb: () => newUser()});
-
-
-	const newUser = () => {
-		addUser(name.toLowerCase());
-		setName("");
-	};
-
-
-	return (
-		<AddUserContainer>
-			<Input ref={ref} placeholder="Username" maxLength={25} onChange={e => setName(e.target.value)} value={name}/>
-			<Button onClick={newUser}>Add</Button>
-		</AddUserContainer>
-	);
-};
-
-let timeout = null;
 const Assigned = () => {
 	const {state, board, setState} = useContext(CardContext);
-	const [msg, setMsg] = useState(null);
+	const ref = useRef();
+
 	const assigned = board.users.filter(cur => state.assigned.indexOf(cur.username) !== -1);
 
 
-	useEffect(() => () => clearTimeout(timeout));
-
-
-	const addUser = username => {
-		if (username.length < 4) return setMsg("Username must be at least 4 characters long!");
-		if (board.users.filter(cur => cur.username === username).length === 1 && assigned.filter(cur => cur.username === username).length === 0)
-			return setState({assigned: [...state.assigned, username]});
-
-		setMsg("There is no user with that name in this project!");
-		timeout = setTimeout(() => setMsg(null), 2000);
-	};
+	const addUser = username => setState({assigned: [...state.assigned, username]});
 
 	const deleteUser = username => setState({assigned: state.assigned.filter(cur => cur !== username)});
+
+	const onSelect = username => {
+		ref.current.value = "d";
+		if (username === "d") return;
+
+		if (assigned.filter(cur => cur.username === username).length === 1) deleteUser(username);
+		else addUser(username);
+	};
 
 
 	return (
 		<Container>
 			<SubTitle>Assigned</SubTitle>
 
-			<div>{assigned.map(user =>
-				<User onClick={() => deleteUser(user.username)} key={user.username} title={user.username} src={user.icon}/>,
-			)}</div>
+			<div>{assigned.map(user => <User key={user.username} title={user.username} src={user.icon}/>)}</div>
 
-			<ErrorMessage>{msg}</ErrorMessage>
-			<AddUser addUser={addUser}/>
+			<Select ref={ref} onSelect={onSelect} initial={{text: "Username", value: "d"}}
+					options={board.users.map(user => ({text: composeUsername(user, assigned), value: user.username}))}/>
 		</Container>
 	);
 };

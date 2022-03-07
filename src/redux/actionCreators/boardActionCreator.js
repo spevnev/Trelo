@@ -55,7 +55,7 @@ export const deleteBoard = (id, onSuccess) => async (dispatch, getState, {board}
 };
 
 export const changeBoard = (id, newBoard) => (dispatch, getState, {board}) => {
-	if (newBoard.title.length > 0 && getBoard(id)(getState()).title !== newBoard.title) board.changeTitle(id, newBoard.title);
+	if (newBoard && newBoard.title.length > 0 && getBoard(id)(getState()).title !== newBoard.title) board.changeTitle(id, newBoard.title);
 
 	dispatch({
 		type: types.changeBoard,

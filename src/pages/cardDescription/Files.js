@@ -112,16 +112,17 @@ const FileInput = ({setUploading}) => {
 	};
 
 	const onFile = e => {
-		const files = e.target.files;
+		const files = [...e.target.files].slice(0, 10 - state.files.length);
 
 		const arr = [];
 		for (let i = 0; i < files.length; i++) {
-			const file = files[i];
 			const reader = new FileReader();
-			reader.readAsDataURL(file);
+			reader.readAsDataURL(files[i]);
+
 			setUploading(true);
+
 			reader.onload = () => {
-				arr.push({filename: file.name, data: reader.result});
+				arr.push({filename: files[i].name, data: reader.result});
 				if (arr.length === files.length) {
 					dispatch(addFiles(board.id, state.id, arr, files => {
 						setUploading(false);

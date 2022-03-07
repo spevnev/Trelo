@@ -106,7 +106,7 @@ const Users = ({users, boardId, setState, open}) => {
 	useKeyboard({ref, key: "enter", cb: () => newUser()});
 
 
-	useEffect(() => () => clearTimeout(timeout));
+	useEffect(() => () => clearTimeout(timeout), []);
 
 
 	const error = errorMsg => {

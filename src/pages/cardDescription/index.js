@@ -72,11 +72,12 @@ const CardDescription = () => {
 		() => board.status === "LOADING",
 		card,
 		state => {
+			dispatch(changeCard(boardId, state));
+
+			if (card === null) return;
 			[...state.files].filter(cur => card.files.filter(f => cur.url === f.url && cur.filename !== f.filename).length !== 0).forEach(file => {
 				bundle.card.renameFile(boardId, file.filename, file.url);
 			});
-
-			dispatch(changeCard(boardId, state));
 		},
 	);
 

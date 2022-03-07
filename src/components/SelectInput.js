@@ -28,9 +28,9 @@ const Icon = styled.img`
   height: 15px;
 `;
 
-const SelectInput = ({initial, options, onSelect, className}) => (
+const SelectInput = React.forwardRef(({initial, options, onSelect, className}, ref) => (
 	<SelectContainer className={className}>
-		<StyledSelect onChange={e => onSelect(e.target.value)}>
+		<StyledSelect ref={ref} onChange={e => onSelect(e.target.value)}>
 			<option value={initial.value}>{initial.text}</option>
 
 			{options.map(cur =>
@@ -40,6 +40,6 @@ const SelectInput = ({initial, options, onSelect, className}) => (
 
 		<Icon src={dropDown}/>
 	</SelectContainer>
-);
+));
 
 export default SelectInput;

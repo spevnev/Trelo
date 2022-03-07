@@ -66,6 +66,7 @@ const Board = () => {
 		const dstInd = e.destination.index;
 		const cardId = e.draggableId;
 
+		console.log(e);
 		const order = [];
 		if (srcListId === dstListId) {
 			if (srcInd === dstInd) return;
@@ -82,8 +83,8 @@ const Board = () => {
 			});
 		}
 
-		if (order.length === 0) return;
-		dispatch(reorderCards(boardId, order));
+		if (order.length !== 0) dispatch(reorderCards(boardId, order));
+		if (srcListId === dstListId && srcInd === dstListId) return;
 		dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId: dstListId, order: dstInd}));
 	};
 
