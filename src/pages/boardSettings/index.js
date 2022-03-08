@@ -73,7 +73,7 @@ const BoardSettings = () => {
 		state => {
 			dispatch(changeBoard(boardId, state));
 
-			if (user.boards.filter(cur => cur.boardId === boardId).length === 1) {
+			if (user.boards.filter(cur => cur.id === boardId).length === 1) {
 				const curUser = state.users.filter(cur => cur.username === user.username)[0];
 				dispatch(changeBoards(user.boards.map(cur => cur.id === state.id ? {...cur, title: state.title, isOwner: curUser.isOwner} : cur)));
 			}
