@@ -71,7 +71,7 @@ const UserIcon = ({setIcon}) => {
 		setShown(true);
 
 		bundle.user.uploadIcon(data).then(res => {
-			setIcon(res);
+			setIcon(res.url);
 			setShown(false);
 		});
 	};

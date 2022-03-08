@@ -9,4 +9,4 @@ export const uploadIcon = axios => icon => request(axios.post(`/auth/icon/`, {ic
 export const leave = axios => boardId => request(axios.post("/user/leave", {boardId}));
 
 export const changeBoards = axios => newBoards => request(axios.put(`/user/`, {boards: newBoards}));
-export const toggleFavourite = axios => (boardId, fav) => request(axios.put(`/user/favourite`, {boardId, fav}));
+export const toggleFavourite = axios => (boardId, isFavourite) => request(axios.put(`/user/favourite`, {boardId, isFavourite}));
