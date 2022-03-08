@@ -37,8 +37,8 @@ const isEmpty = state => state.title.length === 0 && state.lists.length === 0 &&
 
 let timeout = null;
 const BoardSettings = () => {
-	const [prompt, setPrompt] = useState("Are you sure you want to delete this board?");
-	const [isOpen, setOpen] = useState(false);
+	const [modalText, setModalText] = useState("Are you sure you want to delete this board?");
+	const [isModalOpened, setIsModalOpen] = useState(false);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -103,10 +103,10 @@ const BoardSettings = () => {
 	};
 
 	const open = text => {
-		setOpen(true);
-		setPrompt(text);
+		setIsModalOpen(true);
+		setModalText(text);
 
-		timeout = setTimeout(() => setPrompt("Are you sure you want to delete this board?"), 3000);
+		timeout = setTimeout(() => setModalText("Are you sure you want to delete this board?"), 3000);
 	};
 
 
@@ -117,7 +117,7 @@ const BoardSettings = () => {
 			<Title titleChange={title => setState({title})} title={state.title}/>
 			<Lists lists={state.lists} boardId={boardId} setState={setState}/>
 			<Users users={state.users} boardId={boardId} open={open} setState={setState}/>
-			<Modal isOpenedProp={isOpen} prompt={prompt} onCancel={() => setOpen(false)} onContinue={delBoard}>
+			<Modal isOpened={isModalOpened} text={modalText} onCancel={() => setIsModalOpen(false)} onContinue={delBoard}>
 				<DeleteText>Delete board</DeleteText>
 			</Modal>
 		</Container>

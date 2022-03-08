@@ -73,7 +73,7 @@ const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 		</div>
 
 		<div>
-			<SelectInput onSelect={val => changeRole(username, val)} initial={isOwner ? owner : user} options={isOwner ? [user] : [owner]}/>
+			<SelectInput onSelect={val => changeRole(username, val)} initialOption={isOwner ? owner : user} options={isOwner ? [user] : [owner]}/>
 			<Cancel onClick={() => deleteUser(username)}>&#x2716;</Cancel>
 		</div>
 	</UserContainer>

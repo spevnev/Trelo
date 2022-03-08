@@ -65,7 +65,7 @@ const ListEl = ({title, id, order, deleteEl, changeEl, dragProps}) => (
 
 		<Row>
 			<Icon src={dragIcon} {...dragProps}/>
-			<Modal onContinue={() => deleteEl(id)} prompt="If you delete this list, all cards in it will be deleted too!">
+			<Modal onContinue={() => deleteEl(id)} text="If you delete this list, all cards in it will be deleted too!">
 				<Cancel>&#x2716;</Cancel>
 			</Modal>
 		</Row>

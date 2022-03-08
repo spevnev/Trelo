@@ -54,7 +54,7 @@ const Text = styled.p`
 
 let timeout = null;
 const PopUp = ({children, isShown}) => {
-	const [isVisible, setVisible] = useState(false);
+	const [isShownLocal, setIsShownLocal] = useState(false);
 	const [classes, setClasses] = useState("");
 
 
@@ -62,20 +62,20 @@ const PopUp = ({children, isShown}) => {
 
 	useEffect(() => {
 		if (isShown) {
-			setVisible(true);
+			setIsShownLocal(true);
 			setClasses("in");
 			timeout = setTimeout(() => setClasses(""), 550);
 		} else {
 			setClasses("out");
 			timeout = setTimeout(() => {
 				setClasses("");
-				setVisible(false);
+				setIsShownLocal(false);
 			}, 480);
 		}
 	}, [isShown]);
 
 
-	return (<>{isVisible &&
+	return (<>{isShownLocal &&
 		<Container className={classes}>
 			<Text>{children}</Text>
 		</Container>

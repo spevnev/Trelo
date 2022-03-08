@@ -17,6 +17,7 @@ const GoBackContainer = styled.div`
   }
 `;
 
+
 const GoBack = ({onClick, children}) => (
 	<GoBackContainer onClick={onClick}>
 		<img src={arrowBack} alt=""/>

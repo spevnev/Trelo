@@ -45,7 +45,7 @@ const Assigned = () => {
 
 			<div>{assigned.map(user => <User key={user.username} title={user.username} src={user.icon}/>)}</div>
 
-			<Select ref={ref} onSelect={onSelect} initial={{text: "Username", value: "d"}}
+			<Select ref={ref} onSelect={onSelect} initialOption={{text: "Username", value: "d"}}
 					options={board.users.map(user => ({text: composeUsername(user, assigned), value: user.username}))}/>
 		</Container>
 	);

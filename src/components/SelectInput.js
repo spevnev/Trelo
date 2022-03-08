@@ -1,4 +1,4 @@
-import React from "react";
+import React, {forwardRef} from "react";
 import styled from "styled-components";
 import dropDown from "../assets/svg/arrow_drop_down.svg";
 
@@ -28,10 +28,11 @@ const Icon = styled.img`
   height: 15px;
 `;
 
-const SelectInput = React.forwardRef(({initial, options, onSelect, className}, ref) => (
+
+const SelectInput = forwardRef(({initialOption, options, onSelect, className}, ref) => (
 	<SelectContainer className={className}>
 		<StyledSelect ref={ref} onChange={e => onSelect(e.target.value)}>
-			<option value={initial.value}>{initial.text}</option>
+			<option value={initialOption.value}>{initialOption.text}</option>
 
 			{options.map(cur =>
 				<option value={cur.value} key={cur.value}>{cur.text}</option>,

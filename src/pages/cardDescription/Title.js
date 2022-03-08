@@ -47,10 +47,10 @@ const Title = () => {
 			<HiddenInput maxLength="64" placeholder="Card title" onChange={e => setState({title: e.target.value})} value={state.title}/>
 			<Row>
 				is #
-				<Select onSelect={reorder} initial={{text: state.order + 1, value: state.order}}
+				<Select onSelect={reorder} initialOption={{text: state.order + 1, value: state.order}}
 						options={new Array(curCards.length).fill(null).map((a, i) => ({text: i + 1, value: i})).filter(cur => cur.value !== state.order)}/>
 				in
-				<Select onSelect={move} initial={{text: board.lists.filter(cur => cur.id === state.listId)[0].title, value: state.listId}}
+				<Select onSelect={move} initialOption={{text: board.lists.filter(cur => cur.id === state.listId)[0].title, value: state.listId}}
 						options={board.lists.filter(cur => cur.id !== state.listId).map(cur => ({text: cur.title, value: cur.id}))}/>
 				list.
 			</Row>
