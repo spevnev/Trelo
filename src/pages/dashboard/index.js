@@ -29,7 +29,7 @@ const Dashboard = () => {
 
 	return (
 		<Boards>
-			{boards.sort((a, b) => a > b ? 1 : -1).map(cur => <Board key={cur.id} {...cur}/>)}
+			{boards.sort().map(cur => <Board key={cur.id} {...cur}/>)}
 			<NewBoard/>
 		</Boards>
 	);
