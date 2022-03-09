@@ -116,6 +116,7 @@ const BoardSettings = () => {
 		setIsModalOpen(true);
 		setModalText(text);
 
+		// TODO: 2 modals
 		timeout = setTimeout(() => setModalText("Are you sure you want to delete this board?"), 3000);
 	};
 

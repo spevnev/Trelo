@@ -7,6 +7,7 @@ import {login} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import {useNavigate} from "react-router";
 import schema, {validatePassword, validateUsername} from "../../schema";
+import config from "../../config";
 
 let timeout = null;
 const LoginForm = () => {
@@ -22,16 +23,16 @@ const LoginForm = () => {
 	useEffect(() => () => clearTimeout(timeout), []);
 
 
-	const error = text => {
+	const displayError = text => {
 		setMsg(text);
-		timeout = setTimeout(() => setMsg(null), 3000);
+		timeout = setTimeout(() => setMsg(null), config.ERROR_DURATION_MS);
 	};
 
 	const submit = () => {
-		if (!validateUsername(formState.username, error)) return;
-		if (!validatePassword(formState.password, error)) return;
+		if (!validateUsername(formState.username, displayError)) return;
+		if (!validatePassword(formState.password, displayError)) return;
 
-		dispatch(login(formState.username.toLowerCase(), formState.password, error, () => navigate("/")));
+		dispatch(login(formState.username.toLowerCase(), formState.password, displayError, () => navigate("/")));
 	};
 
 

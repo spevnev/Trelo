@@ -10,6 +10,7 @@ import bundle from "../../services";
 import CropOverlay from "./CropOverlay";
 import PopUp from "../../components/PopUp";
 import {validatePassword, validateUsername} from "../../schema";
+import config from "../../config";
 
 const Button = styled(StyledButton)`
   background: #4040ff;
@@ -35,7 +36,7 @@ const Icon = styled.label`
 `;
 
 
-const UserIcon = ({setIcon, error}) => {
+const UserIcon = ({setIcon, displayError}) => {
 	const input = useRef(null);
 	const [isShown, setShown] = useState(false);
 	const [isCropping, setCropping] = useState(false);
@@ -77,7 +78,7 @@ const UserIcon = ({setIcon, error}) => {
 				setShown(false);
 			})
 			.catch(e => {
-				error("Error uploading icon! Check your internet connection.");
+				displayError("Error uploading icon! Check your internet connection.");
 				setShown(false);
 			});
 	};
@@ -110,20 +111,20 @@ const SignupForm = () => {
 
 	const changeForm = changes => setFormState({...formState, ...changes});
 
-	const error = text => {
+	const displayError = text => {
 		setMsg(text);
-		timeout = setTimeout(() => setMsg(null), 3000);
+		timeout = setTimeout(() => setMsg(null), config.ERROR_DURATION_MS);
 	};
 
 	const submit = () => {
-		if (!validateUsername(formState.username, error)) return;
+		if (!validateUsername(formState.username, displayError)) return;
 
-		if (formState.password !== formState.confirm) return error("Passwords don't match!");
-		if (!validatePassword(formState.password, error)) return;
+		if (formState.password !== formState.confirm) return displayError("Passwords don't match!");
+		if (!validatePassword(formState.password, displayError)) return;
 
-		if (!icon) return error("You must have icon!");
+		if (!icon) return displayError("You must have icon!");
 
-		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, error));
+		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, displayError));
 	};
 
 
@@ -133,7 +134,7 @@ const SignupForm = () => {
 			<SecondaryText>Don't have account yet?</SecondaryText>
 
 			<Form ref={ref}>
-				<UserIcon error={error} setIcon={setIcon}/>
+				<UserIcon displayError={displayError} setIcon={setIcon}/>
 
 				<Input placeholder="Username" onChange={e => changeForm({username: e.target.value})} value={formState.username}/>
 				<Input type="password" placeholder="Password" onChange={e => changeForm({password: e.target.value})} value={formState.password}/>

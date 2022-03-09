@@ -13,9 +13,9 @@ export const fetchUser = () => async (dispatch, getState, {userAPI}) => {
 	dispatch({type: types.setUser, payload: {user: {boards: [], ...data}}});
 };
 
-export const login = (username, password, setError, success) => async (dispatch, getState, {userAPI}) => {
+export const login = (username, password, displayError, success) => async (dispatch, getState, {userAPI}) => {
 	const [error, data] = await userAPI.login(username, password);
-	if (error) return setError(error);
+	if (error) return displayError(error);
 
 	localStorage.setItem("JWT", data.token);
 
@@ -23,9 +23,9 @@ export const login = (username, password, setError, success) => async (dispatch,
 	success();
 };
 
-export const signup = (userData, setError) => async (dispatch, getState, {userAPI}) => {
+export const signup = (userData, displayError) => async (dispatch, getState, {userAPI}) => {
 	const [error, data] = await userAPI.signup(userData.username, userData.password, userData.icon);
-	if (error) return setError(error);
+	if (error) return displayError(error);
 
 	localStorage.setItem("JWT", data.token);
 

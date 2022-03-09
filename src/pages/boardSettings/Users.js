@@ -12,6 +12,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import {addUser, changeRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import schema, {validateUsername} from "../../schema";
+import config from "../../config";
 
 const UserContainer = styled.div`
   display: flex;
@@ -109,9 +110,9 @@ const Users = ({users, boardId, setState, open}) => {
 	useEffect(() => () => clearTimeout(timeout), []);
 
 
-	const error = errorMsg => {
+	const displayError = errorMsg => {
 		setMsg(errorMsg);
-		timeout = setTimeout(() => setMsg(null), 3000);
+		timeout = setTimeout(() => setMsg(null), config.ERROR_DURATION_MS);
 	};
 
 	const changeUserRole = (username, role) => {
@@ -136,11 +137,11 @@ const Users = ({users, boardId, setState, open}) => {
 	};
 
 	const newUser = () => {
-		if (!validateUsername(newUsername, error)) return;
-		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length > 0) return error("This user is already in the board!");
+		if (!validateUsername(newUsername, displayError)) return;
+		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length > 0) return displayError("This user is already in the board!");
 
 		setNewUsername("");
-		dispatch(addUser(boardId, newUsername.toLowerCase(), data => setState({users: [...users, {...data, isOwner: false}]}), error));
+		dispatch(addUser(boardId, newUsername.toLowerCase(), data => setState({users: [...users, {...data, isOwner: false}]}), displayError));
 	};
 
 

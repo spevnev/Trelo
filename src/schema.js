@@ -30,26 +30,26 @@ const schema = {
 	},
 };
 
-export const validateUsername = (username, error) => {
+export const validateUsername = (username, displayError) => {
 	if (username.length < schema.username.min) {
-		error(`Username can't be less than ${schema.username.min} characters!`);
+		displayError(`Username can't be less than ${schema.username.min} characters!`);
 		return false;
 	}
 	if (username.length > schema.username.max) {
-		error(`Username can't be longer than ${schema.username.max} characters!`);
+		displayError(`Username can't be longer than ${schema.username.max} characters!`);
 		return false;
 	}
 
 	return true;
 };
 
-export const validatePassword = (password, error) => {
+export const validatePassword = (password, displayError) => {
 	if (password.length < schema.password.min) {
-		error(`Password can't be less than ${schema.password.min} characters!`);
+		displayError(`Password can't be less than ${schema.password.min} characters!`);
 		return false;
 	}
 	if (password.length > schema.password.max) {
-		error(`Password can't be longer than ${schema.password.max} characters!`);
+		displayError(`Password can't be longer than ${schema.password.max} characters!`);
 		return false;
 	}
 
