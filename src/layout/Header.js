@@ -36,11 +36,12 @@ const UserIcon = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: url("${props => props.image}");
+  background: url("${props => props.src}");
   background-position: center;
   background-size: cover;
   margin: 0 10px;
 `;
+
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -48,6 +49,7 @@ const Header = () => {
 
 
 	if (!user) return null;
+
 
 	return (
 		<HeaderContainer>
@@ -57,7 +59,7 @@ const Header = () => {
 
 			<Container>
 				<Username>{user.username}</Username>
-				{user.icon && <UserIcon image={user.icon}/>}
+				<UserIcon src={user.icon}/>
 			</Container>
 		</HeaderContainer>
 	);

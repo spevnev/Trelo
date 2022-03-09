@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import Input from "../../components/Input";
+import Input from "../../components/StyledInput";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
 import {Cancel, SubContainer, SubTitle} from "./styles";

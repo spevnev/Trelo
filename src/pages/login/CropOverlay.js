@@ -3,14 +3,7 @@ import Cropper from "react-easy-crop";
 import Button from "../../components/Button";
 import styled from "styled-components";
 import useKeyboard from "../../hooks/useKeyboard";
-
-const Container = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-`;
+import ScreenOverlay from "../../components/ScreenOverlay";
 
 const UI = styled.div`
   position: absolute;
@@ -79,7 +72,7 @@ const CropOverlay = ({isShown, setCropping, image, onSubmit}) => {
 
 	if (!isShown) return null;
 	return (
-		<Container ref={ref}>
+		<ScreenOverlay ref={ref}>
 			<Cropper image={image} onCropComplete={onChange} onCropAreaChange={onChange}
 					 crop={crop} zoom={zoom}
 					 onCropChange={setCrop} onZoomChange={setZoom}
@@ -89,7 +82,7 @@ const CropOverlay = ({isShown, setCropping, image, onSubmit}) => {
 				<Button onClick={close}>Cancel</Button>
 				<PrimaryButton onClick={confirm}>Confirm</PrimaryButton>
 			</UI>
-		</Container>
+		</ScreenOverlay>
 	);
 };
 

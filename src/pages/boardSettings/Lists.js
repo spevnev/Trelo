@@ -2,7 +2,7 @@ import React, {useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import HiddenInput from "../../components/HiddenInput";
-import Input from "../../components/Input";
+import Input from "../../components/StyledInput";
 import Button from "../../components/Button";
 import {Cancel, SubContainer, SubTitle} from "./styles";
 import {v4 as uuid} from "uuid";
@@ -113,8 +113,8 @@ const Lists = ({lists, boardId, setState}) => {
 
 			<DragDropContext onDragEnd={onDragEnd}><Droppable droppableId="id">{provided => (
 				<Column ref={provided.innerRef} {...provided.droppableProps}>
-					{lists.sort((a, b) => a.order - b.order).map((cur, i) => (
-						<Draggable draggableId={cur.id} key={cur.id} index={i}>{provided =>
+					{lists.sort((a, b) => a.order - b.order).map((cur, idx) => (
+						<Draggable draggableId={cur.id} key={cur.id} index={idx}>{provided =>
 							<div ref={provided.innerRef} {...provided.draggableProps}>
 								<ListEl {...cur} dragProps={provided.dragHandleProps} deleteEl={deleteEl} changeEl={changeEl}/>
 							</div>

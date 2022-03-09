@@ -50,7 +50,7 @@ const AddCard = styled.p`
 `;
 
 
-const List = ({title, order, boardId, id, cards}) => {
+const List = ({title, order, boardId, id, cards = []}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const users = useSelector(getBoard(boardId)).users;
@@ -58,20 +58,23 @@ const List = ({title, order, boardId, id, cards}) => {
 
 	const newCard = () => {
 		const cardId = uuid();
-
 		dispatch(addCard(boardId, id, cardId, () => navigate(cardId + "?new")));
 	};
 
+
+	cards.sort((a, b) => a.order - b.order);
 
 	return (
 		<Droppable droppableId={id}>{provided => (
 			<div style={{order}} ref={provided.innerRef} {...provided.droppableProps}>
 				<ListContainer>
 					<Title>{title}</Title>
+
 					<InnerContainer>
-						{cards && cards.sort((a, b) => a.order - b.order).map((card, i) => <Card key={card.id} users={users} boardId={boardId} i={i} {...card}/>)}
+						{cards.map((card, idx) => <Card key={card.id} users={users} boardId={boardId} idx={idx} {...card}/>)}
 						{provided.placeholder}
 					</InnerContainer>
+
 					<AddCard onClick={newCard}>+ Add card</AddCard>
 				</ListContainer>
 			</div>

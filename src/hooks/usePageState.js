@@ -3,46 +3,46 @@ import PageLoading from "../components/PageLoading";
 import PageError from "../components/PageError";
 import config from "../config";
 
-
 let timeout = null;
-let stateVar = null;
+let externalState = null;
 const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, debounce) => {
 	const [state, setState] = useState(initState());
-	const [isSaved, setSaved] = useState(true);
-	const [forceSaved, setForceSaved] = useState(true);
-	const [forceLoading, setForceLoading] = useState(!state || isError());
+	const [isSaved, setIsSaved] = useState(true);
+	const [isForceSaved, setIsForceSaved] = useState(true);
+	const [isForceLoading, setIsForceLoading] = useState(!state || isError());
 
-	// Init & on change, save changes on exit
 	useEffect(() => {
-		if (!forceLoading) onLoad();
-		setTimeout(() => setForceLoading(false), config.FORCE_LOADING_MS);
+		if (!isForceLoading) onLoad(); // if page was already visited
+
+		setTimeout(() => setIsForceLoading(false), config.FORCE_LOADING_MS);
 
 		return () => window.onbeforeunload = null;
 	}, []);
 
 	useEffect(() => {
-		stateVar = deps;
+		externalState = deps;
 		setState(deps);
 	}, !deps ? [{}] : [deps]);
 
-	const saveChanges = () => debounce(stateVar);
+	useEffect(() => () => saveChanges(), []);
+
 
 	window.onbeforeunload = () => {
-		if (!(isSaved && forceSaved)) {
+		if (!(isSaved && isForceSaved)) {
 			saveChanges();
 			return "";
 		}
 	};
 
-	useEffect(() => () => saveChanges(), []);
 
-	// Debounce
+	const saveChanges = () => debounce(externalState);
+
 	const startTimer = state => {
 		if (timeout !== null) clearTimeout(timeout);
 
 		timeout = setTimeout(() => {
 			debounce(state);
-			setSaved(true);
+			setIsSaved(true);
 		}, config.DEBOUNCE_SAVE_MS);
 	};
 
@@ -53,18 +53,18 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 		if (timer) startTimer(newState);
 
-		stateVar = newState;
+		externalState = newState;
 		setState(newState);
-		setSaved(false);
+		setIsSaved(false);
 	};
 
-	// Page state
+
 	let pageState = null;
-	if (forceLoading) pageState = <PageLoading/>;
+	if (isForceLoading) pageState = <PageLoading/>;
 	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 	else if (isLoading()) pageState = <PageLoading/>;
 
-	return [pageState, state, changeState, isSaved && forceSaved, setForceSaved, clearTimer, saveChanges];
+	return [pageState, state, changeState, isSaved && isForceSaved, setIsForceSaved, clearTimer, saveChanges];
 };
 
 export default usePageState;

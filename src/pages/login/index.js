@@ -59,7 +59,7 @@ const SmallWrapper = styled(Wrapper)`
 `;
 
 const LinkContainer = styled.div`
-  background: #${props => props.bg};
+  background: ${props => props.background};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,7 +86,7 @@ const Compact = () => {
 	if (isLogin) return (
 		<SmallWrapper>
 			<LoginForm/>
-			<LinkContainer bg="f0f0f0">
+			<LinkContainer background="#f0f0f0">
 				<p>Don't have account yet?</p>
 				<Link onClick={() => setLogin(false)}>Sign up</Link>
 			</LinkContainer>
@@ -96,7 +96,7 @@ const Compact = () => {
 	return (
 		<SmallWrapper>
 			<SignupForm/>
-			<LinkContainer bg="c0c0c0">
+			<LinkContainer background="#c0c0c0">
 				<p>Already have an account?</p>
 				<Link onClick={() => setLogin(true)}>Log in</Link>
 			</LinkContainer>

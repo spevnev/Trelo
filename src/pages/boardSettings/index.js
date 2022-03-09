@@ -73,7 +73,7 @@ const BoardSettings = () => {
 		state => {
 			dispatch(changeBoard(boardId, state));
 
-			if (user.boards.filter(cur => cur.id === boardId).length === 1) {
+			if (user.boards && user.boards.filter(cur => cur.id === boardId).length === 1) {
 				const curUser = state.users.filter(cur => cur.username === user.username)[0];
 				dispatch(changeBoards(user.boards.map(cur => cur.id === state.id ? {...cur, title: state.title, isOwner: curUser.isOwner} : cur)));
 			}
@@ -114,7 +114,7 @@ const BoardSettings = () => {
 
 	return (
 		<Container>
-			<GoBack onClick={goBack}>Return to the board</GoBack>
+			<GoBack onClick={goBack}/>
 
 			<Title titleChange={title => setState({title})} title={state.title}/>
 			<Lists lists={state.lists} boardId={boardId} setState={setState}/>

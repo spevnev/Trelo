@@ -5,8 +5,8 @@ export const SubContainer = styled.div`
   width: 50%;
   height: 100%;
   padding: 15px 20px;
-  background: ${props => `#${props.background}`};
-  color: ${props => `#${props.colour}`};
+  background: ${props => props.background};
+  color: ${props => props.colour};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -30,6 +30,11 @@ export const StyledButton = styled(Button)`
 `;
 
 export const Text = styled.p`
-  font-size: ${props => props.secondary ? "18px" : "28px"};
+  font-size: 28px;
+  text-align: center;
+`;
+
+export const SecondaryText = styled.p`
+  font-size: 18px;
   text-align: center;
 `;

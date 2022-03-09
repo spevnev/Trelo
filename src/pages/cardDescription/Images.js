@@ -7,6 +7,7 @@ import bundle from "../../services";
 import useKeyboard from "../../hooks/useKeyboard";
 import PopUp from "../../components/PopUp";
 import {CardContext} from "./index";
+import ScreenOverlay from "../../components/ScreenOverlay";
 
 const Block = styled.div`
   min-width: 200px;
@@ -21,17 +22,11 @@ const Block = styled.div`
   }
 `;
 
-const OverlayContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
+const OverlayContainer = styled(ScreenOverlay)`
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
 `;
 
 const OverlayImage = styled.img`
@@ -82,7 +77,7 @@ const ImageContainer = styled(Block)`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  background: url("${props => props.src}");
+  background: url(${props => props.src});
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

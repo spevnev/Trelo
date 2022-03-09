@@ -2,42 +2,34 @@ import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import useKeyboard from "../hooks/useKeyboard";
+import ScreenOverlay from "./ScreenOverlay";
+import CentredContainer from "./CentredContainer";
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
+const Overlay = styled(ScreenOverlay)`
+  background: rgba(0, 0, 0, 0.6);
 `;
 
-const ModalContainer = styled.div`
-  width: 400px;
-  min-height: 100px;
-  background: #dfdfdf;
-  border-radius: 10px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+const Container = styled(CentredContainer)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  z-index: 999;
-
-  & p {
-    font-size: 20px;
-    width: 90%;
-    text-align: center;
-    margin: 10px 0;
-  }
+  width: 400px;
+  min-height: 100px;
+  background: #dfdfdf;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 
   & ${Button} {
     margin: 10px 20px;
   }
+`;
+
+const Text = styled.p`
+  font-size: 20px;
+  width: 90%;
+  text-align: center;
+  margin: 10px 0;
 `;
 
 
@@ -60,14 +52,14 @@ const Modal = ({onContinue, onCancel, text, isOpened, children}) => {
 	return (
 		<>
 			{isOpenedLocal &&
-				<Overlay ref={overlayRef}>
-					<ModalContainer>
-						<p>{text}</p>
+				<Overlay ref={overlayRef} onClick={cancel}>
+					<Container>
+						<Text>{text}</Text>
 						<div>
 							<Button onClick={onContinue}>Continue</Button>
 							<Button onClick={cancel}>Cancel</Button>
 						</div>
-					</ModalContainer>
+					</Container>
 				</Overlay>
 			}
 			<div onClick={() => setIsOpenedLocal(true)}>{children}</div>

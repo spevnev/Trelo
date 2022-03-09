@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Form, StyledButton, SubContainer, Text} from "./styles";
-import Input from "../../components/Input";
+import {Form, SecondaryText, StyledButton, SubContainer, Text} from "./styles";
+import Input from "../../components/StyledInput";
 import ErrorMessage from "../../components/ErrorMessage";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
@@ -24,7 +24,7 @@ const Icon = styled.label`
   cursor: pointer;
   margin: 25px auto;
   transition: all 0.3s;
-  background: ${props => props.image ? `url(${props.image})` : `#e0e0e0`};
+  background: ${props => props.src ? `url(${props.src})` : "#fafafa"};
   background-position: center;
   background-size: cover;
 
@@ -34,7 +34,7 @@ const Icon = styled.label`
 `;
 
 
-const UserIcon = ({setIcon}) => {
+const UserIcon = ({setIcon, error}) => {
 	const input = useRef(null);
 	const [isShown, setShown] = useState(false);
 	const [isCropping, setCropping] = useState(false);
@@ -70,21 +70,26 @@ const UserIcon = ({setIcon}) => {
 		setPreview(data);
 		setShown(true);
 
-		bundle.user.uploadIcon(data).then(res => {
-			setIcon(res.url);
-			setShown(false);
-		});
+		bundle.user.uploadIcon(data)
+			.then(res => {
+				setIcon(res.url);
+				setShown(false);
+			})
+			.catch(e => {
+				error("Error uploading icon! Check your internet connection.");
+				setShown(false);
+			});
 	};
 
 
 	return (
-		<>
-			<Icon htmlFor="userIcon" image={preview} onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}/>
+		<div>
+			<Icon htmlFor="userIcon" src={preview} onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}/>
 			<input ref={input} accept="image/jpeg,image/png" onChange={onFile} id="userIcon" type="file" style={{display: "none"}}/>
 
 			<CropOverlay isShown={isCropping} setCropping={setCropping} image={image} onSubmit={onSubmit}/>
 			<PopUp isShown={isShown}>Uploading icon... It might take a few seconds.</PopUp>
-		</>
+		</div>
 	);
 };
 
@@ -123,12 +128,12 @@ const SignupForm = () => {
 
 
 	return (
-		<SubContainer background="0079bf" colour="fff">
+		<SubContainer background="#0079bf" colour="#fff">
 			<Text>Sign up</Text>
-			<Text secondary>Don't have account yet?</Text>
+			<SecondaryText>Don't have account yet?</SecondaryText>
 
 			<Form ref={ref}>
-				<UserIcon setIcon={setIcon}/>
+				<UserIcon error={error} setIcon={setIcon}/>
 
 				<Input placeholder="Username" onChange={e => changeForm({username: e.target.value})} value={formState.username}/>
 				<Input type="password" placeholder="Password" onChange={e => changeForm({password: e.target.value})} value={formState.password}/>

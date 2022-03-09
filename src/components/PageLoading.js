@@ -1,25 +1,6 @@
 import React from "react";
 import styled, {keyframes} from "styled-components";
-
-const Loading = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  background: #f8f8f8;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  & p {
-    font-size: 24px;
-    font-weight: 300;
-    color: #000;
-    margin: 20px 0;
-  }
-`;
+import ScreenOverlay from "./ScreenOverlay";
 
 const Keyframes = keyframes`
   0% {
@@ -29,6 +10,7 @@ const Keyframes = keyframes`
     transform: rotate(360deg);
   }
 `;
+
 
 const Spinner = styled.div`
   display: inline-block;
@@ -125,6 +107,21 @@ const Spinner = styled.div`
   }
 `;
 
+const Loading = styled(ScreenOverlay)`
+  display: flex;
+  background: #f8f8f8;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const Text = styled.p`
+  font-size: 24px;
+  font-weight: 300;
+  color: #000;
+  margin: 20px 0;
+`;
+
 
 const PageLoading = () => (
 	<Loading>
@@ -138,7 +135,8 @@ const PageLoading = () => (
 			<div/>
 			<div/>
 		</Spinner>
-		<p>Loading...</p>
+
+		<Text>Loading...</Text>
 	</Loading>
 );
 

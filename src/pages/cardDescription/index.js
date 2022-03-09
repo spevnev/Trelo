@@ -116,7 +116,7 @@ const CardDescription = () => {
 	return (
 		<Container onDragEnter={onDragEnter} onDrop={() => setOverlay(false)}>
 			<SubContainer>
-				<GoBack onClick={goBack}>Return to the board</GoBack>
+				<GoBack onClick={goBack}/>
 				<Delete onClick={() => openModal("Are you sure you want to delete this card?")} src={deleteIcon}/>
 			</SubContainer>
 

@@ -1,33 +1,53 @@
 import {useEffect, useState} from "react";
 import {v4 as uuid} from "uuid";
 
-let msPath = null;
-window.addEventListener("mousemove", e => msPath = e.path);
+let elementsUnderCursor = [];
+const keyToObject = {};
 
-const keys = {};
-window.addEventListener("keyup", e => {
-	const objects = keys[e.key.toLowerCase()];
-	if (!objects || objects.length === 0) return;
 
-	const obj = objects.filter(cur => e.path.indexOf(cur.ref.current) !== -1 || msPath.indexOf(cur.ref.current) !== -1);
-	obj.forEach(cur => msPath.indexOf(cur.ref.current) !== -1 && cur.priority--);
-	if (obj.length === 0) return;
-
-	obj.sort((a, b) => b.priority - a.priority)[0].cb();
+window.addEventListener("mousemove", e => elementsUnderCursor = e.path);
+window.addEventListener("click", e => {
+	// get elements at position of mouse after the call stack empties
+	setTimeout(() => elementsUnderCursor = document.elementsFromPoint(e.x, e.y), 0);
 });
 
-const useKeyboard = (...objs) => {
+window.addEventListener("keyup", e => {
+	const isObjectInPath = obj => elementsUnderCursor.indexOf(obj.ref.current) !== -1;
+	const isObjectInFocus = obj => e.path.indexOf(obj.ref.current) !== -1 || isObjectInPath(obj);
+
+	const objects = keyToObject[e.key.toLowerCase()];
+	if (!objects || objects.length === 0) return;
+
+	const focusedObjects = objects.filter(isObjectInFocus);
+	if (focusedObjects.length === 0) return;
+
+	// prioritize elements that are focused by keyboard/caret than by mouse/cursor
+	focusedObjects.forEach(obj => {
+		if (elementsUnderCursor.indexOf(obj.ref.current) !== -1) obj.priority--;
+	});
+
+	focusedObjects.sort((a, b) => b.priority - a.priority)[0].cb();
+});
+
+
+const useKeyboard = (...objects) => {
 	const [id] = useState(uuid());
 
-	useEffect(() => () => objs.forEach(obj => keys[obj.key] = keys[obj.key].filter(cur => cur.id !== id)));
+	useEffect(() => () => {
+		// clearing objects of unused hook
+		objects.forEach(obj => keyToObject[obj.key] = keyToObject[obj.key].filter(obj => obj.id !== id));
+	});
 
 	useEffect(() => {
-		objs.forEach(obj => {
-			if (!keys[obj.key]) keys[obj.key] = [];
-			keys[obj.key] = keys[obj.key].filter(cur => cur.ref.current);
-			keys[obj.key].push({priority: 0, id, ...obj});
+		objects.forEach(obj => {
+			if (!keyToObject[obj.key]) keyToObject[obj.key] = [];
+
+			// filtering out objects without the element on the page
+			keyToObject[obj.key] = keyToObject[obj.key].filter(obj => obj.ref.current);
+
+			keyToObject[obj.key].push({priority: 0, id, ...obj});
 		});
-	}, [objs]);
+	}, [objects]);
 };
 
 export default useKeyboard;

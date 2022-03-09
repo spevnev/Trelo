@@ -41,12 +41,12 @@ const UserIcon = styled.img`
 `;
 
 
-const Card = ({title, id, description, images, assigned, files, i, users}) => {
+const Card = ({title, id, description, images, assigned, files, idx, users}) => {
 	const navigate = useNavigate();
 
 
 	return (
-		<Draggable draggableId={id} index={i}>
+		<Draggable draggableId={id} index={idx}>
 			{provided => (
 				<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 					<CardContainer onClick={() => navigate(`${id}`)}>

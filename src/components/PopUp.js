@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
 import styled, {keyframes} from "styled-components";
 
-const popup = keyframes`
+const POPUPS_ANIMATION_MS = 500;
+
+const popupAnimation = keyframes`
   0% {
     transform: translate(-50%, -50%);
   }
@@ -11,7 +13,7 @@ const popup = keyframes`
   }
 `;
 
-const popout = keyframes`
+const popoutAnimation = keyframes`
   0% {
     transform: translate(-50%, -150%);
   }
@@ -20,6 +22,7 @@ const popout = keyframes`
     transform: translate(-50%, -50%);
   }
 `;
+
 
 const Container = styled.div`
   position: fixed;
@@ -35,12 +38,12 @@ const Container = styled.div`
   border-radius: 100px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 
-  &.in {
-    animation: ${popup} .5s ease-out;
+  &.popupAnimation {
+    animation: ${popupAnimation} ${POPUPS_ANIMATION_MS / 1000}s ease-out;
   }
 
-  &.out {
-    animation: ${popout} .5s ease-out;
+  &.popoutAnimation {
+    animation: ${popoutAnimation} ${POPUPS_ANIMATION_MS / 1000}s ease-out;
   }
 `;
 
@@ -63,23 +66,29 @@ const PopUp = ({children, isShown}) => {
 	useEffect(() => {
 		if (isShown) {
 			setIsShownLocal(true);
-			setClasses("in");
-			timeout = setTimeout(() => setClasses(""), 550);
+			setClasses("popupAnimation");
+
+			timeout = setTimeout(() => {
+				setClasses("");
+			}, POPUPS_ANIMATION_MS + 50);
 		} else {
-			setClasses("out");
+			setClasses("popoutAnimation");
+
 			timeout = setTimeout(() => {
 				setClasses("");
 				setIsShownLocal(false);
-			}, 480);
+			}, POPUPS_ANIMATION_MS - 20);
 		}
 	}, [isShown]);
 
 
-	return (<>{isShownLocal &&
+	if (!isShownLocal) return null;
+
+	return (
 		<Container className={classes}>
 			<Text>{children}</Text>
 		</Container>
-	}</>);
+	);
 };
 
 export default PopUp;

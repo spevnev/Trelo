@@ -34,8 +34,8 @@ const SelectInput = forwardRef(({initialOption, options, onSelect, className}, r
 		<StyledSelect ref={ref} onChange={e => onSelect(e.target.value)}>
 			<option value={initialOption.value}>{initialOption.text}</option>
 
-			{options.map(cur =>
-				<option value={cur.value} key={cur.value}>{cur.text}</option>,
+			{options.map(option =>
+				<option value={option.value} key={option.value}>{option.text}</option>,
 			)}
 		</StyledSelect>
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Form, StyledButton, SubContainer, Text} from "./styles";
-import Input from "../../components/Input";
+import {Form, SecondaryText, StyledButton, SubContainer, Text} from "./styles";
+import Input from "../../components/StyledInput";
 import ErrorMessage from "../../components/ErrorMessage";
 import {useDispatch} from "react-redux";
 import {login} from "../../redux/actionCreators/userActionCreator";
@@ -37,9 +37,9 @@ const LoginForm = () => {
 
 
 	return (
-		<SubContainer background="fff" colour="000">
+		<SubContainer background="#fff" colour="#000">
 			<Text>Log in</Text>
-			<Text secondary>Already signed up?</Text>
+			<SecondaryText>Already signed up?</SecondaryText>
 
 			<Form ref={ref}>
 				<Input placeholder="Username" maxLength="25" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
