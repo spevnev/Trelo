@@ -8,4 +8,4 @@ export const deleteCard = axios => (boardId, id) => request(axios.delete(`/card/
 
 export const addFiles = axios => (boardId, cardId, files) => request(axios.post("/card/addFiles", {boardId, cardId, files}));
 export const deleteFile = axios => (boardId, url) => request(axios.post("/card/deleteFile", {boardId, url}));
-export const renameFile = axios => (boardId, filename, url) => request(axios.put("/card/renameFile", {boardId, url, filename}));
+export const renameFile = axios => (boardId, file) => request(axios.put("/card/renameFile", {boardId, file}));

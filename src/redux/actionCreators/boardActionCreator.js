@@ -93,7 +93,7 @@ export const createList = (boardId, id, title) => (dispatch, getState, {board}) 
 	order++;
 
 	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order}]}));
-	board.createList(boardId, id, title, order);
+	board.createList(boardId, {id, title, order});
 };
 
 export const deleteList = (boardId, id) => (dispatch, getState, {board}) => {
