@@ -9,6 +9,7 @@ import {addFiles, deleteFile} from "../../redux/actionCreators/cardActionCreator
 import bundle from "../../services/";
 import PopUp from "../../components/PopUp";
 import {CardContext} from "./index";
+import schema from "../../schema";
 
 const ErrorMessage = styled.p`
   font-size: 12px;
@@ -70,7 +71,7 @@ const File = ({filename, url}) => {
 	const dispatch = useDispatch();
 
 
-	const downloadFile = () => bundle.file.downloadFile(url, filename);
+	const downloadFile = () => bundle.fileAPI.downloadFile(url, filename);
 
 	const rename = e => {
 		if (e.target.value.length === 0) setMsg("File name can't be empty!");
@@ -136,7 +137,7 @@ const FileInput = ({setUploading}) => {
 
 	return (
 		<>
-			<input maxLength={32} ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile} multiple/>
+			<input maxLength={schema.fileTitle.max} ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile} multiple/>
 			<label htmlFor="uploadFile" onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>
 				{overlay ? <DropOverlay>Drop here to add file</DropOverlay> : <AddFile>Add file</AddFile>}
 			</label>
@@ -162,7 +163,7 @@ const Files = () => {
 			<BlockContainer>
 				{state.files.map(file => <File key={file.url} {...file}/>)}
 
-				{state.files.length < 10 && <FileInput setUploading={setUploading}/>}
+				{state.files.length < schema.files.maxLength && <FileInput setUploading={setUploading}/>}
 			</BlockContainer>
 
 			<PopUp isShown={isShown}>Uploading file... It might take a few seconds.</PopUp>

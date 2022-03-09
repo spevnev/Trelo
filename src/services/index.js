@@ -10,13 +10,13 @@ const client = axios.create({baseURL: `${config.BACKEND}/api/`});
 
 client.interceptors.request.use(req => {
 	const token = getToken();
-	if (token !== null) req.headers.authorization = token;
+	if (token) req.headers.authorization = token;
 	return req;
 });
 
 
 const bundle = {
-	board: {
+	boardAPI: {
 		getBoard: getBoard(client),
 		createBoard: createBoard(client),
 		createList: createList(client),
@@ -27,7 +27,7 @@ const bundle = {
 		deleteBoard: deleteBoard(client),
 		deleteList: deleteList(client),
 		deleteUser: deleteUser(client),
-	}, card: {
+	}, cardAPI: {
 		getCards: getCards(client),
 		addCard: addCard(client),
 		addFiles: addFiles(client),
@@ -36,7 +36,7 @@ const bundle = {
 		renameFile: renameFile(client),
 		deleteCard: deleteCard(client),
 		deleteFile: deleteFile(client),
-	}, user: {
+	}, userAPI: {
 		fetchData: fetchData(client),
 		signup: signup(client),
 		uploadIcon: uploadIcon(client),
@@ -44,7 +44,7 @@ const bundle = {
 		changeBoards: changeBoards(client),
 		leave: leave(client),
 		toggleFavourite: toggleFavourite(client),
-	}, file: {
+	}, fileAPI: {
 		uploadFiles: uploadFiles(client),
 		downloadFile: downloadFile(client),
 	},

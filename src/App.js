@@ -17,7 +17,7 @@ const App = () => {
 
 
 	useEffect(() => {
-		if (getToken() !== null && !user.boards) dispatch(fetchUser());
+		if (getToken() && !user.boards) dispatch(fetchUser());
 	}, [user]);
 
 

@@ -9,6 +9,7 @@ import useKeyboard from "../../hooks/useKeyboard";
 import bundle from "../../services";
 import CropOverlay from "./CropOverlay";
 import PopUp from "../../components/PopUp";
+import {validatePassword, validateUsername} from "../../schema";
 
 const Button = styled(StyledButton)`
   background: #4040ff;
@@ -70,7 +71,7 @@ const UserIcon = ({setIcon, error}) => {
 		setPreview(data);
 		setShown(true);
 
-		bundle.user.uploadIcon(data)
+		bundle.userAPI.uploadIcon(data)
 			.then(res => {
 				setIcon(res.url);
 				setShown(false);
@@ -115,15 +116,14 @@ const SignupForm = () => {
 	};
 
 	const submit = () => {
-		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
-		if (formState.username.length > 25) return error("Username can't be longer than 25 characters!");
-		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
-		if (formState.password.length > 64) return error("Password can't be longer than 64 characters!");
-		if (formState.password !== formState.confirm) return error("Passwords don't match!");
-		if (icon.length === 0) return error("You must have icon!");
+		if (!validateUsername(formState.username, error)) return;
 
-		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, error, () => {
-		}));
+		if (formState.password !== formState.confirm) return error("Passwords don't match!");
+		if (!validatePassword(formState.password, error)) return;
+
+		if (!icon) return error("You must have icon!");
+
+		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, error));
 	};
 
 

@@ -38,8 +38,6 @@ const Delete = styled.img`
 `;
 
 
-const isCardEmpty = card => card.title.length === 0 && card.description.length === 0 && card.assigned.length === 0 && card.images.length === 0 && card.files.length === 0;
-
 export const CardContext = createContext(null);
 
 let timeout = null;
@@ -62,27 +60,27 @@ const CardDescription = () => {
 
 	const [pageState, state, setState, isSaved, setSaved, clearTimer] = usePageState(
 		() => {
-			if (board && card && board.status === "READY") return card;
+			if (card && board && board.status === "READY") return card;
 
-			if (board === null) dispatch(fetchBoard(boardId));
-			return null;
+			if (!board) dispatch(fetchBoard(boardId));
 		},
 		() => !window.location.href.includes("new") && dispatch(fetchBoard(boardId, false)),
 		() => !board || !card || board.status === "ERROR", "This card doesn't exist!",
-		() => board.status === "LOADING",
+		() => board && board.status === "LOADING",
 		card,
 		state => {
 			dispatch(changeCard(boardId, state));
 
-			if (card === null) return;
-			[...state.files].filter(cur => card.files.filter(f => cur.url === f.url && cur.filename !== f.filename).length !== 0).forEach(file => {
-				bundle.card.renameFile(boardId, file);
-			});
+			if (card) [...state.files]
+				.filter(cur => card.files.filter(f => cur.url === f.url && cur.filename !== f.filename).length > 0)
+				.forEach(file => bundle.cardAPI.renameFile(boardId, file));
 		},
 	);
 
 	if (pageState) return pageState;
 
+
+	const isCardEmpty = card => card.title.length === 0 && card.description.length === 0 && card.assigned.length === 0 && card.images.length === 0 && card.files.length === 0;
 
 	const openModal = text => {
 		setText(text);

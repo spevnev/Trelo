@@ -8,6 +8,7 @@ import useKeyboard from "../../hooks/useKeyboard";
 import PopUp from "../../components/PopUp";
 import {CardContext} from "./index";
 import ScreenOverlay from "../../components/ScreenOverlay";
+import schema from "../../schema";
 
 const Block = styled.div`
   min-width: 200px;
@@ -126,7 +127,7 @@ const Image = ({openFull, url}) => {
 
 	const downloadImageLocal = e => {
 		e.stopPropagation();
-		bundle.file.downloadFile(url);
+		bundle.fileAPI.downloadFile(url);
 	};
 
 
@@ -168,7 +169,7 @@ const ImageInput = ({setUploading}) => {
 			reader.onload = () => {
 				arr.push(reader.result);
 				if (arr.length === files.length) {
-					bundle.file.uploadFiles(board.id, arr).then(([error, images]) => {
+					bundle.fileAPI.uploadFiles(board.id, arr).then(([error, images]) => {
 						setUploading(false);
 						if (!error) setState({...stateVar, images: [...stateVar.images, ...images]});
 					});
@@ -211,7 +212,7 @@ const Images = () => {
 			<BlockContainer>
 				{state.images.map(cur => <Image openFull={openFull} key={cur} url={cur}/>)}
 
-				{state.images.length < 10 && <ImageInput setUploading={setUploading}/>}
+				{state.images.length < schema.images.maxLength && <ImageInput setUploading={setUploading}/>}
 			</BlockContainer>
 
 			<PopUp isShown={isShown}>Uploading image... It might take a few seconds.</PopUp>

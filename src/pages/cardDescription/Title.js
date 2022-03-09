@@ -6,6 +6,7 @@ import {CardContext} from "./index";
 import {getCards} from "../../redux/selectors";
 import {useDispatch, useSelector} from "react-redux";
 import {changeCard} from "../../redux/actionCreators/cardActionCreator";
+import schema from "../../schema";
 
 const Row = styled.div`
   display: flex;
@@ -44,7 +45,8 @@ const Title = () => {
 	return (
 		<Container>
 			<SubTitle>Title</SubTitle>
-			<HiddenInput maxLength="64" placeholder="Card title" onChange={e => setState({title: e.target.value})} value={state.title}/>
+
+			<HiddenInput maxLength={schema.cardTitle.max} placeholder="Card title" onChange={e => setState({title: e.target.value})} value={state.title}/>
 			<Row>
 				is #
 				<Select onSelect={reorder} initialOption={{text: state.order + 1, value: state.order}}

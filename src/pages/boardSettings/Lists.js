@@ -11,6 +11,7 @@ import {createList, deleteList} from "../../redux/actionCreators/boardActionCrea
 import useKeyboard from "../../hooks/useKeyboard";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import dragIcon from "../../assets/svg/drag-indicator.svg";
+import schema from "../../schema";
 
 const ListElContainer = styled.div`
   display: flex;
@@ -61,7 +62,7 @@ const Row = styled.div`
 
 const ListEl = ({title, id, order, deleteEl, changeEl, dragProps}) => (
 	<ListElContainer style={{order}}>
-		<HiddenInput fontSize="20px" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength="20"/>
+		<HiddenInput fontSize="20px" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength={schema.listTitle.max}/>
 
 		<Row>
 			<Icon src={dragIcon} {...dragProps}/>
@@ -120,12 +121,13 @@ const Lists = ({lists, boardId, setState}) => {
 							</div>
 						}</Draggable>
 					))}
+
 					{provided.placeholder}
 				</Column>
 			)}</Droppable></DragDropContext>
 
 			<NewList>
-				<Input ref={ref} placeholder="List title" maxLength="20" onChange={e => setNewList(e.target.value)} value={newList}/>
+				<Input ref={ref} placeholder="List title" maxLength={schema.listTitle.max} onChange={e => setNewList(e.target.value)} value={newList}/>
 				<Button onClick={addEl}>Add</Button>
 			</NewList>
 		</SubContainer>

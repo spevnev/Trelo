@@ -4,7 +4,7 @@ import PageError from "../components/PageError";
 import config from "../config";
 
 let timeout = null;
-let externalState = null;
+let currentState = null; // to handle edge case - on exit the state variable goes to default value (null)
 const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, debounce) => {
 	const [state, setState] = useState(initState());
 	const [isSaved, setIsSaved] = useState(true);
@@ -20,7 +20,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	}, []);
 
 	useEffect(() => {
-		externalState = deps;
+		currentState = deps;
 		setState(deps);
 	}, !deps ? [{}] : [deps]);
 
@@ -35,10 +35,10 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	};
 
 
-	const saveChanges = () => debounce(externalState);
+	const saveChanges = () => debounce(currentState);
 
 	const startTimer = state => {
-		if (timeout !== null) clearTimeout(timeout);
+		if (timeout) clearTimeout(timeout);
 
 		timeout = setTimeout(() => {
 			debounce(state);
@@ -53,7 +53,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 		if (timer) startTimer(newState);
 
-		externalState = newState;
+		currentState = newState;
 		setState(newState);
 		setIsSaved(false);
 	};
@@ -61,8 +61,8 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 
 	let pageState = null;
 	if (isForceLoading) pageState = <PageLoading/>;
-	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 	else if (isLoading()) pageState = <PageLoading/>;
+	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 
 	return [pageState, state, changeState, isSaved && isForceSaved, setIsForceSaved, clearTimer, saveChanges];
 };

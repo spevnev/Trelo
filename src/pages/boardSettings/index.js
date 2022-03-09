@@ -33,9 +33,8 @@ const DeleteText = styled.p`
 `;
 
 
-const isEmpty = state => state.title.length === 0 && state.lists.length === 0 && state.users.length === 1;
-
 let timeout = null;
+let currentBoard = {}; // idk why, but board variable inside saveChanges function isn't latest, unlike this one
 const BoardSettings = () => {
 	const [modalText, setModalText] = useState("Are you sure you want to delete this board?");
 	const [isModalOpened, setIsModalOpen] = useState(false);
@@ -54,6 +53,10 @@ const BoardSettings = () => {
 
 	useEffect(() => () => clearTimeout(timeout), []);
 
+	useEffect(() => {
+		currentBoard = board;
+	}, [board]);
+
 	const [pageState, state, setState, isSaved, , clearTimer, saveChanges] = usePageState(
 		() => {
 			if (board && board.status === "READY") return board;
@@ -63,14 +66,18 @@ const BoardSettings = () => {
 				if (boards.length === 1 && !boards[0].isOwner) navigate("../");
 			}
 
-			if (board === null) dispatch(fetchBoard(boardId));
-			return null;
+			if (!board) dispatch(fetchBoard(boardId));
 		},
 		() => dispatch(fetchBoard(boardId, false)),
 		() => !board || board.status === "ERROR", "This board doesn't exist or you aren't a member of it!",
 		() => board.status === "LOADING",
 		board,
 		state => {
+			if (currentBoard.lists) {
+				const boardListIds = currentBoard.lists.map(list => list.id);
+				state.lists = state.lists.filter(list => boardListIds.indexOf(list.id) !== -1);
+			}
+
 			dispatch(changeBoard(boardId, state));
 
 			if (user.boards && user.boards.filter(cur => cur.id === boardId).length === 1) {
@@ -78,15 +85,16 @@ const BoardSettings = () => {
 				dispatch(changeBoards(user.boards.map(cur => cur.id === state.id ? {...cur, title: state.title, isOwner: curUser.isOwner} : cur)));
 			}
 
-			if (board === null) return;
-			[...state.lists].filter(cur => board.lists.filter(l => cur.id === l.id && (cur.title !== l.title || cur.order !== l.order)).length !== 0).forEach(list => {
-				bundle.board.changeList(boardId, list);
-			});
+			if (board) [...state.lists]
+				.filter(cur => board.lists.filter(l => cur.id === l.id && (cur.title !== l.title || cur.order !== l.order)).length > 0)
+				.forEach(list => bundle.boardAPI.changeList(boardId, list));
 		},
 	);
 
 	if (pageState) return pageState;
 
+
+	const isEmpty = state => state.title.length === 0 && state.lists.length === 0 && state.users.length === 1;
 
 	const goBack = () => {
 		if (!isSaved) saveChanges();

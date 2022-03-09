@@ -45,6 +45,12 @@ const Card = ({title, id, description, images, assigned, files, idx, users}) => 
 	const navigate = useNavigate();
 
 
+	const hasDescription = description.length > 0;
+	const hasImage = images.length === 1;
+	const hasImages = images.length > 0;
+	const hasFile = files.length === 1;
+	const hasFiles = files.length > 0;
+
 	return (
 		<Draggable draggableId={id} index={idx}>
 			{provided => (
@@ -54,9 +60,9 @@ const Card = ({title, id, description, images, assigned, files, idx, users}) => 
 
 						<SubContainer>
 							<div>
-								{description.length > 0 && <Icon src={textIcon}/>}
-								{images.length > 0 && (images.length === 1 ? <Icon src={imageIcon}/> : <Icon src={imagesIcon}/>)}
-								{files.length > 0 && (files.length === 1 ? <Icon src={fileIcon}/> : <Icon src={filesIcon}/>)}
+								{hasDescription && <Icon src={textIcon}/>}
+								{hasImages && <Icon src={hasImage ? imageIcon : imagesIcon}/>}
+								{hasFiles && <Icon src={hasFile ? fileIcon : filesIcon}/>}
 							</div>
 
 							<div>

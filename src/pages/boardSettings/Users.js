@@ -11,6 +11,7 @@ import {useNavigate} from "react-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import {addUser, changeRole, deleteUser} from "../../redux/actionCreators/boardActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
+import schema, {validateUsername} from "../../schema";
 
 const UserContainer = styled.div`
   display: flex;
@@ -64,7 +65,6 @@ const Username = styled.p`
 
 const user = {value: "user", text: "User"};
 const owner = {value: "owner", text: "Owner"};
-
 const User = ({username, icon, isOwner, deleteUser, changeRole}) => (
 	<UserContainer style={{order: isOwner ? 1 : 0}}>
 		<div>
@@ -136,11 +136,10 @@ const Users = ({users, boardId, setState, open}) => {
 	};
 
 	const newUser = () => {
-		if (newUsername.length < 4) return error("Username can't be less than 4 characters!");
-		if (newUsername.length > 25) return error("Username can't be longer than 25 characters!");
-		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length !== 0) return error("This user is already in the board!");
-		setNewUsername("");
+		if (!validateUsername(newUsername, error)) return;
+		if (users.filter(cur => cur.username === newUsername.toLowerCase()).length > 0) return error("This user is already in the board!");
 
+		setNewUsername("");
 		dispatch(addUser(boardId, newUsername.toLowerCase(), data => setState({users: [...users, {...data, isOwner: false}]}), error));
 	};
 
@@ -158,7 +157,7 @@ const Users = ({users, boardId, setState, open}) => {
 			<ErrorMessage>{msg}</ErrorMessage>
 
 			<NewUser>
-				<Input ref={ref} maxLength="25" placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
+				<Input ref={ref} maxLength={schema.username.max} placeholder="Username" value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
 				<Button onClick={newUser}>Add</Button>
 			</NewUser>
 		</SubContainer>

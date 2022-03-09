@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {Container, SubTitle} from "./styles";
 import {CardContext} from "./index";
 import Textarea from "react-textarea-autosize";
+import schema from "../../schema";
 
 const DescriptionInput = styled(Textarea)`
   background: #f4f4f4;
@@ -30,7 +31,7 @@ const Description = () => {
 	return (
 		<Container>
 			<SubTitle>Description</SubTitle>
-			<DescriptionInput maxRows="10" minRows="4" maxLength="2000"
+			<DescriptionInput maxRows="10" minRows="4" maxLength={schema.description.max}
 							  onChange={e => setState({description: e.target.value})} value={state.description}
 							  placeholder="Description"/>
 		</Container>

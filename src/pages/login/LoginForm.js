@@ -6,6 +6,7 @@ import {useDispatch} from "react-redux";
 import {login} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import {useNavigate} from "react-router";
+import schema, {validatePassword, validateUsername} from "../../schema";
 
 let timeout = null;
 const LoginForm = () => {
@@ -27,10 +28,8 @@ const LoginForm = () => {
 	};
 
 	const submit = () => {
-		if (formState.username.length < 4) return error("Username can't be less than 4 characters!");
-		if (formState.username.length > 25) return error("Username can't be longer than 25 characters!");
-		if (formState.password.length < 4) return error("Password can't be less than 4 characters!");
-		if (formState.password.length > 64) return error("Password can't be longer than 64 characters!");
+		if (!validateUsername(formState.username, error)) return;
+		if (!validatePassword(formState.password, error)) return;
 
 		dispatch(login(formState.username.toLowerCase(), formState.password, error, () => navigate("/")));
 	};
@@ -42,8 +41,9 @@ const LoginForm = () => {
 			<SecondaryText>Already signed up?</SecondaryText>
 
 			<Form ref={ref}>
-				<Input placeholder="Username" maxLength="25" onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
-				<Input type="password" placeholder="Password" maxLength="64" onChange={e => setFormState({...formState, password: e.target.value})} value={formState.password}/>
+				<Input placeholder="Username" maxLength={schema.username.max} onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
+				<Input type="password" placeholder="Password" maxLength={schema.password.max} onChange={e => setFormState({...formState, password: e.target.value})}
+					   value={formState.password}/>
 
 				<ErrorMessage fixedHeight>{msg}</ErrorMessage>
 

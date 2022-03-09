@@ -13,23 +13,23 @@ const emptyBoard = (id, user) => ({
 
 const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}});
 
-export const fetchBoard = (id, updateState = true) => async (dispatch, getState, {board, card}) => {
+export const fetchBoard = (id, updateState = true) => async (dispatch, getState, {boardAPI, cardAPI}) => {
 	if (updateState) dispatch(addBoard({id, status: "LOADING"}));
 
-	const cards = await card.getCards(id);
-	const brd = await board.getBoard(id);
-	if (brd === null || cards === null) return dispatch(setStatus(id, "ERROR"));
+	const cards = await cardAPI.getCards(id);
+	const board = await boardAPI.getBoard(id);
+	if (!board || !cards) return dispatch(setStatus(id, "ERROR"));
 
 	dispatch(addCardBoard(id, cards.cards));
-	dispatch(addBoard({...brd, status: "READY"}));
+	dispatch(addBoard({...board, status: "READY"}));
 };
 
-export const newBoard = (id, onSuccess) => async (dispatch, getState, {board}) => {
+export const newBoard = (id, onSuccess) => async (dispatch, getState, {boardAPI}) => {
 	const user = getUser()(getState());
 	const boardObject = emptyBoard(id, user);
 
 	try {
-		await board.createBoard(boardObject);
+		await boardAPI.createBoard(boardObject);
 		onSuccess();
 
 		dispatch(addCardBoard(id, []));
@@ -41,8 +41,8 @@ export const newBoard = (id, onSuccess) => async (dispatch, getState, {board}) =
 
 export const addBoard = board => ({type: types.addBoard, payload: {board}});
 
-export const deleteBoard = (id, onSuccess) => async (dispatch, getState, {board}) => {
-	await board.deleteBoard(id);
+export const deleteBoard = (id, onSuccess) => async (dispatch, getState, {boardAPI}) => {
+	await boardAPI.deleteBoard(id);
 	onSuccess();
 
 	dispatch(changeBoards(getUserBoards()(getState()).filter(cur => cur.id !== id)));
@@ -54,8 +54,8 @@ export const deleteBoard = (id, onSuccess) => async (dispatch, getState, {board}
 	});
 };
 
-export const changeBoard = (id, newBoard) => (dispatch, getState, {board}) => {
-	if (newBoard && newBoard.title.length > 0 && getBoard(id)(getState()).title !== newBoard.title) board.changeTitle(id, newBoard.title);
+export const changeBoard = (id, newBoard) => (dispatch, getState, {boardAPI}) => {
+	if (newBoard && newBoard.title && getBoard(id)(getState()).title !== newBoard.title) boardAPI.changeTitle(id, newBoard.title);
 
 	dispatch({
 		type: types.changeBoard,
@@ -63,8 +63,8 @@ export const changeBoard = (id, newBoard) => (dispatch, getState, {board}) => {
 	});
 };
 
-export const addUser = (id, username, onSuccess, onError) => async (dispatch, getState, {board}) => {
-	const [error, data] = await board.addUser(username, id);
+export const addUser = (id, username, onSuccess, onError) => async (dispatch, getState, {boardAPI}) => {
+	const [error, data] = await boardAPI.addUser(username, id);
 	if (error) return onError(error);
 
 	onSuccess(data);
@@ -72,33 +72,33 @@ export const addUser = (id, username, onSuccess, onError) => async (dispatch, ge
 	dispatch(changeBoard(id, {...boardData, users: [...boardData.users, {...data, isOwner: false}]}));
 };
 
-export const deleteUser = (id, username) => (dispatch, getState, {board}) => {
+export const deleteUser = (id, username) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(id)(getState());
 
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.filter(cur => cur.username !== username)}));
-	board.deleteUser(username, id);
+	boardAPI.deleteUser(username, id);
 };
 
-export const changeRole = (id, username, isOwner) => (dispatch, getState, {board}) => {
+export const changeRole = (id, username, isOwner) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(id)(getState());
 
 	dispatch(changeBoard(id, {...boardData, users: boardData.users.map(cur => cur.username === username ? {...cur, isOwner} : cur)}));
-	board.changeRole(id, username, isOwner);
+	boardAPI.changeRole(id, username, isOwner);
 };
 
-export const createList = (boardId, id, title) => (dispatch, getState, {board}) => {
+export const createList = (boardId, id, title) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(boardId)(getState());
 	let order = -1;
 	boardData.lists.forEach(cur => order = Math.max(cur.order, order));
 	order++;
 
 	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order}]}));
-	board.createList(boardId, {id, title, order});
+	boardAPI.createList(boardId, {id, title, order});
 };
 
-export const deleteList = (boardId, id) => (dispatch, getState, {board}) => {
+export const deleteList = (boardId, id) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(boardId)(getState());
 
 	dispatch(changeBoard(boardId, {...boardData, lists: boardData.lists.filter(cur => cur.id !== id)}));
-	board.deleteList(boardId, id);
+	boardAPI.deleteList(boardId, id);
 };

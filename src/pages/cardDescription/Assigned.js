@@ -16,15 +16,16 @@ const User = styled.img`
 `;
 
 
-const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
-const composeUsername = (user, assigned) => `${capitalize(user.username)}${assigned.filter(cur => cur.username === user.username).length === 0 ? " - ✓" : " - ✘"}`;
-
 const Assigned = () => {
 	const {state, board, setState} = useContext(CardContext);
 	const ref = useRef();
 
 	const assigned = board.users.filter(cur => state.assigned.indexOf(cur.username) !== -1);
 
+
+	const capitalizeString = str => str.charAt(0).toUpperCase() + str.slice(1);
+
+	const composeUsername = (user, assigned) => `${capitalizeString(user.username)}${assigned.filter(cur => cur.username === user.username).length === 0 ? " - ✓" : " - ✘"}`;
 
 	const addUser = username => setState({assigned: [...state.assigned, username]});
 

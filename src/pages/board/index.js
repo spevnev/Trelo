@@ -52,7 +52,7 @@ const Board = () => {
 
 
 	useEffect(() => {
-		if (board === null) dispatch(fetchBoard(boardId));
+		if (!board) dispatch(fetchBoard(boardId));
 	}, []);
 
 	if (!board || board.status === "LOADING") return <PageLoading/>;
@@ -82,7 +82,7 @@ const Board = () => {
 			});
 		}
 
-		if (order.length !== 0) dispatch(reorderCards(boardId, order));
+		if (order.length > 0) dispatch(reorderCards(boardId, order));
 		if (srcListId === dstListId && srcInd === dstListId) return;
 		dispatch(changeCard(boardId, {...cards.filter(cur => cur.id === cardId)[0], listId: dstListId, order: dstInd}));
 	};

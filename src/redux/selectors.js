@@ -1,5 +1,6 @@
 export const getUser = () => state => state.user;
 
+export const getUserBoards = () => state => state.user.boards;
 
 export const getBoard = id => state => {
 	const board = state.board.filter(cur => cur.id === id);
@@ -8,14 +9,9 @@ export const getBoard = id => state => {
 	return board[0];
 };
 
-export const getUserBoards = () => state => state.user.boards;
-
-export const getBoards = () => state => state.board;
-
-
 export const getCard = (boardId, cardId) => state => {
 	const cards = getCards(boardId)(state);
-	if (cards === null) return null;
+	if (!cards) return null;
 
 	const card = cards.filter(cur => cur.id === cardId);
 	if (card.length !== 1) return null;
