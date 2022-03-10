@@ -6,7 +6,7 @@ import {ReactComponent as StarFull} from "../../assets/svg/star-full.svg";
 import {ReactComponent as Cog} from "../../assets/svg/cog.svg";
 import {ReactComponent as Exit} from "../../assets/svg/exit.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {leave, toggleFavourite} from "../../redux/actionCreators/userActionCreator";
+import {Leave, ToggleFavourite} from "../../redux/actionCreators/userActionCreator";
 import {getUser} from "../../redux/selectors";
 
 const NavBarContainer = styled.div`
@@ -38,26 +38,25 @@ const Title = styled.p`
 const NavBar = ({board}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const boards = useSelector(getUser()).boards;
+	const boards = useSelector(getUser()).boards || [];
 
 
 	const leaveBoard = () => {
-		dispatch(leave(board.id));
+		dispatch(Leave(board.id));
 		navigate("/");
 	};
 
 
-	if (!boards) return null;
-
-	const userBoard = boards.filter(cur => cur.id === board.id);
+	let userBoard = boards.filter(board => board.id === board.id);
 	if (userBoard.length !== 1) return null;
+	userBoard = userBoard[0];
 
 
 	return (
 		<NavBarContainer>
 			<NavEl><Title>{board.title}</Title></NavEl>
-			<NavEl onClick={() => dispatch(toggleFavourite(board.id))}>{userBoard[0].isFavourite ? <StarFull/> : <StarEmpty/>}</NavEl>
-			{userBoard[0].isOwner ?
+			<NavEl onClick={() => dispatch(ToggleFavourite(board.id))}>{userBoard.isFavourite ? <StarFull/> : <StarEmpty/>}</NavEl>
+			{userBoard.isOwner ?
 				<NavEl><Cog onClick={() => navigate("settings")}/></NavEl>
 				:
 				<NavEl><Exit style={{marginLeft: 2, width: "18px"}} onClick={leaveBoard}/></NavEl>

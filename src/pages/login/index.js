@@ -80,15 +80,15 @@ const Link = styled.p`
 
 
 const Compact = () => {
-	const [isLogin, setLogin] = useState(true);
+	const [isLoginVisible, setIsLoginVisible] = useState(true);
 
 
-	if (isLogin) return (
+	if (isLoginVisible) return (
 		<SmallWrapper>
 			<LoginForm/>
 			<LinkContainer background="#f0f0f0">
 				<p>Don't have account yet?</p>
-				<Link onClick={() => setLogin(false)}>Sign up</Link>
+				<Link onClick={() => setIsLoginVisible(false)}>Sign up</Link>
 			</LinkContainer>
 		</SmallWrapper>
 	);
@@ -98,7 +98,7 @@ const Compact = () => {
 			<SignupForm/>
 			<LinkContainer background="#c0c0c0">
 				<p>Already have an account?</p>
-				<Link onClick={() => setLogin(true)}>Log in</Link>
+				<Link onClick={() => setIsLoginVisible(true)}>Log in</Link>
 			</LinkContainer>
 		</SmallWrapper>
 	);

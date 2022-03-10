@@ -5,7 +5,7 @@ import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
 import HiddenInput from "../../components/HiddenInput";
 import {useDispatch} from "react-redux";
-import {addFiles, deleteFile} from "../../redux/actionCreators/cardActionCreator";
+import {AddFiles, DeleteFile} from "../../redux/actionCreators/cardActionCreator";
 import bundle from "../../services/";
 import PopUp from "../../components/PopUp";
 import {CardContext} from "./index";
@@ -66,18 +66,16 @@ const DropOverlay = styled(AddFile)`
 
 
 const File = ({filename, url}) => {
+	const dispatch = useDispatch();
 	const {board, state, setState} = useContext(CardContext);
 	const [msg, setMsg] = useState(null);
-	const dispatch = useDispatch();
 
-
-	const downloadFile = () => bundle.fileAPI.downloadFile(url, filename);
 
 	const rename = e => {
-		if (e.target.value.length === 0) setMsg("File name can't be empty!");
+		if (!e.target.value) setMsg("File name can't be empty!");
 		else setMsg(null);
 
-		setState({...state, files: state.files.map(cur => cur.url === url ? {...cur, filename: e.target.value} : cur)});
+		setState({...state, files: state.files.map(file => file.url === url ? {...file, filename: e.target.value} : file)});
 	};
 
 
@@ -85,8 +83,9 @@ const File = ({filename, url}) => {
 		<>
 			<FileContainer>
 				<HiddenInput placeholder="File name" onChange={rename} value={filename}/>
-				<Icon src={download} onClick={downloadFile}/>
-				<Icon src={cross} onClick={() => dispatch(deleteFile(board.id, state.id, url))}/>
+
+				<Icon src={download} onClick={() => bundle.fileAPI.downloadFile(url, filename)}/>
+				<Icon src={cross} onClick={() => dispatch(DeleteFile(board.id, state.id, url))}/>
 			</FileContainer>
 
 			<ErrorMessage>{msg}</ErrorMessage>
@@ -96,10 +95,9 @@ const File = ({filename, url}) => {
 
 let stateVar = null;
 const FileInput = ({setUploading}) => {
-	const {board, state, setState, overlay} = useContext(CardContext);
-	const input = useRef(null);
 	const dispatch = useDispatch();
-
+	const input = useRef(null);
+	const {board, state, setState, isOverlayVisible} = useContext(CardContext);
 
 	useEffect(() => stateVar = state, [state]);
 
@@ -125,7 +123,7 @@ const FileInput = ({setUploading}) => {
 			reader.onload = () => {
 				arr.push({filename: files[i].name, data: reader.result});
 				if (arr.length === files.length) {
-					dispatch(addFiles(board.id, state.id, arr, files => {
+					dispatch(AddFiles(board.id, state.id, arr, files => {
 						setUploading(false);
 						setState({...stateVar, files: [...stateVar.files, ...files]});
 					}));
@@ -137,9 +135,10 @@ const FileInput = ({setUploading}) => {
 
 	return (
 		<>
-			<input maxLength={schema.fileTitle.max} ref={input} style={{display: "none"}} id="uploadFile" type="file" accept="*/*" onChange={onFile} multiple/>
+			<input maxLength={schema.fileTitle.max} ref={input} style={{display: "none"}}
+				   id="uploadFile" type="file" accept="*/*" onChange={onFile} multiple/>
 			<label htmlFor="uploadFile" onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>
-				{overlay ? <DropOverlay>Drop here to add file</DropOverlay> : <AddFile>Add file</AddFile>}
+				{isOverlayVisible ? <DropOverlay>Drop here to add file</DropOverlay> : <AddFile>Add file</AddFile>}
 			</label>
 		</>
 	);

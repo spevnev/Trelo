@@ -7,7 +7,7 @@ import Button from "../../components/Button";
 import {Cancel, SubContainer, SubTitle} from "./styles";
 import {v4 as uuid} from "uuid";
 import Modal from "../../components/Modal";
-import {createList, deleteList} from "../../redux/actionCreators/boardActionCreator";
+import {CreateList, DeleteList} from "../../redux/actionCreators/boardActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import dragIcon from "../../assets/svg/drag-indicator.svg";
@@ -62,8 +62,8 @@ const Row = styled.div`
 
 const ListEl = ({title, id, order, deleteEl, changeEl, dragProps}) => (
 	<ListElContainer style={{order}}>
-		<HiddenInput fontSize="20px" placeholder="List title" onChange={e => changeEl(id, e.target.value)} value={title} maxLength={schema.listTitle.max}/>
-
+		<HiddenInput fontSize="20px" placeholder="List title" maxLength={schema.listTitle.max}
+					 onChange={e => changeEl(id, e.target.value)} value={title}/>
 		<Row>
 			<Icon src={dragIcon} {...dragProps}/>
 			<Modal onContinue={() => deleteEl(id)} text="If you delete this list, all cards in it will be deleted too!">
@@ -73,40 +73,45 @@ const ListEl = ({title, id, order, deleteEl, changeEl, dragProps}) => (
 	</ListElContainer>
 );
 
-const Lists = ({lists, boardId, setState}) => {
-	const [newList, setNewList] = useState("");
+const Lists = ({lists = [], boardId, setState}) => {
 	const dispatch = useDispatch();
 
-	const ref = useRef();
-	useKeyboard({ref, key: "enter", cb: () => addEl()});
+	const [newListTitle, setNewListTitle] = useState("");
+	const inputRef = useRef();
+
+	useKeyboard({ref: inputRef, key: "enter", cb: () => addEl()});
 
 
 	const addEl = () => {
-		setNewList("");
-		dispatch(createList(boardId, uuid(), newList));
+		setNewListTitle("");
+		dispatch(CreateList(boardId, uuid(), newListTitle));
 	};
 
-	const deleteEl = listId => dispatch(deleteList(boardId, listId));
+	const deleteEl = listId => dispatch(DeleteList(boardId, listId));
 
-	const changeEl = (listId, title) => setState({lists: lists.map(cur => cur.id === listId ? {...cur, title} : cur)});
+	const changeEl = (listId, title) => setState({lists: lists.map(list => list.id === listId ? {...list, title} : list)});
 
 	const onDragEnd = e => {
 		const srcInd = e.source.index;
 		const dstInd = e.destination.index;
 		const listId = e.draggableId;
 
+		const isBetweenSrcAndDst = order => order > srcInd && order <= dstInd;
+		const isBetweenDstAndSrc = order => order < srcInd && order >= dstInd;
+
 		setState({
-			lists: lists.map(cur => {
-				if (cur.id === listId) return {...cur, order: dstInd};
-				if (srcInd > dstInd && cur.order < srcInd && cur.order >= dstInd) return {...cur, order: cur.order + 1};
-				if (cur.order > srcInd && cur.order <= dstInd) return {...cur, order: cur.order - 1};
-				return cur;
+			lists: lists.map(list => {
+				if (list.id === listId) return {...list, order: dstInd};
+				if (srcInd > dstInd && isBetweenDstAndSrc(list.order)) return {...list, order: list.order + 1};
+				if (isBetweenSrcAndDst(list.order)) return {...list, order: list.order - 1};
+
+				return list;
 			}),
 		});
 	};
 
 
-	if (!lists) return null;
+	lists.sort((a, b) => a.order - b.order);
 
 	return (
 		<SubContainer>
@@ -114,10 +119,10 @@ const Lists = ({lists, boardId, setState}) => {
 
 			<DragDropContext onDragEnd={onDragEnd}><Droppable droppableId="id">{provided => (
 				<Column ref={provided.innerRef} {...provided.droppableProps}>
-					{lists.sort((a, b) => a.order - b.order).map((cur, idx) => (
-						<Draggable draggableId={cur.id} key={cur.id} index={idx}>{provided =>
+					{lists.map((list, idx) => (
+						<Draggable draggableId={list.id} key={list.id} index={idx}>{provided =>
 							<div ref={provided.innerRef} {...provided.draggableProps}>
-								<ListEl {...cur} dragProps={provided.dragHandleProps} deleteEl={deleteEl} changeEl={changeEl}/>
+								<ListEl {...list} dragProps={provided.dragHandleProps} deleteEl={deleteEl} changeEl={changeEl}/>
 							</div>
 						}</Draggable>
 					))}
@@ -127,7 +132,7 @@ const Lists = ({lists, boardId, setState}) => {
 			)}</Droppable></DragDropContext>
 
 			<NewList>
-				<Input ref={ref} placeholder="List title" maxLength={schema.listTitle.max} onChange={e => setNewList(e.target.value)} value={newList}/>
+				<Input ref={inputRef} placeholder="List title" maxLength={schema.listTitle.max} onChange={e => setNewListTitle(e.target.value)} value={newListTitle}/>
 				<Button onClick={addEl}>Add</Button>
 			</NewList>
 		</SubContainer>

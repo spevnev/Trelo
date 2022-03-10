@@ -5,7 +5,7 @@ import config from "../config";
 
 let timeout = null;
 let currentState = null; // to handle edge case - on exit the state variable goes to default value (null)
-const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, debounce) => {
+const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps = "", debounce, saveOnExit = true) => {
 	const [state, setState] = useState(initState());
 	const [isSaved, setIsSaved] = useState(true);
 	const [isForceSaved, setIsForceSaved] = useState(true);
@@ -22,18 +22,19 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	useEffect(() => {
 		currentState = deps;
 		setState(deps);
-	}, !deps ? [{}] : [deps]);
+	}, [deps]);
 
 	useEffect(() => () => saveChanges(), []);
 
 
 	window.onbeforeunload = () => {
-		if (!(isSaved && isForceSaved)) {
-			saveChanges();
-			return "";
-		}
+		if (!shouldSave()) return;
+
+		saveChanges();
+		return "";
 	};
 
+	const shouldSave = () => !(isSaved && isForceSaved);
 
 	const saveChanges = () => debounce(currentState);
 
@@ -64,7 +65,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps, deb
 	else if (isLoading()) pageState = <PageLoading/>;
 	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
 
-	return [pageState, state, changeState, isSaved && isForceSaved, setIsForceSaved, clearTimer, saveChanges];
+	return [pageState, state, changeState, setIsForceSaved, clearTimer];
 };
 
 export default usePageState;

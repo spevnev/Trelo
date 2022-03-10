@@ -1,9 +1,9 @@
 import types from "../actions/boardActions";
-import {addCardBoard, deleteCardBoard} from "./cardActionCreator";
-import {changeBoards} from "./userActionCreator";
+import {AddCardBoard, DeleteCardBoard} from "./cardActionCreator";
+import {ChangeBoards} from "./userActionCreator";
 import {getBoard, getUser, getUserBoards} from "../selectors";
 
-const emptyBoard = (id, user) => ({
+const newEmptyBoard = (id, user) => ({
 	title: "New Board",
 	id,
 	lists: [{title: "Backlog", id: "id1"}, {title: "Progress", id: "id2"}, {title: "Done", id: "id3"}],
@@ -13,40 +13,41 @@ const emptyBoard = (id, user) => ({
 
 const setStatus = (id, status) => ({type: types.setStatus, payload: {id, status}});
 
-export const fetchBoard = (id, updateState = true) => async (dispatch, getState, {boardAPI, cardAPI}) => {
-	if (updateState) dispatch(addBoard({id, status: "LOADING"}));
+export const FetchBoard = (id, updateState = true) => async (dispatch, getState, {boardAPI, cardAPI}) => {
+	if (updateState) dispatch(AddBoard({id, status: "LOADING"}));
 
 	const cards = await cardAPI.getCards(id);
 	const board = await boardAPI.getBoard(id);
 	if (!board || !cards) return dispatch(setStatus(id, "ERROR"));
 
-	dispatch(addCardBoard(id, cards.cards));
-	dispatch(addBoard({...board, status: "READY"}));
+	dispatch(AddCardBoard(id, cards.cards));
+	dispatch(AddBoard({...board, status: "READY"}));
 };
 
-export const newBoard = (id, onSuccess) => async (dispatch, getState, {boardAPI}) => {
+export const NewBoard = (id, onSuccess) => async (dispatch, getState, {boardAPI}) => {
 	const user = getUser()(getState());
-	const boardObject = emptyBoard(id, user);
+	const boardObject = newEmptyBoard(id, user);
 
 	try {
 		await boardAPI.createBoard(boardObject);
 		onSuccess();
 
-		dispatch(addCardBoard(id, []));
-		dispatch(addBoard({...boardObject, status: "READY"}));
-		dispatch(changeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
+		dispatch(AddCardBoard(id, []));
+		dispatch(AddBoard({...boardObject, status: "READY"}));
+		dispatch(ChangeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
 	} catch (e) {
 	}
 };
 
-export const addBoard = board => ({type: types.addBoard, payload: {board}});
+export const AddBoard = board => ({type: types.addBoard, payload: {board}});
 
-export const deleteBoard = (id, onSuccess) => async (dispatch, getState, {boardAPI}) => {
-	await boardAPI.deleteBoard(id);
-	onSuccess();
+export const DeleteBoard = (id, callback) => (dispatch, getState, {boardAPI}) => {
+	boardAPI.deleteBoard(id);
 
-	dispatch(changeBoards(getUserBoards()(getState()).filter(cur => cur.id !== id)));
-	dispatch(deleteCardBoard(id));
+	dispatch(ChangeBoards(getUserBoards()(getState()).filter(board => board.id !== id)));
+	dispatch(DeleteCardBoard(id));
+
+	callback();
 
 	dispatch({
 		type: types.deleteBoard,
@@ -54,8 +55,11 @@ export const deleteBoard = (id, onSuccess) => async (dispatch, getState, {boardA
 	});
 };
 
-export const changeBoard = (id, newBoard) => (dispatch, getState, {boardAPI}) => {
-	if (newBoard && newBoard.title && getBoard(id)(getState()).title !== newBoard.title) boardAPI.changeTitle(id, newBoard.title);
+export const ChangeBoard = (id, newBoard) => (dispatch, getState, {boardAPI}) => {
+	const hasTitle = board => board && board.title;
+
+	const prevBoard = getBoard(id)(getState()) || {};
+	if (hasTitle(newBoard) && prevBoard.title !== newBoard.title) boardAPI.changeTitle(id, newBoard.title);
 
 	dispatch({
 		type: types.changeBoard,
@@ -63,42 +67,42 @@ export const changeBoard = (id, newBoard) => (dispatch, getState, {boardAPI}) =>
 	});
 };
 
-export const addUser = (id, username, onSuccess, onError) => async (dispatch, getState, {boardAPI}) => {
+export const AddUser = (id, username, onSuccess, onError) => async (dispatch, getState, {boardAPI}) => {
 	const [error, data] = await boardAPI.addUser(username, id);
 	if (error) return onError(error);
 
 	onSuccess(data);
 	const boardData = getBoard(id)(getState());
-	dispatch(changeBoard(id, {...boardData, users: [...boardData.users, {...data, isOwner: false}]}));
+	dispatch(ChangeBoard(id, {...boardData, users: [...boardData.users, {...data, isOwner: false}]}));
 };
 
-export const deleteUser = (id, username) => (dispatch, getState, {boardAPI}) => {
+export const DeleteUser = (id, username) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(id)(getState());
 
-	dispatch(changeBoard(id, {...boardData, users: boardData.users.filter(cur => cur.username !== username)}));
+	dispatch(ChangeBoard(id, {...boardData, users: boardData.users.filter(user => user.username !== username)}));
 	boardAPI.deleteUser(username, id);
 };
 
-export const changeRole = (id, username, isOwner) => (dispatch, getState, {boardAPI}) => {
+export const ChangeRole = (id, username, isOwner) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(id)(getState());
 
-	dispatch(changeBoard(id, {...boardData, users: boardData.users.map(cur => cur.username === username ? {...cur, isOwner} : cur)}));
+	dispatch(ChangeBoard(id, {...boardData, users: boardData.users.map(user => user.username === username ? {...user, isOwner} : user)}));
 	boardAPI.changeRole(id, username, isOwner);
 };
 
-export const createList = (boardId, id, title) => (dispatch, getState, {boardAPI}) => {
+export const CreateList = (boardId, id, title) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(boardId)(getState());
 	let order = -1;
-	boardData.lists.forEach(cur => order = Math.max(cur.order, order));
+	boardData.lists.forEach(list => order = Math.max(list.order, order));
 	order++;
 
-	dispatch(changeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order}]}));
+	dispatch(ChangeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order}]}));
 	boardAPI.createList(boardId, {id, title, order});
 };
 
-export const deleteList = (boardId, id) => (dispatch, getState, {boardAPI}) => {
+export const DeleteList = (boardId, id) => (dispatch, getState, {boardAPI}) => {
 	const boardData = getBoard(boardId)(getState());
 
-	dispatch(changeBoard(boardId, {...boardData, lists: boardData.lists.filter(cur => cur.id !== id)}));
+	dispatch(ChangeBoard(boardId, {...boardData, lists: boardData.lists.filter(list => list.id !== id)}));
 	boardAPI.deleteList(boardId, id);
 };

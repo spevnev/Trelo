@@ -1,11 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import Board from "./Board";
-import NewBoard from "./NewBoard";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getUserBoards} from "../../redux/selectors";
-import PageLoading from "../../components/PageLoading";
 import useTitle from "../../hooks/useTitle";
+import {BoardContainer} from "./styles";
+import {useNavigate} from "react-router";
+import {v4 as uuid} from "uuid";
+import {NewBoard} from "../../redux/actionCreators/boardActionCreator";
+import PageLoading from "../../components/PageLoading";
 
 const Boards = styled.div`
   padding: 15px 2vw;
@@ -18,19 +21,36 @@ const Boards = styled.div`
   overflow-y: scroll;
 `;
 
+const CenteredText = styled.p`
+  font-size: 24px;
+  margin: auto;
+`;
+
 
 const Dashboard = () => {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const boards = useSelector(getUserBoards());
+
 	useTitle("Dashboard");
+
+
+	const openSettings = () => {
+		const boardId = uuid();
+		dispatch(NewBoard(boardId, () => navigate(`/board/${boardId}/settings`)));
+	};
 
 
 	if (!boards) return <PageLoading/>;
 
-
 	return (
 		<Boards>
-			{boards.sort().map(cur => <Board key={cur.id} {...cur}/>)}
-			<NewBoard/>
+			{boards.sort().map(board => <Board key={board.id} {...board}/>)}
+
+			<BoardContainer onClick={openSettings} style={{order: 999}}>
+				<CenteredText>New board</CenteredText>
+			</BoardContainer>
 		</Boards>
 	);
 };

@@ -43,13 +43,12 @@ document.body.append(canvas);
 const context = canvas.getContext("2d");
 const imageObj = new Image();
 
-const CropOverlay = ({isShown, setCropping, image, onSubmit}) => {
+const CropOverlay = ({isShown, setIsCropping, image, onSubmit}) => {
 	const [crop, setCrop] = useState({x: 0, y: 0});
 	const [zoom, setZoom] = useState(1);
+	const overlayRef = useRef();
 
-	const ref = useRef();
-	useKeyboard({ref, key: "enter", priority: 1, cb: () => confirm()}, {ref, key: "escape", cb: () => close()});
-
+	useKeyboard({ref: overlayRef, key: "enter", priority: 1, cb: () => confirm()}, {ref: overlayRef, key: "escape", cb: () => close()});
 
 	useEffect(() => {
 		imageObj.src = image;
@@ -57,10 +56,12 @@ const CropOverlay = ({isShown, setCropping, image, onSubmit}) => {
 	}, [image]);
 
 
-	const onChange = (percents, {x, y, width, height}) => imageObj.complete && context.drawImage(imageObj, x, y, width, height, 0, 0, 100, 100);
+	const onChange = (percents, {x, y, width, height}) => {
+		if (imageObj.complete) context.drawImage(imageObj, x, y, width, height, 0, 0, 100, 100);
+	};
 
 	const close = () => {
-		setCropping(false);
+		setIsCropping(false);
 		canvas.remove();
 	};
 
@@ -71,8 +72,9 @@ const CropOverlay = ({isShown, setCropping, image, onSubmit}) => {
 
 
 	if (!isShown) return null;
+
 	return (
-		<ScreenOverlay ref={ref}>
+		<ScreenOverlay ref={overlayRef}>
 			<Cropper image={image} onCropComplete={onChange} onCropAreaChange={onChange}
 					 crop={crop} zoom={zoom}
 					 onCropChange={setCrop} onZoomChange={setZoom}

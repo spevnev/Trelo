@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Form, SecondaryText, StyledButton, SubContainer, Text} from "./styles";
+import {Form, StyledButton, SubContainer, SubText, Text} from "./styles";
 import Input from "../../components/StyledInput";
 import ErrorMessage from "../../components/ErrorMessage";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
-import {signup} from "../../redux/actionCreators/userActionCreator";
+import {Signup} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import bundle from "../../services";
 import CropOverlay from "./CropOverlay";
@@ -38,8 +38,8 @@ const Icon = styled.label`
 
 const UserIcon = ({setIcon, displayError}) => {
 	const input = useRef(null);
-	const [isShown, setShown] = useState(false);
-	const [isCropping, setCropping] = useState(false);
+	const [isShown, setIsShown] = useState(false);
+	const [isCropping, setIsCropping] = useState(false);
 	const [image, setImage] = useState(null);
 	const [preview, setPreview] = useState(null);
 
@@ -63,24 +63,24 @@ const UserIcon = ({setIcon, displayError}) => {
 			if (file.name.split(".").length === 1) return;
 			reader.onload = () => {
 				setImage(reader.result);
-				setCropping(true);
+				setIsCropping(true);
 			};
 		}
 	};
 
-	const onSubmit = data => {
+	const onSubmit = async data => {
 		setPreview(data);
-		setShown(true);
+		setIsShown(true);
 
-		bundle.userAPI.uploadIcon(data)
-			.then(res => {
-				setIcon(res.url);
-				setShown(false);
-			})
-			.catch(e => {
-				displayError("Error uploading icon! Check your internet connection.");
-				setShown(false);
-			});
+		try {
+			const res = await bundle.userAPI.uploadIcon(data);
+
+			setIcon(res.url);
+			setIsShown(false);
+		} catch (e) {
+			displayError("Error uploading icon! Check your internet connection.");
+			setIsShown(false);
+		}
 	};
 
 
@@ -89,7 +89,7 @@ const UserIcon = ({setIcon, displayError}) => {
 			<Icon htmlFor="userIcon" src={preview} onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}/>
 			<input ref={input} accept="image/jpeg,image/png" onChange={onFile} id="userIcon" type="file" style={{display: "none"}}/>
 
-			<CropOverlay isShown={isCropping} setCropping={setCropping} image={image} onSubmit={onSubmit}/>
+			<CropOverlay isShown={isCropping} setIsCropping={setIsCropping} image={image} onSubmit={onSubmit}/>
 			<PopUp isShown={isShown}>Uploading icon... It might take a few seconds.</PopUp>
 		</div>
 	);
@@ -99,12 +99,12 @@ let timeout = null;
 const SignupForm = () => {
 	const dispatch = useDispatch();
 
-	const [msg, setMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: "", confirm: ""});
 	const [icon, setIcon] = useState("");
+	const [msg, setMsg] = useState("");
+	const formRef = useRef();
 
-	const ref = useRef();
-	useKeyboard({ref, key: "enter", cb: () => submit()});
+	useKeyboard({ref: formRef, key: "enter", cb: () => submit()});
 
 	useEffect(() => () => clearTimeout(timeout), []);
 
@@ -124,16 +124,16 @@ const SignupForm = () => {
 
 		if (!icon) return displayError("You must have icon!");
 
-		dispatch(signup({...formState, icon, username: formState.username.toLowerCase()}, displayError));
+		dispatch(Signup({...formState, icon, username: formState.username.toLowerCase()}, displayError));
 	};
 
 
 	return (
 		<SubContainer background="#0079bf" colour="#fff">
 			<Text>Sign up</Text>
-			<SecondaryText>Don't have account yet?</SecondaryText>
+			<SubText>Don't have account yet?</SubText>
 
-			<Form ref={ref}>
+			<Form ref={formRef}>
 				<UserIcon displayError={displayError} setIcon={setIcon}/>
 
 				<Input placeholder="Username" onChange={e => changeForm({username: e.target.value})} value={formState.username}/>

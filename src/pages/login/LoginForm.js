@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Form, SecondaryText, StyledButton, SubContainer, Text} from "./styles";
+import {Form, StyledButton, SubContainer, SubText, Text} from "./styles";
 import Input from "../../components/StyledInput";
 import ErrorMessage from "../../components/ErrorMessage";
 import {useDispatch} from "react-redux";
-import {login} from "../../redux/actionCreators/userActionCreator";
+import {Login} from "../../redux/actionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import {useNavigate} from "react-router";
 import schema, {validatePassword, validateUsername} from "../../schema";
@@ -14,40 +14,40 @@ const LoginForm = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const [msg, setMsg] = useState();
+	const [errorMsg, setErrorMsg] = useState();
 	const [formState, setFormState] = useState({username: "", password: ""});
+	const formRef = useRef();
 
-	const ref = useRef();
-	useKeyboard({ref, key: "enter", cb: () => submit()});
+	useKeyboard({ref: formRef, key: "enter", cb: () => submit()});
 
 	useEffect(() => () => clearTimeout(timeout), []);
 
 
 	const displayError = text => {
-		setMsg(text);
-		timeout = setTimeout(() => setMsg(null), config.ERROR_DURATION_MS);
+		setErrorMsg(text);
+		timeout = setTimeout(() => setErrorMsg(null), config.ERROR_DURATION_MS);
 	};
 
 	const submit = () => {
 		if (!validateUsername(formState.username, displayError)) return;
 		if (!validatePassword(formState.password, displayError)) return;
 
-		dispatch(login(formState.username.toLowerCase(), formState.password, displayError, () => navigate("/")));
+		dispatch(Login(formState.username.toLowerCase(), formState.password, displayError, () => navigate("/")));
 	};
 
 
 	return (
 		<SubContainer background="#fff" colour="#000">
 			<Text>Log in</Text>
-			<SecondaryText>Already signed up?</SecondaryText>
+			<SubText>Already signed up?</SubText>
 
-			<Form ref={ref}>
-				<Input placeholder="Username" maxLength={schema.username.max} onChange={e => setFormState({...formState, username: e.target.value})} value={formState.username}/>
-				<Input type="password" placeholder="Password" maxLength={schema.password.max} onChange={e => setFormState({...formState, password: e.target.value})}
-					   value={formState.password}/>
+			<Form ref={formRef}>
+				<Input placeholder="Username" maxLength={schema.username.max} value={formState.username}
+					   onChange={e => setFormState({...formState, username: e.target.value})}/>
+				<Input type="password" placeholder="Password" maxLength={schema.password.max} value={formState.password}
+					   onChange={e => setFormState({...formState, password: e.target.value})}/>
 
-				<ErrorMessage fixedHeight>{msg}</ErrorMessage>
-
+				<ErrorMessage fixedHeight>{errorMsg}</ErrorMessage>
 				<StyledButton onClick={submit}>Log in</StyledButton>
 			</Form>
 		</SubContainer>

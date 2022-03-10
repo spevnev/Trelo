@@ -6,7 +6,7 @@ import {ReactComponent as StarFull} from "../../assets/svg/star-full.svg";
 import {ReactComponent as StarEmpty} from "../../assets/svg/star-empty.svg";
 import {ReactComponent as Cog} from "../../assets/svg/cog.svg";
 import {BoardContainer} from "./styles";
-import {toggleFavourite} from "../../redux/actionCreators/userActionCreator";
+import {ToggleFavourite} from "../../redux/actionCreators/userActionCreator";
 
 const Title = styled.p`
   font-size: 18px;
@@ -19,6 +19,13 @@ const Icons = styled.div`
   flex-direction: row;
   justify-content: end;
   align-items: center;
+
+  & svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+    fill: #f0f0f0;
+  }
 `;
 
 
@@ -34,7 +41,7 @@ const Board = ({title, isFavourite, isOwner, id}) => {
 
 	const toggleFavouriteLocal = e => {
 		e.stopPropagation();
-		dispatch(toggleFavourite(id));
+		dispatch(ToggleFavourite(id));
 	};
 
 

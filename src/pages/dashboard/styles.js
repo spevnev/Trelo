@@ -19,11 +19,4 @@ export const BoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  & svg {
-    width: 24px;
-    height: 24px;
-    margin-left: 5px;
-    fill: #f0f0f0;
-  }
 `;

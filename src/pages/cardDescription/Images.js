@@ -103,15 +103,16 @@ const ImageContainer = styled(Block)`
 
 
 const Overlay = ({src, close}) => {
-	const body = useRef(document.body);
-	const ref = useRef(null);
-	useKeyboard({ref: body, key: "escape", cb: close, priority: 1});
+	const bodyRef = useRef(document.body);
+	const imageRef = useRef(null);
+
+	useKeyboard({ref: bodyRef, key: "escape", cb: close, priority: 1});
 
 
 	return (
-		<OverlayContainer onClick={e => e.target !== ref.current && close()}>
+		<OverlayContainer onClick={e => e.target !== imageRef.current && close()}>
 			<Close src={cross} onClick={close}/>
-			<OverlayImage ref={ref} src={src}/>
+			<OverlayImage ref={imageRef} src={src}/>
 		</OverlayContainer>
 	);
 };
@@ -122,7 +123,7 @@ const Image = ({openFull, url}) => {
 
 	const deleteImage = e => {
 		e.stopPropagation();
-		setState({images: state.images.filter(cur => cur !== url)});
+		setState({images: state.images.filter(imageUrl => imageUrl !== url)});
 	};
 
 	const downloadImageLocal = e => {
@@ -140,10 +141,9 @@ const Image = ({openFull, url}) => {
 };
 
 let stateVar = null;
-const ImageInput = ({setUploading}) => {
-	const {overlay, state, board, setState} = useContext(CardContext);
+const ImageInput = ({setIsUploading}) => {
+	const {isOverlayVisible, state, board, setState} = useContext(CardContext);
 	const input = useRef(null);
-
 
 	useEffect(() => stateVar = state, [state]);
 
@@ -164,15 +164,17 @@ const ImageInput = ({setUploading}) => {
 			const reader = new FileReader();
 			reader.readAsDataURL(files[i]);
 
-			setUploading(true);
+			setIsUploading(true);
 
-			reader.onload = () => {
+			reader.onload = async () => {
 				arr.push(reader.result);
+
 				if (arr.length === files.length) {
-					bundle.fileAPI.uploadFiles(board.id, arr).then(([error, images]) => {
-						setUploading(false);
-						if (!error) setState({...stateVar, images: [...stateVar.images, ...images]});
-					});
+					const [error, images] = await bundle.fileAPI.uploadFiles(board.id, arr);
+					setIsUploading(false);
+
+					if (error) return;
+					setState({...stateVar, images: [...stateVar.images, ...images]});
 				}
 			};
 		}
@@ -183,7 +185,7 @@ const ImageInput = ({setUploading}) => {
 		<>
 			<input ref={input} style={{display: "none"}} accept="image/png,image/jpeg" id="uploadImage" type="file" onChange={onImage} multiple/>
 			<label htmlFor="uploadImage" onDragOver={preventDefault} onDragEnter={preventDefault} onDrop={onDrop}>
-				{overlay ? <DropOverlay>Drop here to add image</DropOverlay> : <AddImage>+</AddImage>}
+				{isOverlayVisible ? <DropOverlay>Drop here to add image</DropOverlay> : <AddImage>+</AddImage>}
 			</label>
 		</>
 	);
@@ -191,28 +193,26 @@ const ImageInput = ({setUploading}) => {
 
 const Images = () => {
 	const {state, setSaved} = useContext(CardContext);
-	const [fullImg, setFullImg] = useState(null);
-	const [isShown, setShown] = useState(false);
+	const [fullImageUrl, setFullImageUrl] = useState(null);
+	const [isShown, setIsShown] = useState(false);
 
 
-	const setUploading = bool => {
-		setShown(bool);
+	const setIsUploading = bool => {
+		setIsShown(bool);
 		setSaved(!bool);
 	};
-
-	const openFull = e => setFullImg(e.target.getAttribute("src"));
 
 
 	return (
 		<Container>
-			{fullImg && <Overlay src={fullImg} close={() => setFullImg(null)}/>}
+			{fullImageUrl && <Overlay src={fullImageUrl} close={() => setFullImageUrl(null)}/>}
 
 			<SubTitle>Attached images</SubTitle>
 
 			<BlockContainer>
-				{state.images.map(cur => <Image openFull={openFull} key={cur} url={cur}/>)}
+				{state.images.map(imageUrl => <Image openFull={e => setFullImageUrl(e.target.getAttribute("src"))} key={imageUrl} url={imageUrl}/>)}
 
-				{state.images.length < schema.images.maxLength && <ImageInput setUploading={setUploading}/>}
+				{state.images.length < schema.images.maxLength && <ImageInput setIsUploading={setIsUploading}/>}
 			</BlockContainer>
 
 			<PopUp isShown={isShown}>Uploading image... It might take a few seconds.</PopUp>

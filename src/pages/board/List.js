@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuid} from "uuid";
 import Card from "./Card";
 import {useNavigate} from "react-router";
-import {addCard} from "../../redux/actionCreators/cardActionCreator";
+import {AddCard} from "../../redux/actionCreators/cardActionCreator";
 import {Droppable} from "react-beautiful-dnd";
 import {getBoard} from "../../redux/selectors";
 
@@ -44,21 +44,21 @@ const InnerContainer = styled.div`
   }
 `;
 
-const AddCard = styled.p`
+const Text = styled.p`
   cursor: pointer;
   font-size: 14px;
 `;
 
 
-const List = ({title, order, boardId, id, cards = []}) => {
+const List = ({title, order, boardId, id, cards}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const users = useSelector(getBoard(boardId)).users;
 
 
-	const newCard = () => {
+	const addCard = () => {
 		const cardId = uuid();
-		dispatch(addCard(boardId, id, cardId, () => navigate(cardId + "?new")));
+		dispatch(AddCard(boardId, id, cardId, () => navigate(cardId + "?new")));
 	};
 
 
@@ -75,7 +75,7 @@ const List = ({title, order, boardId, id, cards = []}) => {
 						{provided.placeholder}
 					</InnerContainer>
 
-					<AddCard onClick={newCard}>+ Add card</AddCard>
+					<Text onClick={addCard}>+ Add card</Text>
 				</ListContainer>
 			</div>
 		)}</Droppable>

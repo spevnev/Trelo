@@ -8,7 +8,7 @@ import BoardSettings from "./pages/boardSettings";
 import CardDescription from "./pages/cardDescription";
 import Layout from "./layout";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchUser} from "./redux/actionCreators/userActionCreator";
+import {FetchUser} from "./redux/actionCreators/userActionCreator";
 import {getUser} from "./redux/selectors";
 
 const App = () => {
@@ -17,7 +17,7 @@ const App = () => {
 
 
 	useEffect(() => {
-		if (getToken() && !user.boards) dispatch(fetchUser());
+		if (getToken() && !user.boards) dispatch(FetchUser());
 	}, [user]);
 
 

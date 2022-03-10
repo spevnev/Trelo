@@ -18,27 +18,30 @@ const User = styled.img`
 
 const Assigned = () => {
 	const {state, board, setState} = useContext(CardContext);
-	const ref = useRef();
+	const selectInputRef = useRef();
 
-	const assigned = board.users.filter(cur => state.assigned.indexOf(cur.username) !== -1);
 
+	const assigned = board.users.filter(user => state.assigned.indexOf(user.username) !== -1);
 
 	const capitalizeString = str => str.charAt(0).toUpperCase() + str.slice(1);
 
-	const composeUsername = (user, assigned) => `${capitalizeString(user.username)}${assigned.filter(cur => cur.username === user.username).length === 0 ? " - ✓" : " - ✘"}`;
+	const composeUsername = (user, assigned) => `${capitalizeString(user.username)}${assigned.filter(assigned => assigned.username === user.username).length === 0 ? " - ✓" : " - ✘"}`;
 
 	const addUser = username => setState({assigned: [...state.assigned, username]});
 
-	const deleteUser = username => setState({assigned: state.assigned.filter(cur => cur !== username)});
+	const deleteUser = username => setState({assigned: state.assigned.filter(user => user !== username)});
 
 	const onSelect = username => {
-		ref.current.value = "d";
-		if (username === "d") return;
+		selectInputRef.current.value = defaultOption.value;
+		if (username === defaultOption.value) return;
 
-		if (assigned.filter(cur => cur.username === username).length === 1) deleteUser(username);
+		if (assigned.filter(user => user.username === username).length === 1) deleteUser(username);
 		else addUser(username);
 	};
 
+
+	const defaultOption = {text: "Username", value: "d"};
+	const userOptions = board.users.map(user => ({text: composeUsername(user, assigned), value: user.username}));
 
 	return (
 		<Container>
@@ -46,8 +49,7 @@ const Assigned = () => {
 
 			<div>{assigned.map(user => <User key={user.username} title={user.username} src={user.icon}/>)}</div>
 
-			<Select ref={ref} onSelect={onSelect} initialOption={{text: "Username", value: "d"}}
-					options={board.users.map(user => ({text: composeUsername(user, assigned), value: user.username}))}/>
+			<Select ref={selectInputRef} onSelect={onSelect} initialOption={defaultOption} options={userOptions}/>
 		</Container>
 	);
 };

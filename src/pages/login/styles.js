@@ -34,7 +34,7 @@ export const Text = styled.p`
   text-align: center;
 `;
 
-export const SecondaryText = styled.p`
+export const SubText = styled.p`
   font-size: 18px;
   text-align: center;
 `;

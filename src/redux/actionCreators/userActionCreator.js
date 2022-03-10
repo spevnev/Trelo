@@ -1,9 +1,9 @@
 import types from "../actions/userActions";
 import {getUserBoards} from "../selectors";
 
-export const changeBoards = newBoards => ({type: types.changeBoards, payload: {newBoards}});
+export const ChangeBoards = newBoards => ({type: types.changeBoards, payload: {newBoards}});
 
-export const fetchUser = () => async (dispatch, getState, {userAPI}) => {
+export const FetchUser = () => async (dispatch, getState, {userAPI}) => {
 	const [error, data] = await userAPI.fetchData();
 	if (error) {
 		localStorage.removeItem("JWT");
@@ -13,17 +13,17 @@ export const fetchUser = () => async (dispatch, getState, {userAPI}) => {
 	dispatch({type: types.setUser, payload: {user: {boards: [], ...data}}});
 };
 
-export const login = (username, password, displayError, success) => async (dispatch, getState, {userAPI}) => {
+export const Login = (username, password, displayError, onSuccess) => async (dispatch, getState, {userAPI}) => {
 	const [error, data] = await userAPI.login(username, password);
 	if (error) return displayError(error);
 
 	localStorage.setItem("JWT", data.token);
 
 	dispatch({type: types.setUser, payload: {user: data.user}});
-	success();
+	onSuccess();
 };
 
-export const signup = (userData, displayError) => async (dispatch, getState, {userAPI}) => {
+export const Signup = (userData, displayError) => async (dispatch, getState, {userAPI}) => {
 	const [error, data] = await userAPI.signup(userData.username, userData.password, userData.icon);
 	if (error) return displayError(error);
 
@@ -32,17 +32,17 @@ export const signup = (userData, displayError) => async (dispatch, getState, {us
 	dispatch({type: types.setUser, payload: {user: data.user}});
 };
 
-export const leave = boardId => (dispatch, getState, {userAPI}) => {
+export const Leave = boardId => (dispatch, getState, {userAPI}) => {
 	userAPI.leave(boardId);
 
-	dispatch(changeBoards(getUserBoards()(getState()).filter(cur => cur.id !== boardId)));
+	dispatch(ChangeBoards(getUserBoards()(getState()).filter(board => board.id !== boardId)));
 };
 
-export const toggleFavourite = id => (dispatch, getState, {userAPI}) => {
+export const ToggleFavourite = id => (dispatch, getState, {userAPI}) => {
 	const boards = getUserBoards()(getState());
-	const isFavourite = boards.filter(cur => cur.id === id)[0].isFavourite;
+	const isFavourite = boards.filter(board => board.id === id)[0].isFavourite;
 
 	userAPI.toggleFavourite(id, !isFavourite);
 
-	dispatch(changeBoards(boards.map(cur => cur.id === id ? {...cur, isFavourite: !isFavourite} : cur)));
+	dispatch(ChangeBoards(boards.map(board => board.id === id ? {...board, isFavourite: !isFavourite} : board)));
 };
