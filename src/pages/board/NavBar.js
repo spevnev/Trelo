@@ -47,7 +47,7 @@ const NavBar = ({board}) => {
 	};
 
 
-	let userBoard = boards.filter(board => board.id === board.id);
+	let userBoard = boards.filter(cur => cur.id === board.id);
 	if (userBoard.length !== 1) return null;
 	userBoard = userBoard[0];
 

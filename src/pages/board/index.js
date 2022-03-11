@@ -60,6 +60,8 @@ const Board = () => {
 
 
 	const onDragEnd = e => {
+		if (!e.destination) return;
+
 		const srcListId = e.source.droppableId;
 		const srcInd = e.source.index;
 		const dstListId = e.destination.droppableId;

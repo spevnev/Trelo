@@ -92,9 +92,13 @@ const Lists = ({lists = [], boardId, setState}) => {
 	const changeEl = (listId, title) => setState({lists: lists.map(list => list.id === listId ? {...list, title} : list)});
 
 	const onDragEnd = e => {
+		if (!e.destination) return;
+
 		const srcInd = e.source.index;
 		const dstInd = e.destination.index;
 		const listId = e.draggableId;
+
+		if (srcInd === dstInd) return;
 
 		const isBetweenSrcAndDst = order => order > srcInd && order <= dstInd;
 		const isBetweenDstAndSrc = order => order < srcInd && order >= dstInd;
