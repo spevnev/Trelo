@@ -1,4 +1,4 @@
-import types from "../actions/cardActions";
+import actions from "../actions/cardActions";
 
 const cardReducer = (state = [], action) => {
 	const payload = action.payload;
@@ -6,21 +6,21 @@ const cardReducer = (state = [], action) => {
 	const changeBoard = func => state.map(board => board.id === payload.boardId ? func(board) : board);
 
 	switch (action.type) {
-		case types.addCardBoard:
+		case actions.addCardBoard:
 			const l = state.filter(board => board.id === payload.boardId).length;
 			if (l === 0) return [...state, {id: payload.boardId, cards: payload.cards}];
 			return state.map(board => board.id === payload.boardId ? {id: payload.boardId, cards: payload.cards} : board);
-		case types.deleteCardBoard:
+		case actions.deleteCardBoard:
 			return state.filter(board => board.id !== payload.boardId);
 
-		case types.addCard:
+		case actions.addCard:
 			return changeBoard(cardBoard => ({...cardBoard, cards: [...cardBoard.cards, payload.card]}));
-		case types.deleteCard:
+		case actions.deleteCard:
 			return changeBoard(cardBoard => ({...cardBoard, cards: cardBoard.cards.filter(card => card.id !== payload.id)}));
 
-		case types.changeCard:
+		case actions.changeCard:
 			return changeBoard(cardBoard => ({...cardBoard, cards: cardBoard.cards.map(card => card.id === payload.id ? payload.newCard : card)}));
-		case types.reorderCards:
+		case actions.reorderCards:
 			const ids = payload.order.map(orderObj => orderObj.id);
 			const orders = payload.order.map(orderObj => orderObj.order);
 

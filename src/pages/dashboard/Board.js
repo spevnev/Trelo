@@ -6,7 +6,7 @@ import {ReactComponent as StarFull} from "../../assets/svg/star-full.svg";
 import {ReactComponent as StarEmpty} from "../../assets/svg/star-empty.svg";
 import {ReactComponent as Cog} from "../../assets/svg/cog.svg";
 import {BoardContainer} from "./styles";
-import {ToggleFavourite} from "../../redux/actionCreators/userActionCreator";
+import {ToggleFavourite} from "../../redux/thunkActionCreators/userActionCreator";
 
 const Title = styled.p`
   font-size: 18px;

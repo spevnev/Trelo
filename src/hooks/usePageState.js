@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
 import PageLoading from "../components/PageLoading";
-import PageError from "../components/PageError";
 import config from "../config";
 
 let timeout = null;
 let currentState = null; // to handle edge case - on exit the state variable goes to default value (null)
-const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps = "", debounce, saveOnExit = true) => {
+const usePageState = (initState, onLoad, isError, errorElement, isLoading, deps = "", debounce) => {
 	const [state, setState] = useState(initState());
 	const [isSaved, setIsSaved] = useState(true);
 	const [isForceSaved, setIsForceSaved] = useState(true);
@@ -63,7 +62,7 @@ const usePageState = (initState, onLoad, isError, errorMsg, isLoading, deps = ""
 	let pageState = null;
 	if (isForceLoading) pageState = <PageLoading/>;
 	else if (isLoading()) pageState = <PageLoading/>;
-	else if (isError()) pageState = <PageError>{errorMsg}</PageError>;
+	else if (isError()) pageState = errorElement;
 
 	return [pageState, state, changeState, setIsForceSaved, clearTimer];
 };

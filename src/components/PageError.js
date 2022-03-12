@@ -30,14 +30,14 @@ const Text = styled.p`
 `;
 
 
-const PageError = ({children}) => {
+const PageError = ({children, goBackUrl = "/"}) => {
 	const navigate = useNavigate();
 
 
 	return (
 		<Centre>
 			<Text>{children}</Text>
-			<Link onClick={() => navigate("/")}>Go back</Link>
+			<Link onClick={() => navigate(goBackUrl)}>Go back</Link>
 		</Centre>
 	);
 };

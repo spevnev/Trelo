@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
-import {ChangeBoard, DeleteBoard, FetchBoard} from "../../redux/actionCreators/boardActionCreator";
+import {ChangeBoard, DeleteBoard, FetchBoard} from "../../redux/thunkActionCreators/boardActionCreator";
 import Users from "./Users";
 import Title from "./Title";
 import Lists from "./Lists";
@@ -10,10 +10,12 @@ import Modal from "../../components/Modal";
 import GoBack from "../../components/GoBack";
 import {getBoard, getUser} from "../../redux/selectors";
 import usePageState from "../../hooks/usePageState";
-import {ChangeBoards} from "../../redux/actionCreators/userActionCreator";
-import bundle from "../../services";
+import {ChangeBoards} from "../../redux/thunkActionCreators/userActionCreator";
+import bundle from "../../services/api";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
+import PageError from "../../components/PageError";
+import socket from "../../services/ws";
 
 const Container = styled.div`
   padding: 0 2vw;
@@ -53,20 +55,28 @@ const BoardSettings = () => {
 		currentBoard = board;
 	}, [board]);
 
+	const shouldBeRedirected = () => {
+		if (user.boards) {
+			const boards = user.boards.filter(board => board.id === boardId);
+			if (boards.length === 1 && !boards[0].isOwner) return true;
+		}
+
+		return false;
+	};
+
+	useEffect(() => {
+		if (shouldBeRedirected()) navigate("../");
+	}, [user]);
+
 
 	const initState = () => {
 		if (board && board.status === "READY") return board;
-
-		if (user.boards) {
-			const boards = user.boards.filter(board => board.id === boardId);
-			if (boards.length === 1 && !boards[0].isOwner) navigate("../");
-		}
 
 		if (!board) dispatch(FetchBoard(boardId));
 	};
 	const onLoad = () => dispatch(FetchBoard(boardId, false));
 	const isError = () => !board || board.status === "ERROR";
-	const errorMsg = "This board doesn't exist or you aren't a member of it!";
+	const errorElement = <PageError>This board doesn't exist or you aren't a member of it!</PageError>;
 	const isLoading = () => board && board.status === "LOADING";
 	const deps = board;
 	const debounce = state => {
@@ -96,11 +106,11 @@ const BoardSettings = () => {
 				if (idx === -1) return;
 
 				const prev = board.lists[idx];
-				if (!areListsEqual(list, prev)) bundle.boardAPI.changeList(boardId, list);
+				if (!areListsEqual(list, prev)) bundle.boardAPI.changeList(boardId, list, socket.id);
 			});
 		}
 	};
-	const [pageState, state, setState, , clearTimer] = usePageState(initState, onLoad, isError, errorMsg, isLoading, deps, debounce);
+	const [pageState, state, setState, , clearTimer] = usePageState(initState, onLoad, isError, errorElement, isLoading, deps, debounce);
 
 	if (pageState) return pageState;
 

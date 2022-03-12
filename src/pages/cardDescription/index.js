@@ -2,8 +2,8 @@ import React, {createContext, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
-import {ChangeCard, DeleteCard} from "../../redux/actionCreators/cardActionCreator";
-import bundle from "../../services";
+import {ChangeCard, DeleteCard} from "../../redux/thunkActionCreators/cardActionCreator";
+import bundle from "../../services/api";
 import Title from "./Title";
 import Assigned from "./Assigned";
 import Description from "./Description";
@@ -13,10 +13,12 @@ import GoBack from "../../components/GoBack";
 import Modal from "../../components/Modal";
 import {getBoard, getCard} from "../../redux/selectors";
 import usePageState from "../../hooks/usePageState";
-import {FetchBoard} from "../../redux/actionCreators/boardActionCreator";
+import {FetchBoard} from "../../redux/thunkActionCreators/boardActionCreator";
 import deleteIcon from "../../assets/svg/cross.svg";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
+import socket from "../../services/ws";
+import PageError from "../../components/PageError";
 
 const Container = styled.div`
   padding: 0 2vw;
@@ -41,6 +43,7 @@ const Cross = styled.img`
 export const CardContext = createContext(null);
 
 let timeout = null;
+let saveOnExit = true;
 const CardDescription = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -64,10 +67,12 @@ const CardDescription = () => {
 	};
 	const onLoad = () => !window.location.href.includes("new") && dispatch(FetchBoard(boardId, false));
 	const isError = () => !board || !card || board.status === "ERROR";
-	const errorMsg = "This card doesn't exist!";
+	const errorElement = <PageError goBackUrl={!board || board.status === "ERROR" ? "/" : "../"}>This card doesn't exist!</PageError>;
 	const isLoading = () => board && board.status === "LOADING";
 	const deps = card;
 	const debounce = state => {
+		if (!saveOnExit) return;
+
 		dispatch(ChangeCard(boardId, state));
 
 		if (card) {
@@ -79,11 +84,11 @@ const CardDescription = () => {
 				if (idx === -1) return;
 
 				const prev = card.files[idx];
-				if (file.filename !== prev.filename) bundle.cardAPI.renameFile(boardId, file);
+				if (file.filename !== prev.filename) bundle.cardAPI.renameFile(boardId, file, socket.id);
 			});
 		}
 	};
-	const [pageState, state, setState, setSaved, clearTimer] = usePageState(initState, onLoad, isError, errorMsg, isLoading, deps, debounce);
+	const [pageState, state, setState, setSaved, clearTimer] = usePageState(initState, onLoad, isError, errorElement, isLoading, deps, debounce);
 
 	if (pageState) return pageState;
 
@@ -103,12 +108,13 @@ const CardDescription = () => {
 		else if (!card.title) return openModal(modalEmptyTitleText);
 
 		clearTimer();
-		navigate("../");
+		navigate(`/board/${boardId}`);
 	};
 
 	const delCard = () => {
 		dispatch(DeleteCard(boardId, cardId, () => {
 			clearTimer();
+			saveOnExit = false;
 			navigate("../");
 		}));
 	};

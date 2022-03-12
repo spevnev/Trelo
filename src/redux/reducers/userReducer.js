@@ -1,13 +1,13 @@
-import types from "../actions/userActions";
+import actions from "../actions/userActions";
 
 const userReducer = (state = {}, action) => {
 	const payload = action.payload;
 
 	switch (action.type) {
-		case types.setUser:
+		case actions.setUser:
 			return {...payload.user};
 
-		case types.changeBoards:
+		case actions.changeBoards:
 			return {...state, boards: payload.newBoards};
 
 		default:

@@ -6,7 +6,7 @@ import {ReactComponent as StarFull} from "../../assets/svg/star-full.svg";
 import {ReactComponent as Cog} from "../../assets/svg/cog.svg";
 import {ReactComponent as Exit} from "../../assets/svg/exit.svg";
 import {useDispatch, useSelector} from "react-redux";
-import {Leave, ToggleFavourite} from "../../redux/actionCreators/userActionCreator";
+import {Leave, ToggleFavourite} from "../../redux/thunkActionCreators/userActionCreator";
 import {getUser} from "../../redux/selectors";
 
 const NavBarContainer = styled.div`

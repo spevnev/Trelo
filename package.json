@@ -65,6 +65,7 @@
     "resolve": "^1.20.0",
     "resolve-url-loader": "^4.0.0",
     "semver": "^7.3.5",
+    "socket.io-client": "^4.4.1",
     "style-loader": "^3.3.1",
     "styled-components": "^5.3.3",
     "terser-webpack-plugin": "^5.2.5",

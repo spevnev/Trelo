@@ -3,7 +3,7 @@ import styled from "styled-components";
 import cross from "../../assets/svg/cross.svg";
 import download from "../../assets/svg/download.svg";
 import {Container, SubTitle} from "./styles";
-import bundle from "../../services";
+import bundle from "../../services/api";
 import useKeyboard from "../../hooks/useKeyboard";
 import PopUp from "../../components/PopUp";
 import {CardContext} from "./index";

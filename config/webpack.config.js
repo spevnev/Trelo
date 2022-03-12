@@ -102,7 +102,7 @@ module.exports = function (webpackEnv) {
 		output: {
 			path: paths.appBuild,
 			pathinfo: isEnvDevelopment,
-			filename: isEnvProduction ? "static/js/[name].[contenthash:8].js" : isEnvDevelopment && "static/js/bundle.js",
+			filename: isEnvProduction ? "static/js/[name].[contenthash:8].js" : isEnvDevelopment && "static/js/index.js",
 			chunkFilename: isEnvProduction ? "static/js/[name].[contenthash:8].chunk.js" : isEnvDevelopment && "static/js/[name].chunk.js",
 			assetModuleFilename: "static/media/[name].[hash][ext]",
 			publicPath: paths.publicUrlOrPath,

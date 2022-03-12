@@ -2,8 +2,8 @@ import {addUser, changeBoard, changeList, changeUser, createBoard, createList, d
 import {addCard, addFiles, changeCard, deleteCard, deleteFile, getCards, renameFile, reorderCards} from "./card";
 import {changeBoards, fetchData, leave, login, signup, toggleFavourite, uploadIcon} from "./user";
 import {downloadFile, uploadFiles} from "./file";
-import {getToken} from "./jwt";
-import config from "../config";
+import {getToken} from "../jwt";
+import config from "../../config";
 import axios from "axios";
 
 const client = axios.create({baseURL: `${config.BACKEND}/api/`});

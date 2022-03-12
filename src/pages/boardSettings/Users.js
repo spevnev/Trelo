@@ -5,11 +5,11 @@ import Input from "../../components/StyledInput";
 import Button from "../../components/Button";
 import SelectInput from "../../components/SelectInput";
 import {Cancel, SubContainer, SubTitle} from "./styles";
-import {ChangeBoards} from "../../redux/actionCreators/userActionCreator";
+import {Leave} from "../../redux/thunkActionCreators/userActionCreator";
 import {getUser} from "../../redux/selectors";
 import {useNavigate} from "react-router";
 import ErrorMessage from "../../components/ErrorMessage";
-import {AddUser, ChangeRole, DeleteUser} from "../../redux/actionCreators/boardActionCreator";
+import {AddUser, ChangeUserRole, DeleteUser} from "../../redux/thunkActionCreators/boardActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import schema, {validateUsername} from "../../schema";
 import config from "../../config";
@@ -100,7 +100,7 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const curUser = useSelector(getUser()) || {};
+	const curUser = useSelector(getUser()) || {boards: []};
 	const [errorMsg, setErrorMsg] = useState();
 	const [newUsername, setNewUsername] = useState("");
 	const inputRef = useRef();
@@ -123,7 +123,7 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 		// Only owners can access this page, so if there's only 1 owner it is the user
 		if (!isOwner && numOfOwners === 1) return;
 
-		dispatch(ChangeRole(boardId, username, isOwner));
+		dispatch(ChangeUserRole(boardId, username, isOwner));
 	};
 
 	const delUser = username => {
@@ -134,8 +134,7 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 	const leave = () => {
 		if (users.length === 1 || numOfOwners === 1) return openModal();
 
-		setState({users: users.filter(user => user.username !== curUser.username)});
-		dispatch(ChangeBoards(curUser.boards.filter(board => board.id !== boardId)));
+		dispatch(Leave(boardId));
 		navigate("/");
 	};
 

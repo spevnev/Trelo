@@ -6,6 +6,7 @@ import {Provider} from "react-redux";
 import GlobalStyles from "./styles";
 import store from "./redux/store";
 
+// Remove the loading when js loads
 document.getElementById("loading").remove();
 
 ReactDOM.render(

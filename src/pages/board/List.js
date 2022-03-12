@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuid} from "uuid";
 import Card from "./Card";
 import {useNavigate} from "react-router";
-import {AddCard} from "../../redux/actionCreators/cardActionCreator";
+import {AddCard} from "../../redux/thunkActionCreators/cardActionCreator";
 import {Droppable} from "react-beautiful-dnd";
 import {getBoard} from "../../redux/selectors";
 

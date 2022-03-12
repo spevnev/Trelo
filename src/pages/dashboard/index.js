@@ -7,7 +7,7 @@ import useTitle from "../../hooks/useTitle";
 import {BoardContainer} from "./styles";
 import {useNavigate} from "react-router";
 import {v4 as uuid} from "uuid";
-import {NewBoard} from "../../redux/actionCreators/boardActionCreator";
+import {NewBoard} from "../../redux/thunkActionCreators/boardActionCreator";
 import PageLoading from "../../components/PageLoading";
 
 const Boards = styled.div`

@@ -3,7 +3,7 @@ import {Form, StyledButton, SubContainer, SubText, Text} from "./styles";
 import Input from "../../components/StyledInput";
 import ErrorMessage from "../../components/ErrorMessage";
 import {useDispatch} from "react-redux";
-import {Login} from "../../redux/actionCreators/userActionCreator";
+import {Login} from "../../redux/thunkActionCreators/userActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
 import {useNavigate} from "react-router";
 import schema, {validatePassword, validateUsername} from "../../schema";
@@ -32,7 +32,7 @@ const LoginForm = () => {
 		if (!validateUsername(formState.username, displayError)) return;
 		if (!validatePassword(formState.password, displayError)) return;
 
-		dispatch(Login(formState.username.toLowerCase(), formState.password, displayError, () => navigate("/")));
+		dispatch(Login(formState.username.toLowerCase(), formState.password, displayError));
 	};
 
 

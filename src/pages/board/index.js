@@ -6,12 +6,12 @@ import List from "./List";
 import NavBar from "./NavBar";
 import {getBoard, getCards} from "../../redux/selectors";
 import {DragDropContext} from "react-beautiful-dnd";
-import {FetchBoard} from "../../redux/actionCreators/boardActionCreator";
+import {FetchBoard} from "../../redux/thunkActionCreators/boardActionCreator";
 import PageLoading from "../../components/PageLoading";
 import PageError from "../../components/PageError";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
-import {ChangeCard, ReorderCards} from "../../redux/actionCreators/cardActionCreator";
+import {ChangeCard, ReorderCards} from "../../redux/thunkActionCreators/cardActionCreator";
 
 const Container = styled.div`
   display: flex;

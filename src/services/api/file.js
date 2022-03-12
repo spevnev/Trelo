@@ -1,4 +1,4 @@
-import request from "./request";
+import request from "../request";
 
 export const downloadFile = axios => async (url, filename = "Image.png") => {
 	try {

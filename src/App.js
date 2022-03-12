@@ -8,8 +8,9 @@ import BoardSettings from "./pages/boardSettings";
 import CardDescription from "./pages/cardDescription";
 import Layout from "./layout";
 import {useDispatch, useSelector} from "react-redux";
-import {FetchUser} from "./redux/actionCreators/userActionCreator";
+import {FetchUser} from "./redux/thunkActionCreators/userActionCreator";
 import {getUser} from "./redux/selectors";
+import WsWrapper from "./layout/WsWrapper";
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -20,7 +21,6 @@ const App = () => {
 		if (getToken() && !user.boards) dispatch(FetchUser());
 	}, [user]);
 
-
 	return (
 		<Routes>
 			<Route path="/login" element={getToken() || user.username ? <Navigate to="/"/> : <Login/>}/>
@@ -28,7 +28,7 @@ const App = () => {
 			<Route path="/" element={<Layout>{getToken() || user.username ? <Outlet/> : <Navigate to="/login"/>}</Layout>}>
 				<Route index element={<Dashboard/>}/>
 
-				<Route path="board/:boardId">
+				<Route path="board/:boardId" element={<WsWrapper/>}>
 					<Route index element={<Board/>}/>
 					<Route path="settings" element={<BoardSettings/>}/>
 					<Route path=":cardId" element={<CardDescription/>}/>
