@@ -8,8 +8,6 @@ const WsWrapper = () => {
 	const {boardId} = useParams();
 
 	useEffect(() => {
-		// roomHandler.then(handler => handler.join(boardId));
-		// return () => roomHandler.then(handler => handler.leave(boardId));
 		roomHandler.join(boardId);
 		return () => roomHandler.leave(boardId);
 	}, [boardId]);
