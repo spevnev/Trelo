@@ -10,12 +10,11 @@ import Modal from "../../components/Modal";
 import GoBack from "../../components/GoBack";
 import {getBoard, getUser} from "../../redux/selectors";
 import usePageState from "../../hooks/usePageState";
-import {ChangeBoards} from "../../redux/thunkActionCreators/userActionCreator";
 import bundle from "../../services/api";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
 import PageError from "../../components/PageError";
-import socket from "../../services/ws";
+import {changeBoards} from "../../redux/actionCreators/userActionCreator";
 
 const Container = styled.div`
   padding: 0 2vw;
@@ -92,7 +91,7 @@ const BoardSettings = () => {
 		const isInUsersBoards = user.boards && user.boards.filter(board => board.id === boardId).length === 1;
 		if (isInUsersBoards) {
 			const curUser = state.users.filter(user => user.username === user.username)[0];
-			dispatch(ChangeBoards(user.boards.map(board => board.id === state.id ? {...board, title: state.title, isOwner: curUser.isOwner} : board)));
+			dispatch(changeBoards(user.boards.map(board => board.id === state.id ? {...board, title: state.title, isOwner: curUser.isOwner} : board)));
 		}
 
 		if (board) {
@@ -106,7 +105,7 @@ const BoardSettings = () => {
 				if (idx === -1) return;
 
 				const prev = board.lists[idx];
-				if (!areListsEqual(list, prev)) bundle.boardAPI.changeList(boardId, list, socket.id);
+				if (!areListsEqual(list, prev)) bundle.boardAPI.changeList(boardId, list);
 			});
 		}
 	};

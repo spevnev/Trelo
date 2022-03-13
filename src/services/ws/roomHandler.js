@@ -1,4 +1,8 @@
-import socket from "./index";
+const createRoomHandler = socket => {
+	const join = boardId => socket.emit("room:join", {boardId, token: localStorage.getItem("JWT")});
+	const leave = boardId => socket.emit("room:leave", boardId);
 
-export const joinRoom = boardId => socket.emit("room:join", {boardId, token: localStorage.getItem("JWT")});
-export const leaveRoom = boardId => socket.emit("room:leave", boardId);
+	return {join, leave};
+};
+
+export default createRoomHandler;

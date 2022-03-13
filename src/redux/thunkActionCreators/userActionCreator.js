@@ -1,9 +1,5 @@
-import actions from "../actions/userActions";
 import {getUserBoards} from "../selectors";
-import socket from "../../services/ws";
-import {setUser} from "../actionCreators/userActionCreator";
-
-export const ChangeBoards = newBoards => ({type: actions.changeBoards, payload: {newBoards}});
+import {changeBoards, setUser} from "../actionCreators/userActionCreator";
 
 export const FetchUser = () => async (dispatch, getState, {userAPI}) => {
 	const [error, data] = await userAPI.fetchData();
@@ -36,9 +32,9 @@ export const Signup = (userData, displayError) => async (dispatch, getState, {us
 export const Leave = boardId => (dispatch, getState, {userAPI}) => {
 	const boards = getUserBoards()(getState());
 
-	userAPI.leave(boardId, socket.id);
+	userAPI.leave(boardId);
 
-	dispatch(ChangeBoards(boards.filter(board => board.id !== boardId)));
+	dispatch(changeBoards(boards.filter(board => board.id !== boardId)));
 };
 
 export const ToggleFavourite = id => (dispatch, getState, {userAPI}) => {
@@ -47,5 +43,5 @@ export const ToggleFavourite = id => (dispatch, getState, {userAPI}) => {
 
 	userAPI.toggleFavourite(id, !isFavourite);
 
-	dispatch(ChangeBoards(boards.map(board => board.id === id ? {...board, isFavourite: !isFavourite} : board)));
+	dispatch(changeBoards(boards.map(board => board.id === id ? {...board, isFavourite: !isFavourite} : board)));
 };

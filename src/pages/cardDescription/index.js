@@ -17,7 +17,6 @@ import {FetchBoard} from "../../redux/thunkActionCreators/boardActionCreator";
 import deleteIcon from "../../assets/svg/cross.svg";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
-import socket from "../../services/ws";
 import PageError from "../../components/PageError";
 
 const Container = styled.div`
@@ -84,7 +83,7 @@ const CardDescription = () => {
 				if (idx === -1) return;
 
 				const prev = card.files[idx];
-				if (file.filename !== prev.filename) bundle.cardAPI.renameFile(boardId, file, socket.id);
+				if (file.filename !== prev.filename) bundle.cardAPI.renameFile(boardId, file);
 			});
 		}
 	};

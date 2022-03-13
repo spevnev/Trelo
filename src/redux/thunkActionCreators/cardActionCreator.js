@@ -1,5 +1,4 @@
 import {getCard, getCards} from "../selectors";
-import socket from "../../services/ws";
 import {addCard, changeCard, deleteCard, reorderCards} from "../actionCreators/cardActionCreator";
 
 const newEmptyCard = (id, listId, order) => ({title: "New card", id, listId, description: "", order, images: [], files: [], assigned: []});
@@ -15,7 +14,7 @@ export const AddCard = (boardId, listId, id, callback) => (dispatch, getState, {
 	dispatch(addCard(boardId, newCard));
 	callback();
 
-	cardAPI.addCard(boardId, newCard, socket.id);
+	cardAPI.addCard(boardId, newCard);
 };
 
 export const DeleteCard = (boardId, id, callback) => (dispatch, getState, {cardAPI}) => {
@@ -32,13 +31,13 @@ export const DeleteCard = (boardId, id, callback) => (dispatch, getState, {cardA
 
 export const ChangeCard = (boardId, newCard) => (dispatch, getState, {cardAPI}) => {
 	if (!newCard) return;
-	cardAPI.changeCard(boardId, newCard, socket.id);
+	cardAPI.changeCard(boardId, newCard);
 
 	dispatch(changeCard(boardId, newCard));
 };
 
 export const ReorderCards = (boardId, order) => (dispatch, getState, {cardAPI}) => {
-	cardAPI.reorderCards(boardId, order, socket.id);
+	cardAPI.reorderCards(boardId, order);
 
 	dispatch(reorderCards(boardId, order));
 };
@@ -51,11 +50,11 @@ export const DeleteFile = (boardId, id, url) => (dispatch, getState, {cardAPI}) 
 };
 
 export const AddFiles = (boardId, id, files, onSuccess) => async (dispatch, getState, {cardAPI, fileAPI}) => {
-	const [error, urls] = await fileAPI.uploadFiles(boardId, files.map(file => file.data), socket.id);
+	const [error, urls] = await fileAPI.uploadFiles(boardId, files.map(file => file.data));
 	if (error) return;
 
 	const cardFiles = files.map((file, i) => ({url: urls[i], filename: file.filename}));
-	cardAPI.addFiles(boardId, id, cardFiles, socket.id);
+	cardAPI.addFiles(boardId, id, cardFiles);
 
 	onSuccess(cardFiles);
 };

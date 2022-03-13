@@ -1,6 +1,5 @@
-import {ChangeBoards} from "./userActionCreator";
+import {changeBoards} from "../actionCreators/userActionCreator";
 import {getBoard, getUser, getUserBoards} from "../selectors";
-import socket from "../../services/ws";
 import {addBoard, changeBoard, deleteBoard, setStatus} from "../actionCreators/boardActionCreator";
 import {addCardBoard, deleteCardBoard} from "../actionCreators/cardActionCreator";
 
@@ -32,13 +31,13 @@ export const NewBoard = (id, onSuccess) => async (dispatch, getState, {boardAPI}
 
 		dispatch(addCardBoard(id, []));
 		dispatch(addBoard({...boardObject, status: "READY"}));
-		dispatch(ChangeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
+		dispatch(changeBoards([...user.boards, {id, isOwner: true, isFavourite: false, title: "New Board"}]));
 	} catch (e) {
 	}
 };
 
 export const DeleteBoard = (id, callback) => (dispatch, getState, {boardAPI}) => {
-	dispatch(ChangeBoards(getUserBoards()(getState()).filter(board => board.id !== id)));
+	dispatch(changeBoards(getUserBoards()(getState()).filter(board => board.id !== id)));
 	dispatch(deleteCardBoard(id));
 
 	callback();
@@ -52,13 +51,13 @@ export const ChangeBoard = (id, newBoard) => (dispatch, getState, {boardAPI}) =>
 
 	const prevBoard = getBoard(id)(getState()) || {};
 	if (hasTitle(newBoard) && prevBoard.title !== newBoard.title)
-		boardAPI.changeTitle(id, newBoard.title, socket.id);
+		boardAPI.changeBoard(id, newBoard.title);
 
 	dispatch(changeBoard(id, newBoard));
 };
 
 export const AddUser = (id, username, onSuccess, onError) => async (dispatch, getState, {boardAPI}) => {
-	const [error, data] = await boardAPI.addUser(username, id, socket.id);
+	const [error, data] = await boardAPI.addUser(username, id);
 	if (error) return onError(error);
 
 	onSuccess(data);
@@ -77,7 +76,7 @@ export const ChangeUserRole = (id, username, isOwner) => (dispatch, getState, {b
 	const boardData = getBoard(id)(getState());
 
 	dispatch(ChangeBoard(id, {...boardData, users: boardData.users.map(user => user.username === username ? {...user, isOwner} : user)}));
-	boardAPI.changeRole(id, username, isOwner, socket.id);
+	boardAPI.changeUser(id, username, isOwner);
 };
 
 export const CreateList = (boardId, id, title) => (dispatch, getState, {boardAPI}) => {
@@ -87,7 +86,7 @@ export const CreateList = (boardId, id, title) => (dispatch, getState, {boardAPI
 	order++;
 
 	dispatch(ChangeBoard(boardId, {...boardData, lists: [...boardData.lists, {title: title, id, order}]}));
-	boardAPI.createList(boardId, {id, title, order}, socket.id);
+	boardAPI.createList(boardId, {id, title, order});
 };
 
 export const DeleteList = (boardId, id) => (dispatch, getState, {boardAPI}) => {

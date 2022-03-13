@@ -1,6 +1,7 @@
 import request from "../request";
+import axios from "../axiosClient";
 
-export const downloadFile = axios => async (url, filename = "Image.png") => {
+export const downloadFile = async (url, filename = "Image.png") => {
 	try {
 		const res = await axios.get(url, {responseType: "blob"});
 		if (!res || res.status !== 200) return null;
@@ -16,4 +17,4 @@ export const downloadFile = axios => async (url, filename = "Image.png") => {
 	}
 };
 
-export const uploadFiles = axios => (boardId, files) => request(axios.post(`/file/upload/`, {boardId, files}));
+export const uploadFiles = (boardId, files) => request(axios.post(`/file/upload/`, {boardId, files}));

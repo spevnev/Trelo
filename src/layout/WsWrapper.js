@@ -1,15 +1,17 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router";
 import {Outlet} from "react-router-dom";
-import {joinRoom, leaveRoom} from "../services/ws/roomHandler";
+import {roomHandler} from "../services/ws";
 
 // Manages websocket rooms
 const WsWrapper = () => {
 	const {boardId} = useParams();
 
 	useEffect(() => {
-		joinRoom(boardId);
-		return () => leaveRoom(boardId);
+		// roomHandler.then(handler => handler.join(boardId));
+		// return () => roomHandler.then(handler => handler.leave(boardId));
+		roomHandler.join(boardId);
+		return () => roomHandler.leave(boardId);
 	}, [boardId]);
 
 	return <Outlet/>;

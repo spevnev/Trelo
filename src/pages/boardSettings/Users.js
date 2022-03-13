@@ -100,7 +100,7 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const curUser = useSelector(getUser()) || {boards: []};
+	const curUser = useSelector(getUser());
 	const [errorMsg, setErrorMsg] = useState();
 	const [newUsername, setNewUsername] = useState("");
 	const inputRef = useRef();
@@ -146,6 +146,8 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 		dispatch(AddUser(boardId, newUsername.toLowerCase(), data => setState({users: [...users, {...data, isOwner: false}]}), displayError));
 	};
 
+
+	if (!curUser || !curUser.boards) return null;
 
 	const board = curUser.boards.filter(board => board.id === boardId);
 	const otherUsers = users.filter(user => user.username !== curUser.username);

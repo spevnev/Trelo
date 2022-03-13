@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
@@ -12,6 +12,7 @@ import PageError from "../../components/PageError";
 import useKeyboard from "../../hooks/useKeyboard";
 import useTitle from "../../hooks/useTitle";
 import {ChangeCard, ReorderCards} from "../../redux/thunkActionCreators/cardActionCreator";
+import config from "../../config";
 
 const Container = styled.div`
   display: flex;
@@ -45,6 +46,7 @@ const Board = () => {
 	const board = useSelector(getBoard(boardId));
 	const cards = useSelector(getCards(boardId)) || [];
 	const bodyRef = useRef(document.body);
+	const [isLoading, setIsLoading] = useState(!board);
 
 	useKeyboard({ref: bodyRef, key: "escape", cb: () => navigate("/")});
 
@@ -52,11 +54,13 @@ const Board = () => {
 
 	useEffect(() => {
 		if (!board) dispatch(FetchBoard(boardId));
+		setTimeout(() => setIsLoading(false), config.FORCE_LOADING_MS);
 	}, []);
 
 
-	if (!board || board.status === "LOADING") return <PageLoading/>;
-	if (board.status === "ERROR") return <PageError>This board doesn't exist or you aren't a member of it!</PageError>;
+	if (isLoading) return <PageLoading/>;
+	if (!board || board.status === "ERROR") return <PageError>This board doesn't exist or you aren't a member of it!</PageError>;
+	if (board.status === "LOADING") return <PageLoading/>;
 
 
 	const onDragEnd = e => {
