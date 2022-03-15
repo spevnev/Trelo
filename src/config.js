@@ -10,6 +10,7 @@ const config = {
 			FORCE_LOADING_MS: 50,
 		}),
 	ERROR_DURATION_MS: 3000,
+	CARD_BEING_CHANGED_MS: 5000,
 };
 
 export default config;

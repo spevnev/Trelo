@@ -33,6 +33,8 @@ const DeleteText = styled.p`
   }
 `;
 
+const modalDeleteText = "Are you sure you want to delete this board?";
+const modalLeaveText = "If you leave, the board will be deleted.";
 
 let saveOnExit = true;
 let currentBoard = {}; // idk why, but board variable inside saveChanges function isn't latest, unlike this one
@@ -131,9 +133,6 @@ const BoardSettings = () => {
 		}));
 	};
 
-
-	const modalDeleteText = "Are you sure you want to delete this board?";
-	const modalLeaveText = "If you leave, the board will be deleted.";
 
 	return (
 		<Container ref={containerRef}>

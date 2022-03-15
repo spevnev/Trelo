@@ -5,11 +5,6 @@ import {changeBoard, deleteBoard} from "../../redux/actionCreators/boardActionCr
 const registerBoardHandler = (socket, store) => {
 	const {getState, dispatch} = store;
 
-	socket.on("board:add", ({id, title}) => {
-		const userBoards = getUserBoards()(getState());
-
-		dispatch(changeBoards([...userBoards, {id, title, isFavourite: false, isOwner: false}]));
-	});
 	socket.on("board:change", ({boardId, title}) => {
 		const board = getBoard(boardId)(getState());
 

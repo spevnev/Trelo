@@ -41,6 +41,9 @@ const Cross = styled.img`
 
 export const CardContext = createContext(null);
 
+const modalEmptyTitleText = "Title can't be empty! Do you want to delete this card?";
+const modalEmptyCardText = "Are you sure you want to delete this card?";
+
 let timeout = null;
 let saveOnExit = true;
 const CardDescription = () => {
@@ -92,9 +95,6 @@ const CardDescription = () => {
 	if (pageState) return pageState;
 
 
-	const modalEmptyTitleText = "Title can't be empty! Do you want to delete this card?";
-	const modalEmptyCardText = "Are you sure you want to delete this card?";
-
 	const isCardEmpty = card => !card.title && !card.description && card.assigned.length === 0 && card.images.length === 0 && card.files.length === 0;
 
 	const openModal = text => {
@@ -103,14 +103,14 @@ const CardDescription = () => {
 	};
 
 	const goBack = () => {
-		if (isCardEmpty(card)) return delCard();
+		if (isCardEmpty(card)) return deleteCard();
 		else if (!card.title) return openModal(modalEmptyTitleText);
 
 		clearTimer();
 		navigate(`/board/${boardId}`);
 	};
 
-	const delCard = () => {
+	const deleteCard = () => {
 		dispatch(DeleteCard(boardId, cardId, () => {
 			clearTimer();
 			saveOnExit = false;
@@ -144,7 +144,7 @@ const CardDescription = () => {
 				<Files/>
 			</CardContext.Provider>
 
-			<Modal onCancel={() => setIsOpen(false)} onContinue={delCard} isOpened={isOpen} text={modalText}/>
+			<Modal onCancel={() => setIsOpen(false)} onContinue={deleteCard} isOpened={isOpen} text={modalText}/>
 		</Container>
 	);
 };

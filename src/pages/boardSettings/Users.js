@@ -105,7 +105,7 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 	const [newUsername, setNewUsername] = useState("");
 	const inputRef = useRef();
 
-	useKeyboard({ref: inputRef, key: "enter", cb: () => newUser()});
+	useKeyboard({ref: inputRef, key: "enter", cb: () => addUser()});
 
 	useEffect(() => () => clearTimeout(timeout), []);
 
@@ -126,19 +126,19 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 		dispatch(ChangeUserRole(boardId, username, isOwner));
 	};
 
-	const delUser = username => {
+	const deleteUser = username => {
 		setState({users: users.filter(user => user.username !== username)});
 		dispatch(DeleteUser(boardId, username));
 	};
 
-	const leave = () => {
+	const leaveBoard = () => {
 		if (users.length === 1 || numOfOwners === 1) return openModal();
 
 		dispatch(Leave(boardId));
 		navigate("/");
 	};
 
-	const newUser = () => {
+	const addUser = () => {
 		if (!validateUsername(newUsername, displayError)) return;
 		if (users.filter(user => user.username === newUsername.toLowerCase()).length > 0) return displayError("This user is already in the board!");
 
@@ -156,15 +156,15 @@ const Users = ({users = [], boardId, setState, openModal}) => {
 		<SubContainer>
 			<SubTitle>Users</SubTitle>
 
-			<CurUser leave={leave} username={curUser.username} icon={curUser.icon} isOwner={board.length === 1 ? board[0].isOwner : false}/>
-			{otherUsers.map(user => <User key={user.username} deleteUser={delUser} changeRole={changeUserRole} {...user}/>)}
+			<CurUser leave={leaveBoard} username={curUser.username} icon={curUser.icon} isOwner={board.length === 1 ? board[0].isOwner : false}/>
+			{otherUsers.map(user => <User key={user.username} deleteUser={deleteUser} changeRole={changeUserRole} {...user}/>)}
 
 			<ErrorMessage>{errorMsg}</ErrorMessage>
 
 			<NewUser>
 				<Input ref={inputRef} maxLength={schema.username.max} placeholder="Username"
 					   value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
-				<Button onClick={newUser}>Add</Button>
+				<Button onClick={addUser}>Add</Button>
 			</NewUser>
 		</SubContainer>
 	);

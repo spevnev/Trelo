@@ -13,7 +13,7 @@ import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import dragIcon from "../../assets/svg/drag-indicator.svg";
 import schema from "../../schema";
 
-const ListElContainer = styled.div`
+const ListContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -60,17 +60,17 @@ const Row = styled.div`
 `;
 
 
-const ListEl = ({title, id, order, deleteEl, changeEl, dragProps}) => (
-	<ListElContainer style={{order}}>
+const List = ({title, id, order, deleteList, changeList, dragProps}) => (
+	<ListContainer style={{order}}>
 		<HiddenInput fontSize="20px" placeholder="List title" maxLength={schema.listTitle.max}
-					 onChange={e => changeEl(id, e.target.value)} value={title}/>
+					 onChange={e => changeList(id, e.target.value)} value={title}/>
 		<Row>
 			<Icon src={dragIcon} {...dragProps}/>
-			<Modal onContinue={() => deleteEl(id)} text="If you delete this list, all cards in it will be deleted too!">
+			<Modal onContinue={() => deleteList(id)} text="If you delete this list, all cards in it will be deleted too!">
 				<Cancel>&#x2716;</Cancel>
 			</Modal>
 		</Row>
-	</ListElContainer>
+	</ListContainer>
 );
 
 const Lists = ({lists = [], boardId, setState}) => {
@@ -79,17 +79,17 @@ const Lists = ({lists = [], boardId, setState}) => {
 	const [newListTitle, setNewListTitle] = useState("");
 	const inputRef = useRef();
 
-	useKeyboard({ref: inputRef, key: "enter", cb: () => addEl()});
+	useKeyboard({ref: inputRef, key: "enter", cb: () => addList()});
 
 
-	const addEl = () => {
+	const addList = () => {
 		setNewListTitle("");
 		dispatch(CreateList(boardId, uuid(), newListTitle));
 	};
 
-	const deleteEl = listId => dispatch(DeleteList(boardId, listId));
+	const deleteList = listId => dispatch(DeleteList(boardId, listId));
 
-	const changeEl = (listId, title) => setState({lists: lists.map(list => list.id === listId ? {...list, title} : list)});
+	const changeList = (listId, title) => setState({lists: lists.map(list => list.id === listId ? {...list, title} : list)});
 
 	const onDragEnd = e => {
 		if (!e.destination) return;
@@ -126,7 +126,7 @@ const Lists = ({lists = [], boardId, setState}) => {
 					{lists.map((list, idx) => (
 						<Draggable draggableId={list.id} key={list.id} index={idx}>{provided =>
 							<div ref={provided.innerRef} {...provided.draggableProps}>
-								<ListEl {...list} dragProps={provided.dragHandleProps} deleteEl={deleteEl} changeEl={changeEl}/>
+								<List {...list} dragProps={provided.dragHandleProps} deleteList={deleteList} changeList={changeList}/>
 							</div>
 						}</Draggable>
 					))}
@@ -137,7 +137,7 @@ const Lists = ({lists = [], boardId, setState}) => {
 
 			<NewList>
 				<Input ref={inputRef} placeholder="List title" maxLength={schema.listTitle.max} onChange={e => setNewListTitle(e.target.value)} value={newListTitle}/>
-				<Button onClick={addEl}>Add</Button>
+				<Button onClick={addList}>Add</Button>
 			</NewList>
 		</SubContainer>
 	);
