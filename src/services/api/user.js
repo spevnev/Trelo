@@ -1,7 +1,13 @@
 import request from "../request";
 import axios from "../axiosClient";
 
-export const fetchData = () => request(axios.get("/user/"));
+export const fetchData = async () => {
+	const res = await request(axios.get("/user/"));
+
+	if (!res) localStorage.removeItem("JWT");
+
+	return res;
+};
 
 export const login = (username, password) => request(axios.post("/auth/login", {username: username.toLowerCase(), password}));
 export const signup = (username, password, icon) => request(axios.post("/auth/signup", {username: username.toLowerCase(), password, icon}));
