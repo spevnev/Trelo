@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js && docker image build -t trelo . && rm -r/build"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
