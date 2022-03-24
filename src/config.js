@@ -1,5 +1,5 @@
 const config = {
-	BACKEND: process.env.BACKEND_URL || "localhost:3000",
+	BACKEND: "http://localhost",
 	DEBOUNCE_SAVE_MS: 2000,
 	FORCE_LOADING_MS: 200,
 	ERROR_DURATION_MS: 3000,

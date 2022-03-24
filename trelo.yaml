@@ -83,6 +83,16 @@ spec:
       name: react-service
       port:
         number: 80
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: node-service
+                port:
+                  number: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -90,7 +100,7 @@ metadata:
   name: react-deployment
 spec:
   # Replica set:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: react
@@ -118,7 +128,7 @@ metadata:
   name: node-deployment
 spec:
   # Replica set:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: node

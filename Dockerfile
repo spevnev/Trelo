@@ -1,7 +1,6 @@
 FROM nginx:1.21.6-alpine
 
 ENV PORT=80
-ENV BACKEND_URL="node-service"
 
 COPY nginx/nginx.conf /etc/nginx/nginx.conf.template
 COPY nginx/headers.conf /etc/nginx/headers.conf
