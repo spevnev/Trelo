@@ -25,7 +25,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js && docker image build -t trelo . && rm -r ./build",
-    "k8s": "cd ../treloBack && npm run build && cd ../trelo && npm run build && kubectl delete deployments.apps node-deployment react-deployment; kubectl apply -f trelo.yaml"
+    "k8s": "cd ../treloBack && npm run build && cd ../trelo && npm run build && kubectl delete deployments.apps node-deployment react-deployment; kubectl apply -f deployment.yaml"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",

@@ -24,7 +24,6 @@ spec:
   resources:
     requests:
       storage: 10Gi
-
 ---
 apiVersion: v1
 kind: Service
@@ -73,8 +72,6 @@ spec:
     - protocol: TCP
       targetPort: 5432
       port: 5432
-
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
@@ -119,7 +116,6 @@ spec:
                 name: node-service
                 port:
                   number: 80
-
 ---
 apiVersion: apps/v1
 kind: Deployment
