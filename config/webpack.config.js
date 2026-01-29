@@ -14,7 +14,6 @@ const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
-const ESLintPlugin = require("eslint-webpack-plugin");
 const paths = require("./paths");
 const modules = require("./modules");
 const getClientEnvironment = require("./env");
@@ -30,8 +29,6 @@ const babelRuntimeEntryHelpers = require.resolve("@babel/runtime/helpers/esm/ass
 const babelRuntimeRegenerator = require.resolve("@babel/runtime/regenerator", {paths: [babelRuntimeEntry]});
 
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false";
-const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === "true";
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
 const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || "10000");
 
 const swSrc = paths.swSrc;
@@ -376,28 +373,6 @@ module.exports = function (webpackEnv) {
 				dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
 				exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
 				maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-			}),
-			!disableESLintPlugin && new ESLintPlugin({
-				extensions: ["js", "mjs", "jsx", "ts", "tsx"],
-				formatter: require.resolve("react-dev-utils/eslintFormatter"),
-				eslintPath: require.resolve("eslint"),
-				failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-				context: paths.appSrc,
-				cache: true,
-				cacheLocation: path.resolve(
-					paths.appNodeModules,
-					".cache/.eslintcache",
-				),
-				cwd: paths.appPath,
-				resolvePluginsRelativeTo: __dirname,
-				baseConfig: {
-					extends: [require.resolve("eslint-config-react-app/base")],
-					rules: {
-						...(!hasJsxRuntime && {
-							"react/react-in-jsx-scope": "error",
-						}),
-					},
-				},
 			}),
 			isEnvProduction && new CompressionPlugin({
 				filename: "[path][base].br",

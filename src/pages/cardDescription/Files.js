@@ -99,7 +99,7 @@ const FileInput = ({setUploading}) => {
 	const input = useRef(null);
 	const {board, state, setState, isOverlayVisible} = useContext(CardContext);
 
-	useEffect(() => stateVar = state, [state]);
+	useEffect(() => { stateVar = state; }, [state]);
 
 
 	const preventDefault = e => e.preventDefault();

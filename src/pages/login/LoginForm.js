@@ -37,7 +37,7 @@ const LoginForm = () => {
 
 
 	return (
-		<SubContainer background="#fff" colour="#000">
+		<SubContainer $background="#fff" $color="#000">
 			<Text>Log in</Text>
 			<SubText>Already signed up?</SubText>
 
@@ -47,7 +47,7 @@ const LoginForm = () => {
 				<Input type="password" placeholder="Password" maxLength={schema.password.max} value={formState.password}
 					   onChange={e => setFormState({...formState, password: e.target.value})}/>
 
-				<ErrorMessage fixedHeight>{errorMsg}</ErrorMessage>
+				<ErrorMessage $fixedHeight>{errorMsg}</ErrorMessage>
 				<StyledButton onClick={submit}>Log in</StyledButton>
 			</Form>
 		</SubContainer>

@@ -129,7 +129,7 @@ const SignupForm = () => {
 
 
 	return (
-		<SubContainer background="#0079bf" colour="#fff">
+		<SubContainer $background="#0079bf" $color="#fff">
 			<Text>Sign up</Text>
 			<SubText>Don't have account yet?</SubText>
 
@@ -140,7 +140,7 @@ const SignupForm = () => {
 				<Input type="password" placeholder="Password" onChange={e => changeForm({password: e.target.value})} value={formState.password}/>
 				<Input type="password" placeholder="Confirm password" onChange={e => changeForm({confirm: e.target.value})} value={formState.confirm}/>
 
-				<ErrorMessage fixedHeight>{msg}</ErrorMessage>
+				<ErrorMessage $fixedHeight>{msg}</ErrorMessage>
 
 				<Button onClick={submit}>Sign up</Button>
 			</Form>

@@ -6,7 +6,7 @@ import imageIcon from "../../assets/svg/image.svg";
 import imagesIcon from "../../assets/svg/images.svg";
 import fileIcon from "../../assets/svg/file-empty.svg";
 import filesIcon from "../../assets/svg/files-empty.svg";
-import {Draggable} from "react-beautiful-dnd";
+import {Draggable} from "@hello-pangea/dnd";
 
 const CardContainer = styled.div`
   margin-bottom: 10px;

@@ -85,7 +85,7 @@ const BoardSettings = () => {
 
 		if (currentBoard.lists) {
 			const boardListIds = currentBoard.lists.map(list => list.id);
-			state.lists = state.lists.filter(list => boardListIds.indexOf(list.id) !== -1);
+			state = {...state, lists: state.lists.filter(list => boardListIds.indexOf(list.id) !== -1)};
 		}
 
 		dispatch(ChangeBoard(boardId, state));

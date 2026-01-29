@@ -5,7 +5,7 @@ let elementsUnderCursor = [];
 const keyToObject = {};
 
 
-window.addEventListener("mousemove", e => elementsUnderCursor = e.path);
+window.addEventListener("mousemove", e => elementsUnderCursor = e.composedPath());
 window.addEventListener("click", e => {
 	// get elements at position of mouse after the call stack empties
 	setTimeout(() => elementsUnderCursor = document.elementsFromPoint(e.x, e.y), 0);
@@ -13,7 +13,7 @@ window.addEventListener("click", e => {
 
 window.addEventListener("keyup", e => {
 	const isObjectInPath = obj => elementsUnderCursor.indexOf(obj.ref.current) !== -1;
-	const isObjectInFocus = obj => e.path.indexOf(obj.ref.current) !== -1 || isObjectInPath(obj);
+	const isObjectInFocus = obj => e.composedPath().indexOf(obj.ref.current) !== -1 || isObjectInPath(obj);
 
 	const objects = keyToObject[e.key.toLowerCase()];
 	if (!objects || objects.length === 0) return;

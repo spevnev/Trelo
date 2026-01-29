@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import List from "./List";
 import NavBar from "./NavBar";
 import {getBoard, getCards} from "../../redux/selectors";
-import {DragDropContext} from "react-beautiful-dnd";
+import {DragDropContext} from "@hello-pangea/dnd";
 import {FetchBoard} from "../../redux/thunkActionCreators/boardActionCreator";
 import PageLoading from "../../components/PageLoading";
 import PageError from "../../components/PageError";

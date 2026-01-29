@@ -9,7 +9,7 @@ import {v4 as uuid} from "uuid";
 import Modal from "../../components/Modal";
 import {CreateList, DeleteList} from "../../redux/thunkActionCreators/boardActionCreator";
 import useKeyboard from "../../hooks/useKeyboard";
-import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import {DragDropContext, Draggable, Droppable} from "@hello-pangea/dnd";
 import dragIcon from "../../assets/svg/drag-indicator.svg";
 import schema from "../../schema";
 

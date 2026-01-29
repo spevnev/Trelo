@@ -1,5 +1,5 @@
 const config = {
-	BACKEND: "http://localhost",
+	BACKEND: "http://localhost:3001",
 	DEBOUNCE_SAVE_MS: 2000,
 	FORCE_LOADING_MS: 200,
 	ERROR_DURATION_MS: 3000,

@@ -5,7 +5,7 @@ import {v4 as uuid} from "uuid";
 import Card from "./Card";
 import {useNavigate} from "react-router";
 import {AddCard} from "../../redux/thunkActionCreators/cardActionCreator";
-import {Droppable} from "react-beautiful-dnd";
+import {Droppable} from "@hello-pangea/dnd";
 import {getBoard} from "../../redux/selectors";
 
 const Title = styled.p`

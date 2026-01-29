@@ -145,7 +145,7 @@ const ImageInput = ({setIsUploading}) => {
 	const {isOverlayVisible, state, board, setState} = useContext(CardContext);
 	const input = useRef(null);
 
-	useEffect(() => stateVar = state, [state]);
+	useEffect(() => { stateVar = state; }, [state]);
 
 
 	const preventDefault = e => e.preventDefault();
