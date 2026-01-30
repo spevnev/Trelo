@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "25.3.0"
+    "node": ">=22.0.0"
   },
   "browserslist": {
     "production": [
@@ -20,8 +20,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "buildImage": "build && docker image build -t trelo ."
+    "build": "node scripts/build.js"
   },
   "dependencies": {
     "@babel/core": "^7.28.6",
